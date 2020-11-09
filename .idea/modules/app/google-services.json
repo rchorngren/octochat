@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "129712705876",
+    "firebase_url": "https://octochat-4d230.firebaseio.com",
+    "project_id": "octochat-4d230",
+    "storage_bucket": "octochat-4d230.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:129712705876:android:f49de3257afeeed15538c1",
+        "android_client_info": {
+          "package_name": "com.example.octochat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "129712705876-p0gi1jcn1tu6bo63gjdgu9hlsvqfusfv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.octochat",
+            "certificate_hash": "b3ba23ff71f24c7b629b00aece14fefb85a6d8b3"
+          }
+        },
+        {
+          "client_id": "129712705876-rfsgv12fk6mkqkf6srr7h4hmncfqkj78.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6qG2QUIP9O7NcLWsqUPENqlTMR4Bum_Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "129712705876-rfsgv12fk6mkqkf6srr7h4hmncfqkj78.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
