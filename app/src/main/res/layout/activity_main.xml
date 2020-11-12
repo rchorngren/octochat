@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#28000000"
+    tools:context=".MainActivity">
+
+   <!-- <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:background="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                app:srcCompat="@drawable/logoban" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="15dp"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/textNameOrEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:width="24dp"
+                    android:drawableLeft="@drawable/avataruser"
+                    android:ems="10"
+                    android:hint="  Userame Or Email"
+                    android:inputType="textPersonName" />
+                &lt;!&ndash;            Icons made by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>&ndash;&gt;
+
+                <EditText
+                    android:id="@+id/textUserPass"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/padlockpass"
+                    android:ems="10"
+                    android:hint="  Password"
+                    android:inputType="text" />
+                &lt;!&ndash;            Icons made by <a href="https://www.flaticon.com/authors/tomas-knop" title="Tomas Knop">Tomas Knop</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>&ndash;&gt;
+
+                <Button
+                    android:id="@+id/userLogIn_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="#DAD8D8"
+                    android:backgroundTint="#F4F4F4"
+                    android:drawableRight="@drawable/go_arrow"
+                    android:padding="8dp"
+                    android:text="Sign in" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp" />
+
+                <TextView
+                    android:id="@+id/textViewForgotPassword"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginEnd="8dp"
+                    android:gravity="right"
+                    android:text="Recover Password" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp" />
+
+                <Button
+                    android:id="@+id/userLogInPrivate_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#FFFFFF"
+                    android:text="Sign in Private" />
+                &lt;!&ndash;            Icons made by <a href="https://www.flaticon.com/authors/dmitri13" title="dmitri13">dmitri13</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>&ndash;&gt;
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp" />
+
+                <TextView
+                    android:id="@+id/textViewSignUp"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginEnd="8dp"
+                    android:gravity="right"
+                    android:text="Sign Up" />
+
+
+                &lt;!&ndash; <com.google.android.gms.common.SignInButton
+                android:id="@+id/userLogIn_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:padding="8dp" >
+
+            </com.google.android.gms.common.SignInButton>&ndash;&gt;
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>
