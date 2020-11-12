@@ -20,7 +20,6 @@ class ChatActivity : AppCompatActivity() {
     lateinit var messagesList: ListView
     lateinit var messageAdapter: MessagesListAdapter
 
-    lateinit var listenerRegistration: ListenerRegistration
     lateinit var messagesRef: CollectionReference
 
     lateinit var auth: FirebaseAuth
@@ -32,6 +31,7 @@ class ChatActivity : AppCompatActivity() {
     lateinit var username: String
     lateinit var displayName: String
 
+    lateinit var otherUserUid: String
     lateinit var otherUser: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,17 +40,22 @@ class ChatActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        email = intent.getStringExtra("email")!!
-        password = intent.getStringExtra("password")!!
-        otherUserEmail = intent.getStringExtra("otherUserEmail")!!
-        username = intent.getStringExtra("username")!!
-        displayName = intent.getStringExtra("displayName")!!
+        //Intent
+//        email = intent.getStringExtra("email")!!
+//        password = intent.getStringExtra("password")!!
+//        otherUserEmail = intent.getStringExtra("otherUserEmail")!!
+//        username = intent.getStringExtra("username")!!
+//        displayName = intent.getStringExtra("displayName")!!
+        val chatId = intent.getStringExtra("chatId")!!
+        otherUserUid = intent.getStringExtra("otherUserUid")!!
+        val otherUserDisplayName = intent.getStringExtra("otherUserDisplayName")
+
 
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
-        loginUser(email, password)
+        //loginUser(email, password)
 
-        messagesRef = db.collection("chats")
+        messagesRef = db.collection("chats").document(chatId).collection("messages")
 
         textFullName = findViewById(R.id.textFullName)
         messagesList = findViewById(R.id.listViewMessages)
@@ -59,6 +64,10 @@ class ChatActivity : AppCompatActivity() {
         val sendTestMessageButton = findViewById<ImageView>(R.id.buttonSendTestMessage)
         val editText = findViewById<EditText>(R.id.textField)
         val sendButton = findViewById<ImageView>(R.id.buttonSend)
+
+        textFullName.text = otherUserDisplayName
+
+        createChat()
 
         sendButton.setOnClickListener {
             Log.e(TAG, user!!.uid)
@@ -73,6 +82,7 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
+
     private fun loginUser(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener {
             if (it.isSuccessful) {
@@ -81,30 +91,31 @@ class ChatActivity : AppCompatActivity() {
                 user = auth.currentUser
                 saveUserToFirestore()
 
-                db.collection("chats")
-                    .whereArrayContains("users", user!!.uid)
-                    .get()
-                    .addOnCompleteListener {
-
-                        Log.e(TAG, it.result!!.documents[0].id)
-
-                        if (it.result!!.documents.size > 0) {
-                            createChat()
-                            messagesRef = db.collection("chats").document(it.result!!.documents[0].id).collection("messages")
-
-                        } else {
-                            Log.e(TAG, "hittar ingen dig i chatter")
-                            createChat(true)
-                        }
-                    }
-            } else {
-                Log.e(TAG, "Login failed; ${it.exception}")
+                //Replaced in ChatListActivity
+//                db.collection("chats")
+//                    .whereArrayContains("users", user!!.uid)
+//                    .get()
+//                    .addOnCompleteListener {
+//
+//                        Log.e(TAG, it.result!!.documents[0].id)
+//
+//                        if (it.result!!.documents.size > 0) {
+//                            createChat()
+//                            messagesRef = db.collection("chats").document(it.result!!.documents[0].id).collection("messages")
+//
+//                        } else {
+//                            Log.e(TAG, "hittar ingen dig i chatter")
+//                            createChat(true)
+//                        }
+//                    }
+//            } else {
+//                Log.e(TAG, "Login failed; ${it.exception}")
             }
         }
     }
 
     fun setSnapshotListener() {
-        listenerRegistration = messagesRef.orderBy("timestamp", Query.Direction.ASCENDING)
+        messagesRef.orderBy("timestamp", Query.Direction.ASCENDING)
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     Log.e(TAG, "error: $error")
@@ -135,17 +146,18 @@ class ChatActivity : AppCompatActivity() {
 
     fun createChat(new: Boolean = false) {
         val currentUser = User(user!!.uid, email, username, displayName)
+
         db.collection("users")
-            .whereEqualTo("email", otherUserEmail)
+            .document(otherUserUid)
             .get()
             .addOnCompleteListener {
-                otherUser = it.result!!.documents[0].toObject(User::class.java)!!
+                otherUser = it.result!!.toObject(User::class.java)!!
 
-                textFullName.text = otherUser.displayName
+//                textFullName.text = otherUser.displayName
 
-                if(new){
-                    db.collection("chats").document().set(hashMapOf("users" to listOf(user!!.uid, otherUser.userId)) as Map<String, Any>)
-                }
+//                if(new){
+//                    db.collection("chats").document().set(hashMapOf("users" to listOf(user!!.uid, otherUser.userId)) as Map<String, Any>)
+//                }
                 messageAdapter = MessagesListAdapter(this, listMessages, currentUser, otherUser)
                 messagesList.adapter = messageAdapter
                 setSnapshotListener()
