@@ -1,10 +1,14 @@
 package com.example.octochat.messaging
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.EditText
 import android.widget.ListView
 import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.octochat.R
 import com.example.octochat.messaging.util.ChatListAdapter
@@ -26,6 +30,7 @@ class ChatListActivity : AppCompatActivity() {
 
     lateinit var listViewChats: ListView
     lateinit var progressBar: ProgressBar
+    lateinit var emptyView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,10 +39,53 @@ class ChatListActivity : AppCompatActivity() {
         listViewChats = findViewById(R.id.listView)
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         progressBar = findViewById(R.id.progressBar)
+        emptyView = findViewById(R.id.emptyView)
 
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
+        getActiveChats()
+
+        fab.setOnClickListener {
+            val dialogBuilder = AlertDialog.Builder(this)
+            val otherUserEmailField = EditText(this)
+
+            dialogBuilder.setView(otherUserEmailField)
+            dialogBuilder.setTitle("Start chat")
+
+            dialogBuilder.setPositiveButton("Start") { dialogInterface, i ->
+
+                val otherUserEmail = otherUserEmailField.text.toString()
+                if (otherUserEmail != "") {
+                    db.collection("users")
+                        .whereEqualTo("email", otherUserEmail)
+                        .get()
+                        .addOnCompleteListener {
+//                            Log.e("ChatListActivity", it.result!!.documents.toString())
+                            if (it.result!!.documents.size > 0) {
+                                val otherUser =
+                                    it.result!!.documents[0].toObject(User::class.java)!!
+
+                                db.collection("chats")
+                                    .document()
+                                    .set(
+                                        hashMapOf(
+                                            "users" to listOf(
+                                                auth.currentUser!!.uid,
+                                                otherUser.userId
+                                            )
+                                        )
+                                    )
+
+                                getActiveChats()
+                            } else Log.e(
+                                "ChatListActivity",
+                                "No user with email $otherUserEmail found"
+                            )
+                        }
+                }
+            }.show()
+        }
 
         listViewChats.setOnItemClickListener { adapterView, view, i, l ->
             val intent = Intent(this, ChatActivity::class.java)
@@ -48,29 +96,40 @@ class ChatListActivity : AppCompatActivity() {
         }
     }
 
-    fun getActiveChats(){
+    fun getActiveChats() {
         progressBar.visibility = ProgressBar.VISIBLE
+        emptyView.visibility = TextView.GONE
+
         db.collection("chats")
-            .whereArrayContains("users", currentUser!!.uid)
+            .whereArrayContains("users", auth.currentUser!!.uid)
             .get()
             .addOnCompleteListener {
 
-                Log.e(TAG, it.result!!.documents[0].id)
+                Log.e(TAG, it.result!!.documents.size.toString())
 
-                for(document in it.result!!.documents){
-//                    val listUsers = document.get("users")
-                    val users = document["users"] as MutableList<String>?
-                    var otherUserUid: String? = null
-                    for(user in users!!){
-                        otherUserUid = if(user == currentUser!!.uid) continue else user
-                    }
+                if (it.result!!.documents.size > 0) {
+                    for (document in it.result!!.documents) {
+                        val users = document["users"] as MutableList<String>?
+                        var otherUserUid: String? = null
 
-                    db.collection("users").document(otherUserUid!!)
-                        .get()
-                        .addOnCompleteListener {
-                            val otherUser = it.result!!.toObject(User::class.java)!!
-                            listChats.add(Chat(document.id, otherUser))
+                        for (user in users!!) {
+                            otherUserUid = if (user == auth.currentUser!!.uid) continue else user
                         }
+
+                        db.collection("users").document(otherUserUid!!)
+                            .get()
+                            .addOnCompleteListener {
+                                if (it.isSuccessful) {
+                                    progressBar.visibility = ProgressBar.GONE
+                                    val otherUser = it.result!!.toObject(User::class.java)!!
+                                    listChats.add(Chat(document.id, otherUser))
+                                    chatListAdapter.notifyDataSetChanged()
+                                }
+                            }
+                    }
+                } else {
+                    progressBar.visibility = ProgressBar.GONE
+                    emptyView.visibility = TextView.VISIBLE
                 }
 
                 chatListAdapter = ChatListAdapter(this, listChats)
@@ -86,7 +145,4 @@ class ChatListActivity : AppCompatActivity() {
 //                }
             }
     }
-
-
-
 }

@@ -28,4 +28,13 @@
         android:layout_width="56dp"
         android:layout_height="56dp"/>
 
+    <TextView
+        android:text="@string/no_chats_yet"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_centerInParent="true"
+        android:id="@+id/emptyView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 </RelativeLayout>

@@ -13,7 +13,7 @@ import com.google.firebase.firestore.*
 class ChatActivity : AppCompatActivity() {
 
     val TAG = "ChatActivity"
-    var user: FirebaseUser? = null
+    var currentUserFb: FirebaseUser? = null
     val listMessages = mutableListOf<Message>()
 
     lateinit var textFullName: TextView
@@ -53,6 +53,7 @@ class ChatActivity : AppCompatActivity() {
 
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
+        currentUserFb = auth.currentUser
 
         messagesRef = db.collection("chats").document(chatId).collection("messages")
 
@@ -69,8 +70,8 @@ class ChatActivity : AppCompatActivity() {
         createChat()
 
         sendButton.setOnClickListener {
-            Log.e(TAG, user!!.uid)
-            messagesRef.add(Message(user!!.uid, editText.text.toString()))
+            Log.e(TAG, currentUserFb!!.uid)
+            messagesRef.add(Message(currentUserFb!!.uid, editText.text.toString()))
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
                         messageAdapter.notifyDataSetChanged()
@@ -87,12 +88,12 @@ class ChatActivity : AppCompatActivity() {
             if (it.isSuccessful) {
                 Log.e(TAG, "Successful login")
 
-                user = auth.currentUser
+                currentUserFb = auth.currentUser
                 saveUserToFirestore()
 
                 //Replaced in ChatListActivity
                 db.collection("chats")
-                    .whereArrayContains("users", user!!.uid)
+                    .whereArrayContains("users", currentUserFb!!.uid)
                     .get()
                     .addOnCompleteListener {
 
@@ -106,6 +107,8 @@ class ChatActivity : AppCompatActivity() {
                             Log.e(TAG, "hittar ingen dig i chatter")
                             createChat(true)
                         }
+
+
                     }
             } else {
                 Log.e(TAG, "Login failed; ${it.exception}")
@@ -134,17 +137,22 @@ class ChatActivity : AppCompatActivity() {
     }
 
     fun saveUserToFirestore() {
-        db.collection("users").document(user!!.uid)
-            .set(User(user!!.uid, email, username, displayName))
-    }
-
-    override fun onDestroy() {
-        auth.signOut()
-        super.onDestroy()
+        db.collection("users").document(currentUserFb!!.uid)
+            .set(User(currentUserFb!!.uid, email, username, displayName))
     }
 
     fun createChat(new: Boolean = false) {
-        val currentUser = User(user!!.uid, email, username, displayName)
+        var currentUser: User? = null
+        db.collection("users").document(currentUserFb!!.uid).get().addOnCompleteListener {
+            if (it.isSuccessful){
+                val currentUserAttributes = it.result!!.toObject(User::class.java)!!
+                val email = currentUserAttributes.email!!
+                val username = currentUserAttributes.username!!
+                val displayName = currentUserAttributes.displayName!!
+                currentUser = User(currentUserFb!!.uid, email, username, displayName)
+            } else Log.e("ChatActivity", it.exception.toString())
+        }
+
 
         db.collection("users")
             .document(otherUserUid)
