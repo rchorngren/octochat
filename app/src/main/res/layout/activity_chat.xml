@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/topRow"
+        android:layout_width="match_parent"
+        android:layout_height="?android:listPreferredItemHeight"
+        android:layout_alignParentTop="true"
+        android:layout_marginHorizontal="12dp">
+
+        <ImageView
+            android:id="@+id/iconBack"
+            android:layout_centerVertical="true"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:backgroundTint="@android:color/darker_gray"
+            android:src="@drawable/ic_back" />
+
+        <LinearLayout
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                app:cardCornerRadius="100dp">
+
+                <ImageView
+                    android:id="@+id/imageProfilePicture"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_no_pfp" />
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:id="@+id/textFullName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="16dp"
+                android:text="Name Lastname"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/iconMore"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_more_vert"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"/>
+
+        <View
+            android:layout_alignParentBottom="true"
+            android:background="@android:color/darker_gray"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"/>
+    </RelativeLayout>
+
+    <ListView
+        android:headerDividersEnabled="true"
+        android:scrollbars="none"
+        android:id="@+id/listViewMessages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottomField"
+        android:layout_below="@id/topRow"
+        android:divider="@null" />
+
+    <LinearLayout
+        android:id="@+id/bottomField"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/buttonSendTestMessage"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginHorizontal="4dp"
+            android:src="@drawable/ic_attachment" />
+
+        <EditText
+            android:id="@+id/textField"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Type a message" />
+
+        <ImageView
+            android:layout_marginHorizontal="8dp"
+            android:id="@+id/buttonSend"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_send" />
+    </LinearLayout>
+
+</RelativeLayout>
