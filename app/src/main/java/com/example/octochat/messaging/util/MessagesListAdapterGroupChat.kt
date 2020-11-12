@@ -1,4 +1,4 @@
-package com.example.octochat.util
+package com.example.octochat.messaging.util
 
 import android.content.Context
 import android.view.Gravity
@@ -9,12 +9,14 @@ import android.widget.BaseAdapter
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
-import com.example.octochat.Message
+import com.example.octochat.messaging.Message
 import com.example.octochat.R
-import com.example.octochat.User
+import com.example.octochat.messaging.User
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 
-class MessagesListAdapter(val context: Context, val listMessages: MutableList<Message>, val currentUser: User?, val otherUser: User?) :
+
+class MessagesListAdapterGroupChat(val context: Context, val listMessages: MutableList<Message>, val currentUser: FirebaseUser?, val listUsers: MutableList<User>) :
     BaseAdapter() {
     val inflater = LayoutInflater.from(context)
     val db = FirebaseFirestore.getInstance()
@@ -32,12 +34,25 @@ class MessagesListAdapter(val context: Context, val listMessages: MutableList<Me
         val displayNameView = view.findViewById<TextView>(R.id.textViewDisplayName)
         val messageView = view.findViewById<TextView>(R.id.textViewMessage)
 
-        val message = listMessages[p0].text
+//        val displayName = listMessages[p0].sender?.displayName
+//        val displayName = listMessages[p0].sender ?: "unknown
+
 
         var displayName = "unknown"
         var userId: String? = null
 
-        if (listMessages[p0].sender == currentUser!!.userId) {
+        //Maybe for group chat?
+        for(user in listUsers){
+            if (user.userId == listMessages[p0].sender) {
+                displayName = user.displayName!!
+                userId = user.userId
+                break
+            }
+//            Log.e("Adapter", listUsers.size.toString() + " ," + user.displayName)
+        }
+        val message = listMessages[p0].text
+
+        if (listMessages[p0].sender == currentUser!!.uid) {
             val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -45,16 +60,10 @@ class MessagesListAdapter(val context: Context, val listMessages: MutableList<Me
                 gravity = Gravity.END
                 marginEnd = 12
             }
-            displayName = currentUser.displayName!!
-            userId = currentUser.userId
-
             displayNameView.layoutParams = params
             messageView.background.setTint(ResourcesCompat.getColor(context.resources, R.color.colorMessageBackgroundGray, null))
 //            displayNameView.visibility = TextView.GONE
             messageView.layoutParams = params
-        } else {
-            displayName = otherUser!!.displayName!!
-            userId = otherUser.userId
         }
 
         displayNameView.text = displayName

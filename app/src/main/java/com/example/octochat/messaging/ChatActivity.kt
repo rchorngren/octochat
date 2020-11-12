@@ -1,13 +1,11 @@
-package com.example.octochat
+package com.example.octochat.messaging
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.ListView
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import com.example.octochat.util.MessagesListAdapter
+import com.example.octochat.R
+import com.example.octochat.messaging.util.MessagesListAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
@@ -17,7 +15,6 @@ class ChatActivity : AppCompatActivity() {
     val TAG = "ChatActivity"
     var user: FirebaseUser? = null
     val listMessages = mutableListOf<Message>()
-    val listUsers = mutableListOf<User>()
 
     lateinit var textFullName: TextView
     lateinit var messagesList: ListView
@@ -25,7 +22,6 @@ class ChatActivity : AppCompatActivity() {
 
     lateinit var listenerRegistration: ListenerRegistration
     lateinit var messagesRef: CollectionReference
-    lateinit var usersRef: CollectionReference
 
     lateinit var auth: FirebaseAuth
     lateinit var db: FirebaseFirestore
@@ -55,7 +51,6 @@ class ChatActivity : AppCompatActivity() {
         loginUser(email, password)
 
         messagesRef = db.collection("chats")
-        usersRef = db.collection("chats").document("1").collection("participants")
 
         textFullName = findViewById(R.id.textFullName)
         messagesList = findViewById(R.id.listViewMessages)
@@ -64,10 +59,6 @@ class ChatActivity : AppCompatActivity() {
         val sendTestMessageButton = findViewById<ImageView>(R.id.buttonSendTestMessage)
         val editText = findViewById<EditText>(R.id.textField)
         val sendButton = findViewById<ImageView>(R.id.buttonSend)
-
-        sendTestMessageButton.setOnClickListener {
-
-        }
 
         sendButton.setOnClickListener {
             Log.e(TAG, user!!.uid)
@@ -130,14 +121,6 @@ class ChatActivity : AppCompatActivity() {
                 messageAdapter.notifyDataSetChanged()
                 messagesList.smoothScrollToPosition(listMessages.size - 1)
             }
-
-        //get list of users in a chat. Maybe better for group chat?
-        usersRef.addSnapshotListener { snapshot, error ->
-            for (participant in snapshot!!.documents) {
-                val newDocument = participant.toObject(User::class.java)
-                if (newDocument != null) listUsers.add(newDocument)
-            }
-        }
     }
 
     fun saveUserToFirestore() {

@@ -1,4 +1,4 @@
-package com.example.octochat
+package com.example.octochat.messaging
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity

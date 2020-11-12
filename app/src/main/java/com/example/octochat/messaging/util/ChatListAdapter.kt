@@ -1,4 +1,4 @@
-package com.example.octochat.util
+package com.example.octochat.messaging.util
 
 import android.content.Context
 import android.view.LayoutInflater

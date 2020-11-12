@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/topRow"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?android:listPreferredItemHeight"
         android:layout_alignParentTop="true"
@@ -72,7 +72,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/bottomField"
-        android:layout_below="@id/topRow"
+        android:layout_below="@id/toolbar"
         android:divider="@null" />
 
     <LinearLayout
