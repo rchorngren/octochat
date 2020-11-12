@@ -53,7 +53,6 @@ class ChatActivity : AppCompatActivity() {
 
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
-        //loginUser(email, password)
 
         messagesRef = db.collection("chats").document(chatId).collection("messages")
 
@@ -92,24 +91,24 @@ class ChatActivity : AppCompatActivity() {
                 saveUserToFirestore()
 
                 //Replaced in ChatListActivity
-//                db.collection("chats")
-//                    .whereArrayContains("users", user!!.uid)
-//                    .get()
-//                    .addOnCompleteListener {
-//
-//                        Log.e(TAG, it.result!!.documents[0].id)
-//
-//                        if (it.result!!.documents.size > 0) {
-//                            createChat()
-//                            messagesRef = db.collection("chats").document(it.result!!.documents[0].id).collection("messages")
-//
-//                        } else {
-//                            Log.e(TAG, "hittar ingen dig i chatter")
-//                            createChat(true)
-//                        }
-//                    }
-//            } else {
-//                Log.e(TAG, "Login failed; ${it.exception}")
+                db.collection("chats")
+                    .whereArrayContains("users", user!!.uid)
+                    .get()
+                    .addOnCompleteListener {
+
+                        Log.e(TAG, it.result!!.documents[0].id)
+
+                        if (it.result!!.documents.size > 0) {
+                            createChat()
+                            messagesRef = db.collection("chats").document(it.result!!.documents[0].id).collection("messages")
+
+                        } else {
+                            Log.e(TAG, "hittar ingen dig i chatter")
+                            createChat(true)
+                        }
+                    }
+            } else {
+                Log.e(TAG, "Login failed; ${it.exception}")
             }
         }
     }
