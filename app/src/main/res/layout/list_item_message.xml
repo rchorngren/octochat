@@ -11,7 +11,7 @@
         android:layout_marginHorizontal="4dp"
         android:layout_marginTop="4dp"
         android:id="@+id/textViewDisplayName"
-        android:text="Display Name"
+        android:text="@string/name"
         android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
@@ -24,7 +24,7 @@
         android:textColor="@android:color/white"
         android:backgroundTint="@color/colorAccent"
         android:background="@drawable/message_background"
-        android:text="message asdlkaösldkaödk"
+        android:text="@string/message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 

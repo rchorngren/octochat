@@ -1,6 +1,7 @@
 package com.example.octochat.messaging.util
 
 import android.content.Context
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -14,11 +15,11 @@ import com.example.octochat.R
 import com.example.octochat.messaging.User
 import com.google.firebase.firestore.FirebaseFirestore
 
-class MessagesListAdapter(val context: Context, val listMessages: MutableList<Message>, val currentUser: User?, val otherUser: User?) :
-    BaseAdapter() {
+class MessagesListAdapter(val context: Context,
+                          val listMessages: MutableList<Message>,
+                          val currentUser: User?,
+                          val otherUser: User?) : BaseAdapter() {
     val inflater = LayoutInflater.from(context)
-    val db = FirebaseFirestore.getInstance()
-    val usersRef = db.collection("chats").document("1").collection("participants")
 
     override fun getCount() = listMessages.size
 
@@ -34,8 +35,8 @@ class MessagesListAdapter(val context: Context, val listMessages: MutableList<Me
 
         val message = listMessages[p0].text
 
-        var displayName = "unknown"
-        var userId: String? = null
+        val displayName: String
+        val userId: String?
 
         if (listMessages[p0].sender == currentUser!!.userId) {
             val params = LinearLayout.LayoutParams(
@@ -50,7 +51,7 @@ class MessagesListAdapter(val context: Context, val listMessages: MutableList<Me
 
             displayNameView.layoutParams = params
             messageView.background.setTint(ResourcesCompat.getColor(context.resources, R.color.colorMessageBackgroundGray, null))
-//            displayNameView.visibility = TextView.GONE
+            displayNameView.visibility = TextView.GONE
             messageView.layoutParams = params
         } else {
             displayName = otherUser!!.displayName!!

@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".messaging.ChatListActivity"/>
-        <activity android:name=".messaging.ChatActivity"/>
+        <activity android:name=".messaging.ChatActivity" android:windowSoftInputMode="adjustResize"/>
     </application>
 
 </manifest>
