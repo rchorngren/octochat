@@ -1,72 +1,54 @@
 package com.example.octochat
 
-
+import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.widget.EditText
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_edit_profile.*
-import kotlinx.android.synthetic.main.activity_edit_profile.profilePicture
-import kotlinx.android.synthetic.main.activity_main.*
+import androidx.appcompat.app.AppCompatActivity
+import com.example.octochat.messaging.ChatListActivity
+import com.example.octochat.ui.login.LoginActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+
 
 class MainActivity : AppCompatActivity() {
-    lateinit var userName : EditText
+
+    lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        val db = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
 
+        auth.signOut()
 
-        userName = findViewById(R.id.editText_userName)
-        //val userName = editText_userName.text
-
-        //val phNum = editText_phoneNumber.text
-        //val email = editText_email.text
-        userName.setEnabled(false)
-
-        Picasso.get()
-            .load("https://firebasestorage.googleapis.com/v0/b/chatapp-2a770.appspot.com/o/Users%20Profile%20Image?alt=media&token=c33424b4-6e79-47fe-8c65-a75205f1392a")
-            .into(profilePicture, object : Callback {
-                override fun onSuccess() {
-                    Log.d("TAG", "success")
-                }
-
-                override fun onError(e: Exception?) {
-                    Log.d("TAG", "error")
-                }
-            })
-
-
+        if(auth.currentUser != null)
+            startChatList()
+        else
+            getLogStarted()
     }
 
-
-
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.menu_main, menu)
-        return super.onCreateOptionsMenu(menu)
+    fun getLogStarted(){
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivityForResult(intent,0)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_settings -> {
-                val intent = Intent(this, SettingsActivity::class.java)
-                startActivity(intent)
-                true
-            }
-            R.id.menu_editprofile -> {
-                val intent = Intent(this, EditProfile::class.java)
-                startActivity(intent)
-                true
-            }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
-            else -> super.onOptionsItemSelected(item)
+        if(resultCode == Activity.RESULT_OK){
+            startChatList()
         }
+    }
+
+    fun startChatList(){
+        Log.e("Main",auth.currentUser!!.uid)
+        val intent = Intent(this, ChatListActivity::class.java)
+        startActivity(intent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 }

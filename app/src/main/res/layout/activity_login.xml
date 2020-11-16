@@ -2,12 +2,17 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#28000000"
-    tools:context=".MainActivity">
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".ui.login.LoginActivity">
 
-   <!-- <ScrollView
+    <ScrollView
+        android:id="@+id/scrollLogIn"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="20dp"
@@ -48,7 +53,7 @@
                     android:ems="10"
                     android:hint="  Userame Or Email"
                     android:inputType="textPersonName" />
-                &lt;!&ndash;            Icons made by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>&ndash;&gt;
+                <!--            Icons made by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
 
                 <EditText
                     android:id="@+id/textUserPass"
@@ -58,7 +63,7 @@
                     android:ems="10"
                     android:hint="  Password"
                     android:inputType="text" />
-                &lt;!&ndash;            Icons made by <a href="https://www.flaticon.com/authors/tomas-knop" title="Tomas Knop">Tomas Knop</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>&ndash;&gt;
+                <!--            Icons made by <a href="https://www.flaticon.com/authors/tomas-knop" title="Tomas Knop">Tomas Knop</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
 
                 <Button
                     android:id="@+id/userLogIn_button"
@@ -97,7 +102,7 @@
                     android:layout_height="wrap_content"
                     android:background="#FFFFFF"
                     android:text="Sign in Private" />
-                &lt;!&ndash;            Icons made by <a href="https://www.flaticon.com/authors/dmitri13" title="dmitri13">dmitri13</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>&ndash;&gt;
+                <!--            Icons made by <a href="https://www.flaticon.com/authors/dmitri13" title="dmitri13">dmitri13</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
 
                 <Space
                     android:layout_width="match_parent"
@@ -111,22 +116,23 @@
                     android:layout_marginEnd="8dp"
                     android:gravity="right"
                     android:text="Sign Up" />
-
-
-                &lt;!&ndash; <com.google.android.gms.common.SignInButton
-                android:id="@+id/userLogIn_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:padding="8dp" >
-
-            </com.google.android.gms.common.SignInButton>&ndash;&gt;
             </LinearLayout>
 
         </LinearLayout>
-    </ScrollView>-->
-
+    </ScrollView>
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="64dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/scrollLogIn"
+        app:layout_constraintStart_toStartOf="@+id/scrollLogIn"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.3" />
 </androidx.constraintlayout.widget.ConstraintLayout>

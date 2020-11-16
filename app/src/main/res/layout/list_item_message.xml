@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:paddingHorizontal="8dp"
+    android:paddingVertical="1dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_marginHorizontal="4dp"
+        android:layout_marginTop="4dp"
+        android:id="@+id/textViewDisplayName"
+        android:text="@string/name"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:maxWidth="320dp"
+        android:paddingVertical="8dp"
+        android:paddingHorizontal="12dp"
+        android:id="@+id/textViewMessage"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/colorAccent"
+        android:background="@drawable/message_background"
+        android:text="@string/message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

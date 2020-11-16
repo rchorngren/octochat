@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.CollectionReference
@@ -28,12 +29,12 @@ class EditProfile : AppCompatActivity() {
     lateinit var imageView: ImageView
     lateinit var changeProfilePic: ImageView
     lateinit var userName: EditText
+    lateinit var userName1: TextView
     lateinit var db: FirebaseFirestore
     lateinit var storageRef: FirebaseStorage
 
     //lateinit var imageRef: StorageReference
     var profilepic: ImageView? = null
-    lateinit var url: String
     lateinit var itemsRef: CollectionReference
 
 
@@ -56,7 +57,7 @@ class EditProfile : AppCompatActivity() {
 
 //        val picasso = Picasso.get()
         Picasso.get()
-            .load("https://firebasestorage.googleapis.com/v0/b/chatapp-2a770.appspot.com/o/Users%20Profile%20Image?alt=media&token=c33424b4-6e79-47fe-8c65-a75205f1392a")
+            .load("https://firebasestorage.googleapis.com/v0/b/octochat-4d230.appspot.com/o/Flower2.jpg?alt=media&token=c51aef37-a661-42d2-8e92-3952f9f7364e")
             .into(profilepic, object : Callback {
                 override fun onSuccess() {
                     Log.d("TAG", "success")
@@ -83,11 +84,11 @@ class EditProfile : AppCompatActivity() {
         saveButton.setOnClickListener {
             val username = userName.text.toString()
             upload()
-            updateUserProfile(username)
+           // updateUserProfile(username)
             edit_userName.setEnabled(false)
             imageView.setVisibility(View.INVISIBLE)
             changeProfilePic.setVisibility(View.INVISIBLE)
-            readFirestoreData()
+            //readFirestoreData()
         }
 
         /*val itemsRef=   db.collection("users")
@@ -111,7 +112,7 @@ class EditProfile : AppCompatActivity() {
         if (requestCode == RequestCode && resultCode == Activity.RESULT_OK && data != null) {
             selectedPhotoUri = data.data!!
             var bitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedPhotoUri)
-            profilePicture.setImageBitmap(bitmap)
+            profilepic?.setImageBitmap(bitmap)
         }
     }
 
@@ -126,16 +127,15 @@ class EditProfile : AppCompatActivity() {
 
                 .addOnSuccessListener { p0 ->
                     pd.dismiss()
-                    Log.d("!!!", "File uploaded")
-                    Toast.makeText(applicationContext, "File uploaded", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(applicationContext, "Profile pic uploaded", Toast.LENGTH_SHORT).show()
                 }
 
-            Log.d("!!!", "${fileRef.downloadUrl}")
+            //Log.d("!!!", "${fileRef.downloadUrl}")
 
         }
     }
 
-    fun updateUserProfile(username: String) {
+    /*fun updateUserProfile(username: String) {
 
         val userList = mutableListOf<User>()
 
@@ -152,24 +152,25 @@ class EditProfile : AppCompatActivity() {
             .addOnFailureListener {
                 Toast.makeText(this, "record Failed to add ", Toast.LENGTH_SHORT).show()
             }
-    }
+    }*/
 
-    fun readFirestoreData() {
+    /*fun readFirestoreData() {
 
         itemsRef.get()
             .addOnCompleteListener {
                 val result: StringBuffer = StringBuffer()
                 if (it.isSuccessful) {
                     for (document in it.result!!) {
-                        result.append(document.data.getValue("userName")).append("")
+                        result.append(document.data.getValue("displayName")).append("")
                     }
                     userName.setText(result)
+                    userName1.setText(result)
 
                 }
 
 
             }
-    }
+    }*/
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
@@ -181,17 +182,18 @@ class EditProfile : AppCompatActivity() {
 
         return when (item.itemId) {
             R.id.menu_settings -> {
-                val intent = Intent(this, SettingsActivity::class.java)
-                startActivity(intent)
                 true
             }
 
-            R.id.menu_editprofile -> {
+            R.id.menu_chats  -> {
+                true
+            }
+            R.id.menu_editprofile  -> {
+
                 val intent = Intent(this, EditProfile::class.java)
                 startActivity(intent)
                 true
             }
-
             else -> super.onOptionsItemSelected(item)
         }
     }

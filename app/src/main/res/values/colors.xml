@@ -17,4 +17,5 @@
 
     <color name="white">#FFFFFF</color>
 
+    <color name="colorMessageBackgroundGray">#808080</color>
 </resources>
