@@ -14,12 +14,16 @@ import android.view.inputmethod.EditorInfo
 import android.widget.*
 
 import com.example.octochat.R
+import com.example.octochat.User
 import com.example.octochat.userFactory
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
+    lateinit var auth: FirebaseAuth
+    lateinit var db: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,11 +35,11 @@ class LoginActivity : AppCompatActivity() {
         val login = findViewById<Button>(R.id.userLogIn_button)
         val signup : TextView = findViewById(R.id.textViewSignUp)
         val loading = findViewById<ProgressBar>(R.id.loading)
-        lateinit var auth : FirebaseAuth
 
 
 
         auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
             .get(LoginViewModel::class.java)
 
@@ -61,7 +65,7 @@ class LoginActivity : AppCompatActivity() {
                 showLoginFailed(loginResult.error)
             }
             if (loginResult.success != null) {
-                updateUiWithUser(loginResult.success)
+                updateUiWithUser(loginResult.success, username.text.toString(), password.text.toString())
             }
             setResult(Activity.RESULT_OK)
 
@@ -94,20 +98,21 @@ class LoginActivity : AppCompatActivity() {
                 }
                 false
             }
-
-            login.setOnClickListener {
-                Log.d("nw" ,  "thisLog1")
-                loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString(), password.text.toString())
-            }
-
-            signup.setOnClickListener{
-                Log.d("thisIsBeing" ,  "clicked - ")
-                buildNewAccount(username , password , auth)
-                loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString(), password.text.toString())
-            }
         }
+
+        login.setOnClickListener {
+            Log.d("thisDel" ,  "anyDel")
+            loading.visibility = View.VISIBLE
+            loginViewModel.login(username.text.toString(), password.text.toString())
+        }
+
+        signup.setOnClickListener{
+            Log.d("thisIsBeing" ,  "clicked - ")
+            buildNewAccount(username , password , auth)
+            loading.visibility = View.VISIBLE
+            loginViewModel.login(username.text.toString(), password.text.toString())
+        }
+
     }
 
 
@@ -131,10 +136,22 @@ class LoginActivity : AppCompatActivity() {
     }
 
 
-    private fun updateUiWithUser(model: LoggedInUserView) {
+    private fun updateUiWithUser(model: LoggedInUserView, username: String, password: String) {
+
+        auth.signInWithEmailAndPassword(username, password).addOnCompleteListener {
+            if (it.isSuccessful) {
+                Log.e("User", "Logged")
+                val user = auth.currentUser
+                db.collection("users").document(user!!.uid).set(User(user.uid, username,username))
+                finish()
+            } else Log.d("updateUiWithUser", it.exception.toString())
+        }
+
         val welcome = getString(R.string.welcome)
         val displayName = model.displayName
         // TODO : initiate successful logged in experience
+
+        Log.d("Comming" , "here- ${displayName}")
         Toast.makeText(
             applicationContext,
             "$welcome $displayName",
