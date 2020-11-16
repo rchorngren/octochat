@@ -11,4 +11,7 @@
     <string name="invalid_password">Password must be >8 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="title_activity_login2">LoginActivity2</string>
+    <string name="no_chats_yet">No chats yet</string>
+    <string name="message">[message]</string>
+    <string name="name">[Name]</string>
 </resources>

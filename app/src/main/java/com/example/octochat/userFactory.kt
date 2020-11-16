@@ -1,5 +1,6 @@
 package com.example.octochat
 
+import com.example.octochat.messaging.User
 import android.content.ClipData
 import android.os.Bundle
 import android.util.Log
@@ -18,6 +19,7 @@ class userFactory : AppCompatActivity() {
     }
 
     fun createNew() {
+        Log.e("UserFactory", "Login")
 
         val username = findViewById<EditText>(R.id.textNameOrEmail)
         val password = findViewById<EditText>(R.id.textUserPass)
@@ -27,14 +29,16 @@ class userFactory : AppCompatActivity() {
         val addNew = ClipData.Item(username.text.toString())
 
         val user = auth.currentUser
-        if( user == null)
-            return
-//To continue development
-        db.collection("users").document().collection("user").add(addNew)
-            .addOnCompleteListener { task ->
-                Log.d("AddingNew", "Add: ${task.exception}")
+        if( user == null) return
 
-            }
+        //To continue development
+//        db.collection("users").document().collection("user").add(addNew)
+//            .addOnCompleteListener { task ->
+//                Log.d("AddingNew", "Add: ${task.exception}")
+//
+//            }
+
+        db.collection("users").document(user.uid).set(User(user.uid, username.text.toString(),username.text.toString(), "New user"))
 
     }
 }

@@ -15,6 +15,7 @@ import android.widget.*
 
 import com.example.octochat.R
 import com.example.octochat.User
+import com.example.octochat.messaging.User
 import com.example.octochat.userFactory
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -33,13 +34,10 @@ class LoginActivity : AppCompatActivity() {
         val username = findViewById<EditText>(R.id.textNameOrEmail)
         val password = findViewById<EditText>(R.id.textUserPass)
         val login = findViewById<Button>(R.id.userLogIn_button)
-        val signup : TextView = findViewById(R.id.textViewSignUp)
+        val signup = findViewById<TextView>(R.id.textViewSignUp)
         val loading = findViewById<ProgressBar>(R.id.loading)
 
-
-
         auth = FirebaseAuth.getInstance()
-        db = FirebaseFirestore.getInstance()
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
             .get(LoginViewModel::class.java)
 
@@ -65,6 +63,7 @@ class LoginActivity : AppCompatActivity() {
                 showLoginFailed(loginResult.error)
             }
             if (loginResult.success != null) {
+                Log.e("LoginActivity","success")
                 updateUiWithUser(loginResult.success, username.text.toString(), password.text.toString())
             }
             setResult(Activity.RESULT_OK)
@@ -98,14 +97,13 @@ class LoginActivity : AppCompatActivity() {
                 }
                 false
             }
-        }
-
-        login.setOnClickListener {
-            Log.d("thisDel" ,  "anyDel")
+    }
+        signup.setOnClickListener{
+            Log.d("thisIsBeing" ,  "clicked - ")
+            buildNewAccount(username , password)
             loading.visibility = View.VISIBLE
             loginViewModel.login(username.text.toString(), password.text.toString())
         }
-
         signup.setOnClickListener{
             Log.d("thisIsBeing" ,  "clicked - ")
             buildNewAccount(username , password , auth)
@@ -115,11 +113,10 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-
-    private fun buildNewAccount(username: EditText, password: EditText, auth: FirebaseAuth) {
-        val email = username.text.toString()
-        val password = password.text.toString()
-        Log.d("Generate", "InSuccess")
+    private fun buildNewAccount(usernameView: EditText, passwordView: EditText) {
+        val email = usernameView.text.toString()
+        val password = passwordView.text.toString()
+        Log.d("buildNewAccount", "email: $email, password: $password")
 
         if (email.isEmpty() || password.isEmpty())
             return
@@ -137,21 +134,22 @@ class LoginActivity : AppCompatActivity() {
 
 
     private fun updateUiWithUser(model: LoggedInUserView, username: String, password: String) {
-
-        auth.signInWithEmailAndPassword(username, password).addOnCompleteListener {
-            if (it.isSuccessful) {
-                Log.e("User", "Logged")
-                val user = auth.currentUser
-                db.collection("users").document(user!!.uid).set(User(user.uid, username,username))
-                finish()
-            } else Log.d("updateUiWithUser", it.exception.toString())
-        }
-
         val welcome = getString(R.string.welcome)
         val displayName = model.displayName
-        // TODO : initiate successful logged in experience
 
-        Log.d("Comming" , "here- ${displayName}")
+        Log.d("updateUiWithUser", "email: $username, password: $password")
+        auth.signInWithEmailAndPassword(username, password).addOnCompleteListener {
+            if (it.isSuccessful) {
+                Log.e("LoginActivity", "Successful login")
+                val user = auth.currentUser
+                db.collection("users").document(user!!.uid).set(User(user.uid, username,username, "New user"))
+//                user = auth.currentUser
+                finish()
+            } else Log.e("updateUiWithUser", it.exception.toString())
+        }
+
+
+        // TODO : initiate successful logged in experience
         Toast.makeText(
             applicationContext,
             "$welcome $displayName",
