@@ -24,6 +24,7 @@ android {
         }
     }
 }
+apply plugin: 'kotlin-kapt'
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
@@ -42,8 +43,23 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-}
+    implementation 'de.hdodenhof:circleimageview:3.0.0'
+    implementation 'com.google.firebase:firebase-storage:17.0.0'
+    implementation 'com.firebaseui:firebase-ui-auth:3.2.2'
+    implementation 'com.firebaseui:firebase-ui-storage:4.3.2'
+    implementation 'com.google.firebase:firebase-database:17.0.0'
+    implementation 'com.google.firebase:firebase-auth:17.0.0'
+    implementation 'com.google.firebase:firebase-firestore:22.0.0'
 
+    kapt 'com.github.bumptech.glide:compiler:4.9.0'
+    kapt 'com.github.bumptech.glide:annotations:4.9.0'
+
+    //Picasso
+    def picassoVersion = "2.71828"
+    implementation "com.squareup.picasso:picasso:$picassoVersion"
+
+
+}
 
 dependencies {
     // Import the BoM for the Firebase platform
