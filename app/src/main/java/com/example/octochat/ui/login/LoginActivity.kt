@@ -14,7 +14,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.*
 
 import com.example.octochat.R
-import com.example.octochat.User
+import com.example.octochat.UserBuild
 import com.example.octochat.messaging.User
 import com.example.octochat.userFactory
 import com.google.firebase.auth.FirebaseAuth
@@ -63,7 +63,7 @@ class LoginActivity : AppCompatActivity() {
                 showLoginFailed(loginResult.error)
             }
             if (loginResult.success != null) {
-                Log.e("LoginActivity","success")
+                Log.e("LoginActivity","successNotnull")
                 updateUiWithUser(loginResult.success, username.text.toString(), password.text.toString())
             }
             setResult(Activity.RESULT_OK)
@@ -106,7 +106,7 @@ class LoginActivity : AppCompatActivity() {
         }
         signup.setOnClickListener{
             Log.d("thisIsBeing" ,  "clicked - ")
-            buildNewAccount(username , password , auth)
+            buildNewAccount(username , password)
             loading.visibility = View.VISIBLE
             loginViewModel.login(username.text.toString(), password.text.toString())
         }
@@ -138,14 +138,18 @@ class LoginActivity : AppCompatActivity() {
         val displayName = model.displayName
 
         Log.d("updateUiWithUser", "email: $username, password: $password")
+
+                Log.d("Does not exist" , auth.toString())
         auth.signInWithEmailAndPassword(username, password).addOnCompleteListener {
             if (it.isSuccessful) {
                 Log.e("LoginActivity", "Successful login")
                 val user = auth.currentUser
-                db.collection("users").document(user!!.uid).set(User(user.uid, username,username, "New user"))
+
+                db.collection("users").document(user!!.uid).set(UserBuild(user.uid, username,username, "New user"))
 //                user = auth.currentUser
                 finish()
-            } else Log.e("updateUiWithUser", it.exception.toString())
+            } else
+                Log.e("updateUiWithUser", it.exception.toString())
         }
 
 

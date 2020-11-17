@@ -1,5 +1,6 @@
 package com.example.octochat.data
 
+import android.util.Log
 import com.example.octochat.data.model.LoggedInUser
 import java.io.IOException
 
@@ -12,6 +13,7 @@ class LoginDataSource {
         try {
             // TODO: handle loggedInUser authentication
             val fakeUser = LoggedInUser(java.util.UUID.randomUUID().toString(), "OctoChat Incognito")
+            Log.d("fakeUser here" , fakeUser.toString())
             return Result.Success(fakeUser)
         } catch (e: Throwable) {
             return Result.Error(IOException("Error logging in", e))
