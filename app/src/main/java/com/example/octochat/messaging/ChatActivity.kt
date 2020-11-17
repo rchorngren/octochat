@@ -2,8 +2,7 @@ package com.example.octochat.messaging
 
 import android.os.Bundle
 import android.util.Log
-import android.view.KeyEvent
-import android.view.LayoutInflater
+import android.view.*
 import android.widget.*
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
@@ -62,6 +61,10 @@ class ChatActivity : AppCompatActivity() {
         createChat()
 
         backIcon.setOnClickListener { finish() }
+
+
+        registerForContextMenu(moreIcon)
+        moreIcon.setOnClickListener { openContextMenu(moreIcon) }
 
         sendButton.setOnClickListener {
             messagesRef.add(Message(currentUserFb!!.uid, editText.text.toString()))
@@ -126,5 +129,30 @@ class ChatActivity : AppCompatActivity() {
                 messagesList.adapter = messageAdapter
                 setSnapshotListener()
             }
+    }
+
+    override fun onCreateContextMenu(
+        menu: ContextMenu?,
+        v: View?,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu_chat, menu)
+
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId){
+            R.id.profile ->{
+                Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show()
+                true
+            }
+            R.id.block -> {
+                Toast.makeText(this, "Block", Toast.LENGTH_SHORT).show()
+                true
+                }
+            else -> super.onContextItemSelected(item)
+        }
     }
 }
