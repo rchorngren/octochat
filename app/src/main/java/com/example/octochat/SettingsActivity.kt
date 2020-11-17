@@ -1,14 +1,14 @@
 package com.example.octochat
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.firebase.auth.FirebaseAuth
 
 class SettingsActivity : AppCompatActivity() {
 
-    //private lateinit var navigateBackButton : ImageView
+    lateinit var auth: FirebaseAuth
     private lateinit var changePasswordButton : ConstraintLayout
     private lateinit var logoutConstraint : ConstraintLayout
 
@@ -17,26 +17,31 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        //navigateBackButton = findViewById(R.id.navigateBackButton)
-        changePasswordButton = findViewById(R.id.changePasswordConstraint)
-        logoutConstraint = findViewById(R.id.logoutConstraint)
+        auth = FirebaseAuth.getInstance()
+
+        var currentUser = auth.currentUser
 
         /*
-        navigateBackButton.setOnClickListener {
-            finish()
+        currentUser?.let {
+            var userName = currentUser.displayName
+            var email = currentUser.email
+            Log.d("!!!", "username: $userName")
+            Log.d("!!!", "email: $email")
         }
 
          */
 
+        changePasswordButton = findViewById(R.id.changePasswordConstraint)
+        logoutConstraint = findViewById(R.id.logoutConstraint)
+
         changePasswordButton.setOnClickListener{
-            //Toggle changePassword fragment
             displayChangePasswordFragment()
         }
 
         logoutConstraint.setOnClickListener{
-            //Logout current user
-            Log.d("!!!", "Click!")
+            logoutUser()
         }
+
     }
 
     fun displayChangePasswordFragment() {
@@ -54,4 +59,11 @@ class SettingsActivity : AppCompatActivity() {
             transaction.commit()
         }
     }
+
+    fun logoutUser() {
+        val intent = Intent(this, MainActivity::class.java)
+        auth.signOut()
+        startActivity(intent)
+    }
+
 }
