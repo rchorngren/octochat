@@ -1,12 +1,15 @@
 package com.example.octochat.messaging
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
+import com.example.octochat.EditProfile
 import com.example.octochat.R
+import com.example.octochat.UserProfile
 import com.example.octochat.messaging.util.MessagesListAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser

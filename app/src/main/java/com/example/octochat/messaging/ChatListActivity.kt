@@ -4,13 +4,18 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.octochat.EditProfile
 import com.example.octochat.R
+import com.example.octochat.SettingsActivity
+import com.example.octochat.UserProfile
 import com.example.octochat.messaging.util.ChatListAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
@@ -96,6 +101,7 @@ class ChatListActivity : AppCompatActivity() {
         }
     }
 
+
     fun getActiveChats() {
         progressBar.visibility = ProgressBar.VISIBLE
         emptyView.visibility = TextView.GONE
@@ -144,5 +150,28 @@ class ChatListActivity : AppCompatActivity() {
 //                    //Start chat activity and add a new chat into the database
 //                }
             }
+    }
+
+    // adding menu button for the user profile screen - Jaya
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu_main, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_settings -> {
+                true
+            }
+            R.id.menu_editprofile -> {
+                val intent = Intent(this, UserProfile::class.java)
+                startActivity(intent)
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }
