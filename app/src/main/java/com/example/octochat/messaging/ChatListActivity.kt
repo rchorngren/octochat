@@ -21,6 +21,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import java.util.*
 
 //Väldigt osäker om det här ens funkar, måste ha en databas med användare och ganska specifika regler för det
 class ChatListActivity : AppCompatActivity() {
@@ -108,13 +110,13 @@ class ChatListActivity : AppCompatActivity() {
 
         db.collection("chats")
             .whereArrayContains("users", auth.currentUser!!.uid)
-            .get()
-            .addOnCompleteListener {
+            .addSnapshotListener { snapshot, error ->
+                if (snapshot!!.documents.size > 0) {
+                    snapshot.documents.forEachIndexed { index, document ->
+                        Log.e(TAG, "index $index for ${document}")
 
-                Log.e(TAG, it.result!!.documents.size.toString())
+                        if(listChats.size > 0) listChats.clear()
 
-                if (it.result!!.documents.size > 0) {
-                    for (document in it.result!!.documents) {
                         val users = document["users"] as MutableList<String>?
                         var otherUserUid: String? = null
 
@@ -128,11 +130,33 @@ class ChatListActivity : AppCompatActivity() {
                                 if (it.isSuccessful) {
                                     progressBar.visibility = ProgressBar.GONE
                                     val otherUser = it.result!!.toObject(User::class.java)!!
-                                    listChats.add(Chat(document.id, otherUser))
-                                    chatListAdapter.notifyDataSetChanged()
+
+                                    db.collection("chats")
+                                        .document(document.id)
+                                        .collection("messages")
+                                        .orderBy("timestamp", Query.Direction.ASCENDING)
+                                        .limitToLast(1)
+                                        .get()
+                                        .addOnCompleteListener {
+
+                                            if (it.result!!.documents.size > 0) {
+                                                val message = it.result!!.documents[0].toObject(Message::class.java)!!
+
+                                                Log.e(TAG, "index $index for ${otherUser.userId}")
+                                                if (message.sender == auth.currentUser!!.uid) { //if you sent the message
+                                                    listChats.add(Chat(document.id, otherUser, message))
+                                                } else {
+                                                    listChats.add(Chat(document.id, otherUser, message))
+                                                }
+                                            } else {
+                                                listChats.add(Chat(document.id, otherUser))
+                                            }
+                                                chatListAdapter.notifyDataSetChanged()
+                                        }
                                 }
                             }
                     }
+
                 } else {
                     progressBar.visibility = ProgressBar.GONE
                     emptyView.visibility = TextView.VISIBLE
@@ -140,15 +164,6 @@ class ChatListActivity : AppCompatActivity() {
 
                 chatListAdapter = ChatListAdapter(this, listChats)
                 listViewChats.adapter = chatListAdapter
-
-//                if (it.result!!.documents.size > 0) {
-//                    //Start chat activity with existing chat
-//                    //messagesRef = db.collection("chats").document(it.result!!.documents[0].id).collection("messages")
-//
-//                } else {
-//                    Log.e(TAG, "hittar ingen dig i chatter")
-//                    //Start chat activity and add a new chat into the database
-//                }
             }
     }
 

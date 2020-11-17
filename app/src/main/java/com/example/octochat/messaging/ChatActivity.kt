@@ -70,7 +70,8 @@ class ChatActivity : AppCompatActivity() {
         moreIcon.setOnClickListener { openContextMenu(moreIcon) }
 
         sendButton.setOnClickListener {
-            messagesRef.add(Message(currentUserFb!!.uid, editText.text.toString()))
+            val message = Message(currentUserFb!!.uid, editText.text.toString())
+            messagesRef.add(message)
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
                         messageAdapter.notifyDataSetChanged()
@@ -79,6 +80,9 @@ class ChatActivity : AppCompatActivity() {
                         Log.e(TAG, it.exception.toString())
                     }
                 }
+
+            db.collection("chats").document(chatId).set(hashMapOf("timestamp" to FieldValue.serverTimestamp()), SetOptions.merge())
+
             editText.setText("")
         }
 
@@ -96,8 +100,6 @@ class ChatActivity : AppCompatActivity() {
                 }
 
                 for (message in snapshot!!.documentChanges) {
-                    Log.e(TAG, "${message.type}")
-
                     if (message.type == DocumentChange.Type.MODIFIED) return@addSnapshotListener
                     val newDocument = message.document.toObject(Message::class.java)
                     listMessages.add(newDocument)
