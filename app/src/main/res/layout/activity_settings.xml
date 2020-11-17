@@ -30,6 +30,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
+<<<<<<< HEAD
                 <TextView
                     android:id="@+id/logoutTextView"
                     android:layout_width="wrap_content"
@@ -40,6 +41,16 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+=======
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/changePasswordConstraint"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="25dp"
+        app:layout_constraintBottom_toTopOf="@+id/logoutConstraint"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+>>>>>>> 70d1c6b... added back navigation and click listeners to settings options
 
                 <ImageView
                     android:id="@+id/imageView6"
@@ -62,6 +73,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
+<<<<<<< HEAD
                 <TextView
                     android:id="@+id/changePasswordTextView"
                     android:layout_width="150dp"
@@ -93,6 +105,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
+=======
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/logoutConstraint"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="75dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+>>>>>>> 70d1c6b... added back navigation and click listeners to settings options
 
                 <TextView
                     android:id="@+id/settingsHeaderText"
