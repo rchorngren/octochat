@@ -34,18 +34,18 @@
                     android:id="@+id/logoutTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="30dp"
+                    android:layout_marginStart="20dp"
                     android:text="@string/settings_logout"
+                    android:textAlignment="viewEnd"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/imageView6"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/imageView6"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginStart="30dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -66,18 +66,17 @@
                     android:id="@+id/changePasswordTextView"
                     android:layout_width="150dp"
                     android:layout_height="29dp"
-                    android:layout_marginEnd="30dp"
+                    android:layout_marginStart="20dp"
                     android:text="@string/settings_change_password"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/changePasswordIcon"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/changePasswordIcon"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_marginStart="30dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -85,7 +84,7 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <!--<androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/settingsHeader"
                 android:layout_width="410dp"
                 android:layout_height="75dp"
@@ -117,7 +116,8 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/abc_vector_test" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>-->
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </FrameLayout>
