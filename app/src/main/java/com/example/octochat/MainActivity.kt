@@ -7,23 +7,22 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-<<<<<<< HEAD
+
 import com.example.octochat.messaging.ChatListActivity
 import com.example.octochat.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
-=======
+
 import androidx.constraintlayout.widget.ConstraintLayout
->>>>>>> 570e996... Added clickable constraints and prepared for functionality
+
 import com.google.firebase.firestore.FirebaseFirestore
 
 
 class MainActivity : AppCompatActivity() {
 
-<<<<<<< HEAD
+
     lateinit var auth: FirebaseAuth
 
-=======
->>>>>>> 570e996... Added clickable constraints and prepared for functionality
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

@@ -14,17 +14,7 @@
     <string name="no_chats_yet">No chats yet</string>
     <string name="message">[message]</string>
     <string name="name">[Name]</string>
-<<<<<<< HEAD
-<<<<<<< HEAD
     <string name="menu_settings">Settings</string>
-=======
-=======
-    <string name="settings_banner">Settings</string>
-    <string name="settings_change_password">Change password</string>
-    <string name="settings_logout">Logout</string>
->>>>>>> eccaa84... added localization for settings activity
->>>>>>> 6846282... rebased upon master
-=======
     <string name="settings_banner">Settings</string>
     <string name="settings_change_password">Change password</string>
     <string name="settings_logout">Logout</string>
@@ -33,6 +23,4 @@
     <string name="settings_change_password_new_password_again">Enter new password again</string>
     <string name="settings_change_password_save">Save</string>
     <string name="settings_change_password_cancel">Cancel</string>
->>>>>>> ec4f62e... added fragment view for changing password (visual only)
->>>>>>> 1afedde... rebase upon master
 </resources>
