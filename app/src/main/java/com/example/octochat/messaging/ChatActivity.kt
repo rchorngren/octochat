@@ -65,7 +65,6 @@ class ChatActivity : AppCompatActivity() {
 
         backIcon.setOnClickListener { finish() }
 
-
         registerForContextMenu(moreIcon)
         moreIcon.setOnClickListener { openContextMenu(moreIcon) }
 
@@ -102,7 +101,11 @@ class ChatActivity : AppCompatActivity() {
                 for (message in snapshot!!.documentChanges) {
                     if (message.type == DocumentChange.Type.MODIFIED) return@addSnapshotListener
                     val newDocument = message.document.toObject(Message::class.java)
+
+                    //this line adds the latest message to the conversation, maybe check if
+                    //the user is currently in the app and if they sent it, and if they aren't, send a notification?
                     listMessages.add(newDocument)
+
                 }
                 messageAdapter.notifyDataSetChanged()
                 messagesList.smoothScrollToPosition(listMessages.size - 1)
