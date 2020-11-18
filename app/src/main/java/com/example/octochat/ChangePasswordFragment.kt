@@ -50,33 +50,33 @@ class ChangePasswordFragment : Fragment() {
         var newConfirmPsw = confirmNewPassword.text.toString()
 
         if(newPsw != newConfirmPsw) {
+            //triggers if password fields does not match
             Toast.makeText(
                 activity,
-                //"Passwords does not match",
                 getString(R.string.settings_toast_password_mismatch),
                 Toast.LENGTH_SHORT
             ).show();
         } else if (newPsw.length < 9) {
+            //triggers if the password is shorter than 9 characters
             Toast.makeText(
                 activity,
-                //"Passwords length is too short - a password length of 9 or more is required",
                 getString(R.string.settings_toast_password_too_short),
                 Toast.LENGTH_SHORT
             ).show();
         } else {
+            //triggers if none of the above are true
             currentUser!!.updatePassword(newPsw).addOnCompleteListener{ task ->
                 if(task.isSuccessful) {
                     Toast.makeText(
                         activity,
-                        //"Password updated",
                         getString(R.string.settings_toast_password_successful),
                         Toast.LENGTH_SHORT
                     ).show();
                     (activity as SettingsActivity).removeChangePasswordFragment()
                 } else {
+                    //triggers if there is an error while updating to firestore
                     Toast.makeText(
                         activity,
-                        //"Something went wrong - please try again",
                         getString(R.string.settings_general_error),
                         Toast.LENGTH_SHORT
                     ).show()
