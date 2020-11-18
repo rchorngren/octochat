@@ -12,17 +12,20 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.marginStart
 import com.example.octochat.EditProfile
 import com.example.octochat.R
 import com.example.octochat.SettingsActivity
 import com.example.octochat.UserProfile
 import com.example.octochat.messaging.util.ChatListAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import java.util.*
 
-//Väldigt osäker om det här ens funkar, måste ha en databas med användare och ganska specifika regler för det
 class ChatListActivity : AppCompatActivity() {
 
     val TAG = "ChatListActivity"
@@ -54,6 +57,7 @@ class ChatListActivity : AppCompatActivity() {
         fab.setOnClickListener {
             val dialogBuilder = AlertDialog.Builder(this)
             val otherUserEmailField = EditText(this)
+            otherUserEmailField.hint  = "Enter email of recipient"
 
             dialogBuilder.setView(otherUserEmailField)
             dialogBuilder.setTitle("Start chat")
@@ -66,21 +70,13 @@ class ChatListActivity : AppCompatActivity() {
                         .whereEqualTo("email", otherUserEmail)
                         .get()
                         .addOnCompleteListener {
-//                            Log.e("ChatListActivity", it.result!!.documents.toString())
                             if (it.result!!.documents.size > 0) {
                                 val otherUser =
                                     it.result!!.documents[0].toObject(User::class.java)!!
 
                                 db.collection("chats")
                                     .document()
-                                    .set(
-                                        hashMapOf(
-                                            "users" to listOf(
-                                                auth.currentUser!!.uid,
-                                                otherUser.userId
-                                            )
-                                        )
-                                    )
+                                    .set(hashMapOf("users" to listOf(auth.currentUser!!.uid, otherUser.userId)))
 
                                 getActiveChats()
                             } else Log.e(
@@ -101,20 +97,24 @@ class ChatListActivity : AppCompatActivity() {
         }
     }
 
-
     fun getActiveChats() {
         progressBar.visibility = ProgressBar.VISIBLE
         emptyView.visibility = TextView.GONE
 
         db.collection("chats")
             .whereArrayContains("users", auth.currentUser!!.uid)
-            .get()
-            .addOnCompleteListener {
+            .addSnapshotListener { snapshot, error ->
+                if (snapshot!!.documents.size > 0) {
+                    snapshot.documents.forEachIndexed { index, document ->
 
-                Log.e(TAG, it.result!!.documents.size.toString())
+                        if (listChats.size > 0) {
+                            listChats.clear()
+                        }
 
-                if (it.result!!.documents.size > 0) {
-                    for (document in it.result!!.documents) {
+                        val timestamp = document["timestamp"] as Timestamp?
+                        val timestampDate: Date
+                        if(timestamp != null) timestampDate = timestamp.toDate() else return@forEachIndexed
+
                         val users = document["users"] as MutableList<String>?
                         var otherUserUid: String? = null
 
@@ -128,8 +128,37 @@ class ChatListActivity : AppCompatActivity() {
                                 if (it.isSuccessful) {
                                     progressBar.visibility = ProgressBar.GONE
                                     val otherUser = it.result!!.toObject(User::class.java)!!
-                                    listChats.add(Chat(document.id, otherUser))
-                                    chatListAdapter.notifyDataSetChanged()
+
+                                    db.collection("chats")
+                                        .document(document.id)
+                                        .collection("messages")
+                                        .orderBy("timestamp", Query.Direction.ASCENDING)
+                                        .limitToLast(1)
+                                        .get()
+                                        .addOnCompleteListener {
+                                            if (it.result!!.documents.size > 0) {
+                                                val message = it.result!!.documents[0].toObject(Message::class.java)!!
+                                                var addChat = true
+                                                for (chat in listChats) {
+                                                    if (chat.chatId == document.id){
+                                                        addChat = false
+                                                        break
+                                                    }
+                                                }
+                                                if (addChat) {
+                                                    if (message.sender == auth.currentUser!!.uid) { //if you sent the message
+                                                        message.text = "You: " + message.text
+                                                        listChats.add(Chat(document.id, otherUser, message, timestampDate))
+                                                    } else {
+                                                        listChats.add(Chat(document.id, otherUser, message, timestampDate))
+                                                    }
+                                                }
+                                            } else {
+                                                listChats.add(Chat(document.id, otherUser))
+                                            }
+                                            listChats.sortByDescending { it.timestamp!!.time}
+                                            chatListAdapter.notifyDataSetChanged()
+                                        }
                                 }
                             }
                     }
@@ -137,18 +166,8 @@ class ChatListActivity : AppCompatActivity() {
                     progressBar.visibility = ProgressBar.GONE
                     emptyView.visibility = TextView.VISIBLE
                 }
-
                 chatListAdapter = ChatListAdapter(this, listChats)
                 listViewChats.adapter = chatListAdapter
-
-//                if (it.result!!.documents.size > 0) {
-//                    //Start chat activity with existing chat
-//                    //messagesRef = db.collection("chats").document(it.result!!.documents[0].id).collection("messages")
-//
-//                } else {
-//                    Log.e(TAG, "hittar ingen dig i chatter")
-//                    //Start chat activity and add a new chat into the database
-//                }
             }
     }
 
@@ -170,6 +189,9 @@ class ChatListActivity : AppCompatActivity() {
             R.id.menu_editprofile -> {
                 val intent = Intent(this, UserProfile::class.java)
                 startActivity(intent)
+                true
+            }
+            R.id.menu_chats -> {
                 true
             }
 
