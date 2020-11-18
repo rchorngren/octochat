@@ -18,7 +18,9 @@ import com.example.octochat.UserBuild
 import com.example.octochat.messaging.User
 import com.example.octochat.userFactory
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.activity_user_profile.*
 
 class LoginActivity : AppCompatActivity() {
 
@@ -97,6 +99,26 @@ class LoginActivity : AppCompatActivity() {
                 }
                 false
             }
+<<<<<<< HEAD
+=======
+
+            login.setOnClickListener {
+                Log.d("nw" ,  "thisLog1")
+                loading.visibility = View.VISIBLE
+
+
+                loginViewModel.login(username.text.toString(), password.text.toString())
+            }
+
+            signup.setOnClickListener{
+                Log.d("thisIsBeing" ,  "clicked - ")
+                buildNewAccount(username , password)
+                loading.visibility = View.VISIBLE
+                loginViewModel.login(username.text.toString(), password.text.toString())
+            }
+        }
+
+>>>>>>> master
     }
         signup.setOnClickListener{
             Log.d("thisIsBeing" ,  "clicked - ")
@@ -160,6 +182,7 @@ class LoginActivity : AppCompatActivity() {
             Toast.LENGTH_LONG
         ).show()
     }
+
 
     private fun showLoginFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()

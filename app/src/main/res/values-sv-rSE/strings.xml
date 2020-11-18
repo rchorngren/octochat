@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">octochat</string>
+    <string name="settings_banner">Inställningar</string>
+    <string name="settings_change_password">Byt lösenord</string>
+    <string name="settings_logout">Logga ut</string>
+    <string name="settings_change_password_current_password">Nuvarande lösenord</string>
+    <string name="settings_change_password_new_password">Nytt lösenord</string>
+    <string name="settings_change_password_new_password_again">Ange nytt lösenord igen</string>
+    <string name="settings_change_password_save">Spara</string>
+    <string name="settings_change_password_cancel">Avbryt</string>
+</resources>
