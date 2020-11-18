@@ -103,7 +103,6 @@ class ChatListActivity : AppCompatActivity() {
         }
     }
 
-
     fun getActiveChats() {
         progressBar.visibility = ProgressBar.VISIBLE
         emptyView.visibility = TextView.GONE
@@ -113,9 +112,10 @@ class ChatListActivity : AppCompatActivity() {
             .addSnapshotListener { snapshot, error ->
                 if (snapshot!!.documents.size > 0) {
                     snapshot.documents.forEachIndexed { index, document ->
-                        Log.e(TAG, "index $index for ${document}")
-
-                        if(listChats.size > 0) listChats.clear()
+                        if(listChats.size > 0) {
+                            listChats.clear()
+                            Log.e(TAG, "Cleared chats")
+                        }
 
                         val users = document["users"] as MutableList<String>?
                         var otherUserUid: String? = null
@@ -138,11 +138,9 @@ class ChatListActivity : AppCompatActivity() {
                                         .limitToLast(1)
                                         .get()
                                         .addOnCompleteListener {
-
                                             if (it.result!!.documents.size > 0) {
                                                 val message = it.result!!.documents[0].toObject(Message::class.java)!!
 
-                                                Log.e(TAG, "index $index for ${otherUser.userId}")
                                                 if (message.sender == auth.currentUser!!.uid) { //if you sent the message
                                                     listChats.add(Chat(document.id, otherUser, message))
                                                 } else {
