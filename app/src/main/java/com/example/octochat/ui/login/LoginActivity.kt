@@ -40,6 +40,7 @@ class LoginActivity : AppCompatActivity() {
         val loading = findViewById<ProgressBar>(R.id.loading)
 
         auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
             .get(LoginViewModel::class.java)
 
@@ -116,54 +117,38 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
-    signup.setOnClickListener{
-        Log.d("thisIsBeing" ,  "clicked - ")
-        buildNewAccount(username , password)
-        loading.visibility = View.VISIBLE
-        loginViewModel.login(username.text.toString(), password.text.toString())
-    }
-    signup.setOnClickListener{
-        Log.d("thisIsBeing" ,  "clicked - ")
-        buildNewAccount(username , password)
-        loading.visibility = View.VISIBLE
-        loginViewModel.login(username.text.toString(), password.text.toString())
-    }
 
-}
 
-private fun buildNewAccount(usernameView: EditText, passwordView: EditText) {
-    val email = usernameView.text.toString()
-    val password = passwordView.text.toString()
-    Log.d("buildNewAccount", "email: $email, password: $password")
+    private fun buildNewAccount(usernameView: EditText, passwordView: EditText) {
+        val email = usernameView.text.toString()
+        val password = passwordView.text.toString()
+        Log.d("buildNewAccount", "email: $email, password: $password")
 
-    if (email.isEmpty() || password.isEmpty())
-        return
+        if (email.isEmpty() || password.isEmpty())
+            return
 
-    auth.createUserWithEmailAndPassword(email, password)
-        .addOnCompleteListener { task ->
-            if (task.isSuccessful) {
-                Log.d("Done", "Success")
-                userFactory()
-            } else {
-                Log.d("TestAgain", "Unable to create: ${task.exception}")
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d("Done", "Success")
+                    userFactory()
+                } else {
+                    Log.d("TestAgain", "Unable to create: ${task.exception}")
+                }
             }
-        }
-}
+    }
 
 
-private fun updateUiWithUser(model: LoggedInUserView, username: String, password: String) {
-    val welcome = getString(R.string.welcome)
-    val displayName = model.displayName
+    private fun updateUiWithUser(model: LoggedInUserView, username: String, password: String) {
+        val welcome = getString(R.string.welcome)
+        val displayName = model.displayName
 
-    Log.d("updateUiWithUser", "email: $username, password: $password")
-
-    Log.d("Does not exist" , auth.toString())
-    auth.signInWithEmailAndPassword(username, password).addOnCompleteListener {
-        if (it.isSuccessful) {
-            Log.e("LoginActivity", "Successful login")
-            val user = auth.currentUser
-
-            db.collection("users").document(user!!.uid).set(UserBuild(user.uid, username,username, "New user"))
+        Log.d("updateUiWithUser", "email: $username, password: $password")
+        auth.signInWithEmailAndPassword(username, password).addOnCompleteListener {
+            if (it.isSuccessful) {
+                Log.e("LoginActivity", "Successful login")
+                val user = auth.currentUser
+                db.collection("users").document(user!!.uid).set(User(user.uid, username,username, "New user"))
 //                user = auth.currentUser
             finish()
         } else
@@ -180,9 +165,9 @@ private fun updateUiWithUser(model: LoggedInUserView, username: String, password
 }
 
 
-private fun showLoginFailed(@StringRes errorString: Int) {
-    Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
-}
+    private fun showLoginFailed(@StringRes errorString: Int) {
+        Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
+    }
 }
 
 /**
@@ -199,4 +184,3 @@ fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
     })
 }
-
