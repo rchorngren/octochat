@@ -99,8 +99,6 @@ class LoginActivity : AppCompatActivity() {
                 }
                 false
             }
-<<<<<<< HEAD
-=======
 
             login.setOnClickListener {
                 Log.d("nw" ,  "thisLog1")

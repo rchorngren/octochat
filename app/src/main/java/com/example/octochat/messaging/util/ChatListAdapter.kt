@@ -29,13 +29,12 @@ class ChatListAdapter(val context: Context, val listChats: MutableList<Chat>) : 
         val displayNameView = view.findViewById<TextView>(R.id.textViewDisplayName)
         val lastTextView = view.findViewById<TextView>(R.id.textViewLastMessage)
 
-        //val pfp = if(listChats[p0].otherUser.profilePicture == 0) R.drawable.bg_no_pfp else listChats[p0].otherUser.profilePicture
         val displayName = listChats[p0].otherUser.displayName
-//        val lastMessage = if(listChats[p0].messagesList.isEmpty()) "No messages yet" else listChats[p0].messagesList[listChats[p0].messagesList.size-1].text
+        val lastMessage = if(listChats[p0].lastMessage != null) listChats[p0].lastMessage!!.text else "No messages yet"
 
-        //profilePictureView.setImageResource(pfp)
         displayNameView.text = displayName
-//        lastTextView.text = lastMessage
+
+        lastTextView.text = lastMessage
 
         return view
     }
