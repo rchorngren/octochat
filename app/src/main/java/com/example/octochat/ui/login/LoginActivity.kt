@@ -117,8 +117,6 @@ class LoginActivity : AppCompatActivity() {
                 loginViewModel.login(username.text.toString(), password.text.toString())
             }
         }
-
->>>>>>> master
     }
         signup.setOnClickListener{
             Log.d("thisIsBeing" ,  "clicked - ")
