@@ -3,8 +3,10 @@ package com.example.octochat
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -18,18 +20,6 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
 
         auth = FirebaseAuth.getInstance()
-
-        var currentUser = auth.currentUser
-
-        /*
-        currentUser?.let {
-            var userName = currentUser.displayName
-            var email = currentUser.email
-            Log.d("!!!", "username: $userName")
-            Log.d("!!!", "email: $email")
-        }
-
-         */
 
         changePasswordButton = findViewById(R.id.changePasswordConstraint)
         logoutConstraint = findViewById(R.id.logoutConstraint)
