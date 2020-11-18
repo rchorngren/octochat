@@ -52,13 +52,15 @@ class ChangePasswordFragment : Fragment() {
         if(newPsw != newConfirmPsw) {
             Toast.makeText(
                 activity,
-                "Passwords does not match",
+                //"Passwords does not match",
+                getString(R.string.settings_toast_password_mismatch),
                 Toast.LENGTH_SHORT
             ).show();
         } else if (newPsw.length < 9) {
             Toast.makeText(
                 activity,
-                "Passwords length is too short - a password length of 9 or more is required",
+                //"Passwords length is too short - a password length of 9 or more is required",
+                getString(R.string.settings_toast_password_too_short),
                 Toast.LENGTH_SHORT
             ).show();
         } else {
@@ -66,14 +68,16 @@ class ChangePasswordFragment : Fragment() {
                 if(task.isSuccessful) {
                     Toast.makeText(
                         activity,
-                        "Password updated",
+                        //"Password updated",
+                        getString(R.string.settings_toast_password_successful),
                         Toast.LENGTH_SHORT
                     ).show();
                     (activity as SettingsActivity).removeChangePasswordFragment()
                 } else {
                     Toast.makeText(
                         activity,
-                        "Something went wrong - please try again",
+                        //"Something went wrong - please try again",
+                        getString(R.string.settings_general_error),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
