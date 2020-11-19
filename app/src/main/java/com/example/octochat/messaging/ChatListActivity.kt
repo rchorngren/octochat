@@ -22,6 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import java.util.*
@@ -57,7 +58,7 @@ class ChatListActivity : AppCompatActivity() {
         fab.setOnClickListener {
             val dialogBuilder = AlertDialog.Builder(this)
             val otherUserEmailField = EditText(this)
-            otherUserEmailField.hint  = "Enter email of recipient"
+            otherUserEmailField.hint = "Enter email of recipient"
 
             dialogBuilder.setView(otherUserEmailField)
             dialogBuilder.setTitle("Start chat")
@@ -76,7 +77,14 @@ class ChatListActivity : AppCompatActivity() {
 
                                 db.collection("chats")
                                     .document()
-                                    .set(hashMapOf("users" to listOf(auth.currentUser!!.uid, otherUser.userId)))
+                                    .set(
+                                        hashMapOf(
+                                            "users" to listOf(
+                                                auth.currentUser!!.uid,
+                                                otherUser.userId
+                                            ), "timestamp" to FieldValue.serverTimestamp()
+                                        )
+                                    )
 
                                 getActiveChats()
                             } else Log.e(
@@ -113,7 +121,8 @@ class ChatListActivity : AppCompatActivity() {
 
                         val timestamp = document["timestamp"] as Timestamp?
                         val timestampDate: Date
-                        if(timestamp != null) timestampDate = timestamp.toDate() else return@forEachIndexed
+                        if (timestamp != null) timestampDate =
+                            timestamp.toDate() else return@forEachIndexed
 
                         val users = document["users"] as MutableList<String>?
                         var otherUserUid: String? = null
@@ -136,33 +145,35 @@ class ChatListActivity : AppCompatActivity() {
                                         .limitToLast(1)
                                         .get()
                                         .addOnCompleteListener {
-                                            if (it.result!!.documents.size > 0) {
-                                                val message = it.result!!.documents[0].toObject(Message::class.java)!!
-                                                var addChat = true
-                                                for (chat in listChats) {
-                                                    if (chat.chatId == document.id){
-                                                        addChat = false
-                                                        break
-                                                    }
+                                            var addChat = true
+                                            for (chat in listChats) {
+                                                if (chat.chatId == document.id) {
+                                                    addChat = false
+                                                    break
                                                 }
-                                                if (addChat) {
+                                            }
+                                            if (addChat) {
+                                                if (it.result!!.documents.size > 0) {
+                                                    val message = it.result!!.documents[0].toObject(Message::class.java)!!
+
                                                     if (message.sender == auth.currentUser!!.uid) { //if you sent the message
                                                         message.text = "You: " + message.text
                                                         listChats.add(Chat(document.id, otherUser, message, timestampDate))
                                                     } else {
                                                         listChats.add(Chat(document.id, otherUser, message, timestampDate))
                                                     }
+                                                    listChats.sortByDescending { it.timestamp!!.time }
+                                                } else {
+                                                    listChats.add(Chat(document.id, otherUser))
                                                 }
-                                            } else {
-                                                listChats.add(Chat(document.id, otherUser))
                                             }
-                                            listChats.sortByDescending { it.timestamp!!.time}
                                             chatListAdapter.notifyDataSetChanged()
                                         }
                                 }
                             }
                     }
                 } else {
+                    if(listChats.size > 0) listChats.clear()
                     progressBar.visibility = ProgressBar.GONE
                     emptyView.visibility = TextView.VISIBLE
                 }

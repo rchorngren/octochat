@@ -98,11 +98,12 @@
             android:src="@drawable/ic_attachment" />
 
         <EditText
+            android:inputType="textCapSentences"
             android:id="@+id/textField"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Type a message" />
+            android:hint="@string/type_a_message" />
 
         <ImageView
             android:layout_marginHorizontal="8dp"
