@@ -56,8 +56,8 @@ class ChangePasswordFragment : Fragment() {
                 getString(R.string.settings_toast_password_mismatch),
                 Toast.LENGTH_SHORT
             ).show();
-        } else if (newPsw.length < 9) {
-            //triggers if the password is shorter than 9 characters
+        } else if (newPsw.length < 8) {
+            //triggers if the password is shorter than 8 characters
             Toast.makeText(
                 activity,
                 getString(R.string.settings_toast_password_too_short),

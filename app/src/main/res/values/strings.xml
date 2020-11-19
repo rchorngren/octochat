@@ -24,7 +24,7 @@
     <string name="settings_change_password_save">Save</string>
     <string name="settings_change_password_cancel">Cancel</string>
     <string name="settings_toast_password_mismatch">Passwords does not match</string>
-    <string name="settings_toast_password_too_short">Passwords length is too short - a password length of 9 or more is required</string>
+    <string name="settings_toast_password_too_short">Passwords length is too short - a password length of 8 or more is required</string>
     <string name="settings_toast_password_successful">Password updated</string>
     <string name="settings_general_error">Something went wrong - please try again</string>
     <string name="type_a_message">Type a message</string>
