@@ -10,7 +10,7 @@
     <string name="settings_change_password_save">Spara</string>
     <string name="settings_change_password_cancel">Avbryt</string>
     <string name="settings_toast_password_mismatch">Det angivna lösenordet matchar inte</string>
-    <string name="settings_toast_password_too_short">Lösenordet är för kort - lösenordet måste vara på 9 tecken eller mer</string>
+    <string name="settings_toast_password_too_short">Lösenordet är för kort - lösenordet måste vara på 8 tecken eller fler</string>
     <string name="settings_toast_password_successful">Lösenord uppdaterat</string>
     <string name="settings_general_error">Något gick fel - försök igen</string>
 </resources>
