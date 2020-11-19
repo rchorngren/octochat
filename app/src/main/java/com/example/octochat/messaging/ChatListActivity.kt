@@ -167,6 +167,7 @@ class ChatListActivity : AppCompatActivity() {
                                                     listChats.add(Chat(document.id, otherUser))
                                                 }
                                             }
+                                            emptyView.visibility = TextView.GONE
                                             chatListAdapter.notifyDataSetChanged()
                                         }
                                 }
