@@ -1,32 +1,43 @@
-package com.example.octochat.ui.login
+/*
+package com.example.octochat.ui.create
 
+import androidx.lifecycle.ViewModel
+import com.example.octochat.ui.login.LoggedInUserView
+import com.example.octochat.ui.login.LoginFormState
+import com.example.octochat.ui.login.LoginResult
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import android.util.Patterns
 import com.example.octochat.data.LoginRepository
 import com.example.octochat.data.Result
 
-import com.example.octochat.R
 
-class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
+class CreateViewModel (private val loginRepository: LoginRepository) : ViewModel() {
+    // TODO: Implement the ViewModel
 
-    private val _loginForm = MutableLiveData<LoginFormState>()
+    private val _createForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
 
-    private val _loginResult = MutableLiveData<LoginResult>()
-    val loginResult: LiveData<LoginResult> = _loginResult
+    private val _createResult = MutableLiveData<LoginResult>()
+    val createResult: LiveData<LoginResult> = _createResult
 
-    fun login(username: String, password: String) {
+    fun create(username: String, password: String) {
         // can be launched in a separate asynchronous job
-        val result = loginRepository.login(username, password)
+        val result = createRepository.create(username, password)
 
-        Log.d("ShowLoginRes" , result.toString())
+        Log.d("ShowCreateRes" , result.toString())
 
         if (result is Result.Success) {
-            _loginResult.value =
-                LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
+            _createResult.value =
+
+
+
+                CreateResult(success = LoggedInUserView(displayName = result.data.displayName))
+
+
+
+
             Log.e("ShowRes" ,  _loginResult.value.toString())
         } else {
             _loginResult.value = LoginResult(error = R.string.login_failed)
@@ -57,3 +68,4 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         return password.length > 7
     }
 }
+*/

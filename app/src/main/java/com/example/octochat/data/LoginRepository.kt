@@ -1,5 +1,6 @@
 package com.example.octochat.data
 
+import android.util.Log
 import com.example.octochat.data.model.LoggedInUser
 
 /**
@@ -40,6 +41,7 @@ class LoginRepository(val dataSource: LoginDataSource) {
 
     private fun setLoggedInUser(loggedInUser: LoggedInUser) {
         this.user = loggedInUser
+        Log.e("LogUser" , this.user.toString())
         // If user credentials will be cached in local storage, it is recommended it be encrypted
         // @see https://developer.android.com/training/articles/keystore
     }

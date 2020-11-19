@@ -106,16 +106,21 @@
 
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="25dp" />
+                    android:layout_height="55dp" />
+
 
                 <TextView
                     android:id="@+id/textViewSignUp"
-                    android:layout_width="120dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:layout_marginEnd="8dp"
-                    android:gravity="right"
-                    android:text="Sign Up" />
+                    android:gravity="center"
+                    android:text="Sign Up"/>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp" />
             </LinearLayout>
 
         </LinearLayout>

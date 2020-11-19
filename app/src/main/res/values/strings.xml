@@ -2,6 +2,7 @@
     <string name="app_name">octochat</string>
     <string name="app_banner">App_banner</string>
     <string name="title_activity_login">LoginActivity</string>
+    <string name="activity_create">CreateUserProfile</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
@@ -10,6 +11,8 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >8 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="sign_up">"Sign Up"</string>
+    <string name="sign_up_cancel">"Cancel"</string>
     <string name="title_activity_login2">LoginActivity2</string>
     <string name="no_chats_yet">No chats yet</string>
     <string name="message">[message]</string>

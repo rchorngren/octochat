@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.create.NewCrea">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".ui.create.CreateUserProfile">
+
+            <ScrollView
+                android:id="@+id/scrollLogIn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:background="#FFFFFF"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/imageViewLogo"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_marginTop="5dp"
+                            app:srcCompat="@drawable/logoban" />
+
+                        <ImageView
+                            android:id="@+id/contacts"
+                            android:layout_width="match_parent"
+                            android:layout_height="51dp"
+                            android:layout_marginEnd="10dp"
+                            android:src="@drawable/ic_profile" />
+                        <TextView
+                            android:id="@+id/textViewUploadImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_marginEnd="8dp"
+                            android:gravity="center"
+                            android:text="Upload Profile Picture" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="15dp"
+                        android:orientation="vertical">
+
+                        <EditText
+                            android:id="@+id/textUserName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:width="24dp"
+                            android:drawableLeft="@drawable/avataruser"
+                            android:ems="10"
+                            android:hint="  Name"
+                            android:inputType="textPersonName" />
+                        <!--            Icons made by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
+
+                        <EditText
+                            android:id="@+id/textUserNick"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:width="24dp"
+                            android:ems="10"
+                            android:hint="Userame"
+                            android:inputType="textPersonName" />
+                        <!--            Icons made by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
+
+                        <EditText
+                            android:id="@+id/textEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:width="24dp"
+                            android:drawableLeft="@drawable/avataruser"
+                            android:ems="10"
+                            android:hint="  Email"
+                            android:inputType="textPersonName" />
+                        <!--            Icons made by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
+
+                        <!--            Icons made by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
+
+
+                        <EditText
+                            android:id="@+id/textUserPass"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/padlockpass"
+                            android:ems="10"
+                            android:hint="  Password"
+                            android:inputType="text" />
+                        <!--            Icons made by <a href="https://www.flaticon.com/authors/tomas-knop" title="Tomas Knop">Tomas Knop</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
+
+                        <EditText
+                            android:id="@+id/textUserPassRepeat"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:hint="Repeat  Password"
+                            android:inputType="text" />
+
+                        <CheckBox
+                            android:id="@+id/checkBox1Terms"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_marginTop="10dp"
+                            android:text="Accept terms of service"/>
+
+                        <Button
+                            android:id="@+id/userCreateAccount_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="#DAD8D8"
+                            android:backgroundTint="#F4F4F4"
+                            android:drawableRight="@drawable/go_arrow"
+                            android:padding="8dp"
+                            android:text="Create Account" />
+
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="25dp" />
+
+                        <!--            Icons made by <a href="https://www.flaticon.com/authors/dmitri13" title="dmitri13">dmitri13</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
+
+                        <TextView
+                            android:id="@+id/textViewCancel"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_marginEnd="8dp"
+                            android:gravity="center"
+                            android:text="Cancel" />
+
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="55dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </ScrollView>
+            <ProgressBar
+                android:id="@+id/loading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="64dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="64dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/scrollLogIn"
+                app:layout_constraintStart_toStartOf="@+id/scrollLogIn"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.3" />
+        </FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

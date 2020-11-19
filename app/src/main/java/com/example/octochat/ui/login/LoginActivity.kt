@@ -1,26 +1,26 @@
 package com.example.octochat.ui.login
 
 import android.app.Activity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import android.content.Intent
 import android.os.Bundle
-import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
+import android.text.SpannableString
 import android.text.TextWatcher
+import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.*
-
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.example.octochat.ui.create.CreateUserProfile
 import com.example.octochat.R
-import com.example.octochat.UserBuild
 import com.example.octochat.messaging.User
-import com.example.octochat.userFactory
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.activity_user_profile.*
+
 
 class LoginActivity : AppCompatActivity() {
 
@@ -38,6 +38,7 @@ class LoginActivity : AppCompatActivity() {
         val login = findViewById<Button>(R.id.userLogIn_button)
         val signup = findViewById<TextView>(R.id.textViewSignUp)
         val loading = findViewById<ProgressBar>(R.id.loading)
+        val intent = Intent(this, CreateUserProfile::class.java)
 
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
@@ -61,13 +62,19 @@ class LoginActivity : AppCompatActivity() {
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
 
+            //Log.e("Nowlog" , loginResult.toString())
+
             loading.visibility = View.GONE
             if (loginResult.error != null) {
                 showLoginFailed(loginResult.error)
             }
             if (loginResult.success != null) {
-                Log.e("LoginActivity","successNotnull")
-                updateUiWithUser(loginResult.success, username.text.toString(), password.text.toString())
+                Log.e("LoginActivity", "successNotnull")
+                updateUiWithUser(
+                    loginResult.success,
+                    username.text.toString(),
+                    password.text.toString()
+                )
             }
             setResult(Activity.RESULT_OK)
 
@@ -102,42 +109,22 @@ class LoginActivity : AppCompatActivity() {
             }
 
             login.setOnClickListener {
-                Log.d("nw" ,  "thisLog1")
+                Log.d("nw", "thisLog1")
                 loading.visibility = View.VISIBLE
-
-
                 loginViewModel.login(username.text.toString(), password.text.toString())
             }
 
             signup.setOnClickListener{
-                Log.d("thisIsBeing" ,  "clicked - ")
-                buildNewAccount(username , password)
-                loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString(), password.text.toString())
+                Log.d("ToCreate", "clicked")
+                    startActivityForResult(intent, 0)
             }
         }
+
+        val signUpStrg: String = getString(R.string.sign_up)
+        val content = SpannableString(signUpStrg)
+        content.setSpan(UnderlineSpan(), 0, signUpStrg.length, 0)
+        signup.setText(content)
     }
-
-
-    private fun buildNewAccount(usernameView: EditText, passwordView: EditText) {
-        val email = usernameView.text.toString()
-        val password = passwordView.text.toString()
-        Log.d("buildNewAccount", "email: $email, password: $password")
-
-        if (email.isEmpty() || password.isEmpty())
-            return
-
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d("Done", "Success")
-                    userFactory()
-                } else {
-                    Log.d("TestAgain", "Unable to create: ${task.exception}")
-                }
-            }
-    }
-
 
     private fun updateUiWithUser(model: LoggedInUserView, username: String, password: String) {
         val welcome = getString(R.string.welcome)
@@ -148,7 +135,14 @@ class LoginActivity : AppCompatActivity() {
             if (it.isSuccessful) {
                 Log.e("LoginActivity", "Successful login")
                 val user = auth.currentUser
-                db.collection("users").document(user!!.uid).set(User(user.uid, username,username, "New user"))
+                db.collection("users").document(user!!.uid).set(
+                    User(
+                        user.uid,
+                        username,
+                        username,
+                        "New user"
+                    )
+                )
 //                user = auth.currentUser
             finish()
         } else
@@ -184,3 +178,11 @@ fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
     })
 }
+
+
+fun startRegistration(){
+//Paused
+        Log.d("ToClass", "clicked")
+    }
+
+
