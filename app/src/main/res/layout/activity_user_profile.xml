@@ -14,12 +14,22 @@
         android:orientation="vertical"
         android:gravity="center_horizontal"
         android:background="@drawable/grad">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My Profile"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:layout_gravity="left">
+        </TextView>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/profilePicture"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginTop="40dp"
+            android:src="@drawable/ic_profile"
 
             />
 
@@ -27,7 +37,7 @@
             android:id="@+id/displayUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="User1"
+            android:text="Jaya"
             android:textStyle="bold"
             android:textSize="18dp"
             android:layout_marginTop="10dp" />
@@ -72,7 +82,7 @@
                     android:id="@+id/displayUserName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="User1"
+                    android:text="Jaya"
                     android:background="@null"
                     />
 
@@ -81,40 +91,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="14dp">
-
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:padding="4dp"
-                android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_baseline_local_phone_24"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Phone"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:id="@+id/editText_phoneNumber"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="+46 7094586733"
-                    />
-
-            </LinearLayout>
-
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

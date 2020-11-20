@@ -6,7 +6,7 @@
         android:title="Settings"
         app:showAsAction="never" />
     <item android:id="@+id/menu_editprofile"
-        android:title="EditProfile"
+        android:title="UserProfile"
         app:showAsAction="never" />
     <item android:id="@+id/menu_chats"
         android:title="Chats"
