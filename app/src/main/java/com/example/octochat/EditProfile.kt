@@ -113,6 +113,7 @@ class EditProfile : AppCompatActivity() {
 
                     var url = taskSnapshot.result
                      url1 = url.toString()
+                    Log.d("!!!", "$url1")
                     pd.dismiss()
                     Picasso.get()
                         .load(url1)
@@ -127,7 +128,7 @@ class EditProfile : AppCompatActivity() {
 
                         })
                     val user = auth.currentUser
-                    db.collection("image").document(user!!.uid).set(Image(url1))
+                    db.collection("image").document("vb2jtIxI37Mwy9m0ezLnBqY4QCo1").set(Image(url1))
 
                 }
             }. addOnFailureListener{
@@ -150,6 +151,7 @@ class EditProfile : AppCompatActivity() {
                             result.append(document.data.getValue("image")).append(" ")
                         }
                         val imageUrl = result.toString()
+                        Log.d("!!!", "$imageUrl")
                         Picasso.get()
                             .load(imageUrl)
                             .into(profilepic, object : Callback {
@@ -174,7 +176,7 @@ class EditProfile : AppCompatActivity() {
         //reference = FirebaseDatabase.getInstance().reference.child("users").child(user!!.uid)
         val email1 = findViewById<TextView>(R.id.textEmail)
         user?.let {
-            val displayName = user.displayName
+            val name = user.displayName
             val userEmail = user.email
             itemsRef = db.collection("users")
             itemsRef.get()
