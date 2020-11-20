@@ -37,7 +37,7 @@
             android:id="@+id/displayUser"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Jaya"
+            android:text="User01"
             android:textStyle="bold"
             android:textSize="18dp"
             android:layout_marginTop="10dp" />
@@ -82,7 +82,7 @@
                     android:id="@+id/displayUserName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Jaya"
+                    android:text="User01"
                     android:background="@null"
                     />
 

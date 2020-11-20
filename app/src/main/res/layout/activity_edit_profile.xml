@@ -58,7 +58,7 @@
             android:layout_marginTop="15dp"
             android:layout_marginEnd="147dp"
             android:fontFamily="sans-serif-light"
-            android:text="Jaya"
+            android:text="User01"
             android:textColor="@color/white"
             android:textSize="32sp" />
 
@@ -107,7 +107,7 @@
                     android:layout_height="43dp"
                     android:background="@null"
                     android:clickable="false"
-                    android:text="User1" />
+                    android:text="User01" />
 
             </LinearLayout>
             <ImageView

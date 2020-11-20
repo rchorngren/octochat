@@ -77,6 +77,7 @@ class UserProfile : AppCompatActivity() {
                             result.append(document.data.getValue("image")).append(" ")
                         }
                         val imageUrl = result.toString()
+                        Log.d("!!!", "$imageUrl")
                         Picasso.get()
                             .load(imageUrl)
                             .into(userPic, object : Callback {
