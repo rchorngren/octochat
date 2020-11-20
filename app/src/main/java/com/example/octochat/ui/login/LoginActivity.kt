@@ -17,15 +17,19 @@ import com.example.octochat.R
 import com.example.octochat.messaging.User
 import com.example.octochat.userFactory
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.activity_user_profile.*
+import com.google.firebase.storage.FirebaseStorage
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
     lateinit var auth: FirebaseAuth
     lateinit var db: FirebaseFirestore
+    lateinit var itemsRef: CollectionReference
+    lateinit var storageRef: FirebaseStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,9 +41,9 @@ class LoginActivity : AppCompatActivity() {
         val login = findViewById<Button>(R.id.userLogIn_button)
         val signup = findViewById<TextView>(R.id.textViewSignUp)
         val loading = findViewById<ProgressBar>(R.id.loading)
-
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
+        storageRef = FirebaseStorage.getInstance()
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
             .get(LoginViewModel::class.java)
 
@@ -116,6 +120,7 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
+
     }
 
 
@@ -148,6 +153,7 @@ class LoginActivity : AppCompatActivity() {
             if (it.isSuccessful) {
                 Log.e("LoginActivity", "Successful login")
                 val user = auth.currentUser
+
                 db.collection("users").document(user!!.uid).set(User(user.uid, username,username, "New user"))
 //                user = auth.currentUser
                 finish()
@@ -161,8 +167,31 @@ class LoginActivity : AppCompatActivity() {
             "$welcome $displayName",
             Toast.LENGTH_LONG
         ).show()
+
+      //  readFirestoreData()
     }
 
+// added by Jaya to show the user name in userprofile screen
+ /*   fun readFirestoreData(){
+    Log.d("!!!", "sb")
+    var getData = object: ValueEventListener{
+        override fun onCancelled(error: DatabaseError) {
+            TODO("Not yet implemented")
+            Log.d("!!!", "sb1")
+        }
+
+        override fun onDataChange(error: DataSnapshot) {
+            Log.d("!!!", "sb2")
+            var sb = StringBuffer()
+            for(i in error.children)
+            {
+                var name = i.child("email").getValue()
+                sb.append("$sb")
+                Log.d("!!!", "$name")
+            }
+        }
+    }
+}*/
 
     private fun showLoginFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()

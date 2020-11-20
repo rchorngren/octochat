@@ -1,21 +1,29 @@
 package com.example.octochat.messaging
 
+import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.KeyEvent
-import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.*
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
-import com.example.octochat.EditProfile
 import com.example.octochat.R
 import com.example.octochat.UserProfile
 import com.example.octochat.messaging.util.MessagesListAdapter
+import com.google.android.gms.tasks.Continuation
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.*
-import java.util.zip.Inflater
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageTask
+import com.google.firebase.storage.UploadTask
+import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.android.synthetic.main.attatchment_dialog.*
 
 class ChatActivity : AppCompatActivity() {
 
@@ -60,6 +68,8 @@ class ChatActivity : AppCompatActivity() {
         val editText = findViewById<EditText>(R.id.textField)
         val sendButton = findViewById<ImageView>(R.id.buttonSend)
 
+
+
         textFullName.text = otherUserDisplayName
 
         createChat()
@@ -76,12 +86,14 @@ class ChatActivity : AppCompatActivity() {
                         Log.e(TAG, it.exception.toString())
                     }
                 }
+
             editText.setText("")
         }
 
         editText.setOnClickListener {
                 messagesList.smoothScrollToPosition(listMessages.size-1)
         }
+
     }
 
     fun setSnapshotListener() {
@@ -129,5 +141,27 @@ class ChatActivity : AppCompatActivity() {
                 messagesList.adapter = messageAdapter
                 setSnapshotListener()
             }
+    }
+// Added by Jaya to show the menu list
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu_main, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_settings -> {
+                true
+            }
+            R.id.menu_editprofile -> {
+                val intent = Intent(this, UserProfile::class.java)
+                startActivity(intent)
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 }

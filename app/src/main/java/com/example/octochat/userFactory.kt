@@ -1,21 +1,29 @@
 package com.example.octochat
 
-import com.example.octochat.messaging.User
 import android.content.ClipData
 import android.os.Bundle
 import android.util.Log
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import com.example.octochat.messaging.User
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 
 class userFactory : AppCompatActivity() {
+
+    lateinit var auth: FirebaseAuth
+    lateinit var db: FirebaseFirestore
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
         createNew()
+
     }
 
     fun createNew() {
@@ -41,4 +49,6 @@ class userFactory : AppCompatActivity() {
         db.collection("users").document(user.uid).set(User(user.uid, username.text.toString(),username.text.toString(), "New user"))
 
     }
+
+
 }

@@ -57,7 +57,10 @@ dependencies {
     //Picasso
     def picassoVersion = "2.71828"
     implementation "com.squareup.picasso:picasso:$picassoVersion"
-
+    // Notifications
+    implementation 'com.google.firebase:firebase-messaging:20.2.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
 
 }
 
