@@ -4,32 +4,56 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.LinearLayout
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_settings.*
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 class SettingsActivity : AppCompatActivity() {
+
+    lateinit var auth: FirebaseAuth
+    private lateinit var changePasswordButton : ConstraintLayout
+    private lateinit var logoutConstraint : ConstraintLayout
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        Picasso.get()
-            .load("https://firebasestorage.googleapis.com/v0/b/chatapp-2a770.appspot.com/o/Users%20Profile%20Image?alt=media&token=c33424b4-6e79-47fe-8c65-a75205f1392a")
-            .into(settingsProfilePic, object : Callback {
-                override fun onSuccess() {
-                    Log.d("TAG", "success")
-                }
 
-                override fun onError(e: Exception?) {
-                    Log.d("TAG", "error")
-                }
-            })
+        auth = FirebaseAuth.getInstance()
 
+        changePasswordButton = findViewById(R.id.changePasswordConstraint)
+        logoutConstraint = findViewById(R.id.logoutConstraint)
 
+        changePasswordButton.setOnClickListener{
+            displayChangePasswordFragment()
         }
+
+        logoutConstraint.setOnClickListener{
+            logoutUser()
+        }
+
+    }
+
+    fun displayChangePasswordFragment() {
+        val changePasswordFragment = ChangePasswordFragment()
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.add(R.id.changePasswordContainer, changePasswordFragment, "changePasswordFragment")
+        transaction.commit()
+    }
+
+    fun removeChangePasswordFragment() {
+        val changePasswordFragment = supportFragmentManager.findFragmentByTag("changePasswordFragment")
+        if(changePasswordFragment != null) {
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.remove(changePasswordFragment)
+            transaction.commit()
+        }
+    }
+
+    fun logoutUser() {
+        val intent = Intent(this, MainActivity::class.java)
+        auth.signOut()
+        startActivity(intent)
+    }
 
 }

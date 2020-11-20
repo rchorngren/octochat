@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.octochat.R
@@ -76,8 +77,12 @@ class ChatActivity : AppCompatActivity() {
 
         backIcon.setOnClickListener { finish() }
 
+        registerForContextMenu(moreIcon)
+        moreIcon.setOnClickListener { it.showContextMenu() }
+
         sendButton.setOnClickListener {
-            messagesRef.add(Message(currentUserFb!!.uid, editText.text.toString()))
+            val message = Message(currentUserFb!!.uid, editText.text.toString())
+            messagesRef.add(message)
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
                         messageAdapter.notifyDataSetChanged()
@@ -86,6 +91,9 @@ class ChatActivity : AppCompatActivity() {
                         Log.e(TAG, it.exception.toString())
                     }
                 }
+
+
+            db.collection("chats").document(chatId).set(hashMapOf("timestamp" to FieldValue.serverTimestamp()), SetOptions.merge())
 
             editText.setText("")
         }
@@ -105,11 +113,13 @@ class ChatActivity : AppCompatActivity() {
                 }
 
                 for (message in snapshot!!.documentChanges) {
-                    Log.e(TAG, "${message.type}")
-
                     if (message.type == DocumentChange.Type.MODIFIED) return@addSnapshotListener
                     val newDocument = message.document.toObject(Message::class.java)
+
+                    //this line adds the latest message to the conversation, maybe check if
+                    //the user is currently in the app and if they sent it, and if they aren't, send a notification?
                     listMessages.add(newDocument)
+
                 }
                 messageAdapter.notifyDataSetChanged()
                 messagesList.smoothScrollToPosition(listMessages.size - 1)
@@ -142,26 +152,29 @@ class ChatActivity : AppCompatActivity() {
                 setSnapshotListener()
             }
     }
-// Added by Jaya to show the menu list
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    override fun onCreateContextMenu(
+        menu: ContextMenu?,
+        v: View?,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
+        super.onCreateContextMenu(menu, v, menuInfo)
         val inflater = menuInflater
-        inflater.inflate(R.menu.menu_main, menu)
-        return super.onCreateOptionsMenu(menu)
+        inflater.inflate(R.menu.menu_chat, menu)
+
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_settings -> {
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId){
+            R.id.profile ->{
+                Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show()
                 true
             }
-            R.id.menu_editprofile -> {
-                val intent = Intent(this, UserProfile::class.java)
-                startActivity(intent)
+            R.id.block -> {
+                Toast.makeText(this, "Block", Toast.LENGTH_SHORT).show()
                 true
-            }
-
-            else -> super.onOptionsItemSelected(item)
+                }
+            else -> super.onContextItemSelected(item)
         }
     }
 }

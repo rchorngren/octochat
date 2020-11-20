@@ -4,14 +4,21 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+
 import com.example.octochat.messaging.ChatListActivity
 import com.example.octochat.ui.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
+
+import androidx.constraintlayout.widget.ConstraintLayout
+
 import com.google.firebase.firestore.FirebaseFirestore
 
 
 class MainActivity : AppCompatActivity() {
+
 
     lateinit var auth: FirebaseAuth
 
@@ -21,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         val db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
-        auth.signOut()
+//        auth.signOut()
 
         if(auth.currentUser != null)
             startChatList()
