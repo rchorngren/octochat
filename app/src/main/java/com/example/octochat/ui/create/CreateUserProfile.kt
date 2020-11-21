@@ -1,27 +1,30 @@
 package com.example.octochat.ui.create
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
 import android.text.SpannableString
 import android.text.TextWatcher
+import androidx.lifecycle.Observer
 import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.annotation.StringRes
+import androidx.lifecycle.ViewModelProvider
 import com.example.octochat.messaging.User
-import com.example.octochat.ui.login.LoggedInUserView
+//import com.example.octochat.ui.create.LoggedInUserView
 import com.example.octochat.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.example.octochat.ui.login.LoginActivity
 
-class CreateUserProfile : AppCompatActivity()  {
 
-    //private lateinit var viewModel: CreateViewModel
+class CreateUserProfile : AppCompatActivity()  {
+    private lateinit var createViewModel: CreateViewModel
     lateinit var auth: FirebaseAuth
     lateinit var db: FirebaseFirestore
 
@@ -30,20 +33,73 @@ class CreateUserProfile : AppCompatActivity()  {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create)
 
-        val username = findViewById<EditText>(R.id.textNameOrEmail)
-        val password = findViewById<EditText>(R.id.textUserPass)
-        val login = findViewById<Button>(R.id.userLogIn_button)
+        //This user_first_name is, different from username a name to bill to, for payments or other
+        val user_first_name = findViewById<EditText>(R.id.textUserNameAtCreate_first)
+
+        //Important - this username is the name send to database for registration and login. On create-models username uses this origin
+        val username = findViewById<EditText>(R.id.textUser_EmailAtCreate_first)
+
+        val password = findViewById<EditText>(R.id.textUser_PasswordAtCreate_first)
+        //val login = findViewById<Button>(R.id.userLogIn_buttonAtFirst)
         val register = findViewById<TextView>(R.id.userCreateAccount_button)
         val loading = findViewById<ProgressBar>(R.id.loading)
-        val cancel = findViewById<TextView>(R.id.textViewCancel)
+        val cancel = findViewById<TextView>(R.id.textView_CancelAtCreate_first)
         val intent = Intent(this, LoginActivity::class.java)
 
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
+        createViewModel = ViewModelProvider(this, CreateViewModelFactory())
+            .get(CreateViewModel::class.java)
+        Log.d("StartThe" , "CreateUser")
 
-        /*password.apply {
+        createViewModel.createFormState.observe(this@CreateUserProfile, Observer {
+            val createState = it ?: return@Observer
+
+            // disable create button unless both username / password is valid
+            register.isEnabled = createState.isDataValid
+
+            if (createState.usernameError != null) {
+                username.error = getString(createState.usernameError)
+            }
+            if (createState.passwordError != null) {
+                password.error = getString(createState.passwordError)
+            }
+        })
+
+        createViewModel.createResult.observe(this@CreateUserProfile, Observer {
+            val createResult = it ?: return@Observer
+
+            //Log.e("Nowlog" , createResult.toString())
+
+            loading.visibility = View.GONE
+            if (createResult.error != null) {
+                showCreateFailed(createResult.error)
+            }
+            if (createResult.success != null) {
+                Log.e("CreateUserProfile", "successNotnull")
+                updateUiWithUser(
+                    createResult.success,
+                    username.text.toString(),
+                    password.text.toString()
+                )
+            }
+            setResult(Activity.RESULT_OK)
+
+            //Complete and destroy create activity once successful
+            //finish()
+        })
+
+        username.afterTextChanged {
+            createViewModel.createDataChanged(
+                username.text.toString(),
+                password.text.toString()
+            )
+        }
+
+
+        password.apply {
             afterTextChanged {
-                loginViewModel.loginDataChanged(
+                createViewModel.createDataChanged(
                     username.text.toString(),
                     password.text.toString()
                 )
@@ -52,31 +108,20 @@ class CreateUserProfile : AppCompatActivity()  {
             setOnEditorActionListener { _, actionId, _ ->
                 when (actionId) {
                     EditorInfo.IME_ACTION_DONE ->
-                        loginViewModel.login(
+                        createViewModel.create(
                             username.text.toString(),
                             password.text.toString()
                         )
                 }
                 false
             }
-
-            login.setOnClickListener {
-                Log.d("nw", "thisLog1")
-                loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString(), password.text.toString())
-            }
-
-            signup.setOnClickListener{
-                Log.d("ToCreate", "clicked")
-                startActivityForResult(intent, 0)
-            }
-        }*/
-
+        }
 
         register.setOnClickListener{
             Log.d("thisIsBeing", "clicked - ")
-            buildNewAccount(username, password)
             loading.visibility = View.VISIBLE
+            buildNewAccount(username, password)
+            //createViewModel.create(username.text.toString(), password.text.toString())
         }
 
         cancel.setOnClickListener{
@@ -113,7 +158,7 @@ class CreateUserProfile : AppCompatActivity()  {
     }
 
 
-    private fun updateUiWithUser(model: LoggedInUserView, username: String, password: String) {
+    private fun updateUiWithUser(model: CreatedUserView, username: String, password: String) {
         val welcome = getString(R.string.welcome)
         val displayName = model.displayName
 
@@ -144,7 +189,7 @@ class CreateUserProfile : AppCompatActivity()  {
         ).show()
     }
 
-    private fun showLoginFailed(@StringRes errorString: Int) {
+    private fun showCreateFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
     }
 

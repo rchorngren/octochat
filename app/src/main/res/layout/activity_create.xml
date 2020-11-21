@@ -68,7 +68,7 @@
                         android:orientation="vertical">
 
                         <EditText
-                            android:id="@+id/textUserName"
+                            android:id="@+id/textUserNameAtCreate_first"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:width="24dp"
@@ -79,7 +79,7 @@
                         <!--            Icons made by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
 
                         <EditText
-                            android:id="@+id/textUserNick"
+                            android:id="@+id/textUserNicknameAtCreate_first"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:width="24dp"
@@ -89,7 +89,7 @@
                         <!--            Icons made by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
 
                         <EditText
-                            android:id="@+id/textEmail"
+                            android:id="@+id/textUser_EmailAtCreate_first"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:width="24dp"
@@ -103,17 +103,18 @@
 
 
                         <EditText
-                            android:id="@+id/textUserPass"
+                            android:id="@+id/textUser_PasswordAtCreate_first"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:drawableLeft="@drawable/padlockpass"
                             android:ems="10"
                             android:hint="  Password"
-                            android:inputType="text" />
+                            android:inputType="text"
+                            android:password="true" />
                         <!--            Icons made by <a href="https://www.flaticon.com/authors/tomas-knop" title="Tomas Knop">Tomas Knop</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
 
                         <EditText
-                            android:id="@+id/textUserPassRepeat"
+                            android:id="@+id/textUser_PasswordAtCreate_Repeat_first"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ems="10"
@@ -149,7 +150,7 @@
                         <!--            Icons made by <a href="https://www.flaticon.com/authors/dmitri13" title="dmitri13">dmitri13</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
 
                         <TextView
-                            android:id="@+id/textViewCancel"
+                            android:id="@+id/textView_CancelAtCreate_first"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right"

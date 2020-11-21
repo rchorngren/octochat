@@ -1,26 +1,25 @@
-/*
 package com.example.octochat.ui.create
 
-import androidx.lifecycle.ViewModel
-import com.example.octochat.ui.login.LoggedInUserView
-import com.example.octochat.ui.login.LoginFormState
-import com.example.octochat.ui.login.LoginResult
+
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import android.util.Patterns
-import com.example.octochat.data.LoginRepository
-import com.example.octochat.data.Result
+import com.example.octochat.data.CreateRepository
+import com.example.octochat.data.ResultCreate
+
+import com.example.octochat.R
 
 
-class CreateViewModel (private val loginRepository: LoginRepository) : ViewModel() {
-    // TODO: Implement the ViewModel
+class CreateViewModel(private val createRepository: CreateRepository) : ViewModel() {
 
-    private val _createForm = MutableLiveData<LoginFormState>()
-    val loginFormState: LiveData<LoginFormState> = _loginForm
+    private val _createForm = MutableLiveData<CreateFormState>()
+    val createFormState: LiveData<CreateFormState> = _createForm
 
-    private val _createResult = MutableLiveData<LoginResult>()
-    val createResult: LiveData<LoginResult> = _createResult
+    private val _createResult = MutableLiveData<CreateResult>()
+    val createResult: LiveData<CreateResult> = _createResult
+
 
     fun create(username: String, password: String) {
         // can be launched in a separate asynchronous job
@@ -28,29 +27,22 @@ class CreateViewModel (private val loginRepository: LoginRepository) : ViewModel
 
         Log.d("ShowCreateRes" , result.toString())
 
-        if (result is Result.Success) {
+        if (result is ResultCreate.Success ) {
             _createResult.value =
-
-
-
-                CreateResult(success = LoggedInUserView(displayName = result.data.displayName))
-
-
-
-
-            Log.e("ShowRes" ,  _loginResult.value.toString())
+                CreateResult(success = CreatedUserView(displayName = result.data.displayName))
+            Log.e("ShowRes" ,  _createResult.value.toString())
         } else {
-            _loginResult.value = LoginResult(error = R.string.login_failed)
+            _createResult.value = CreateResult(error = R.string.create_failed)
         }
     }
 
-    fun loginDataChanged(username: String, password: String) {
+    fun createDataChanged(username: String, password: String) {
         if (!isUserNameValid(username)) {
-            _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
+            _createForm.value = CreateFormState(usernameError = R.string.invalid_username)
         } else if (!isPasswordValid(password)) {
-            _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
+            _createForm.value = CreateFormState(passwordError = R.string.invalid_password)
         } else {
-            _loginForm.value = LoginFormState(isDataValid = true)
+            _createForm.value = CreateFormState(isDataValid = true)
         }
     }
 
@@ -68,4 +60,3 @@ class CreateViewModel (private val loginRepository: LoginRepository) : ViewModel
         return password.length > 7
     }
 }
-*/

@@ -45,7 +45,7 @@
                 android:orientation="vertical">
 
                 <EditText
-                    android:id="@+id/textNameOrEmail"
+                    android:id="@+id/textLoginUserNameOrEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:width="24dp"
@@ -56,17 +56,18 @@
                 <!--            Icons made by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
 
                 <EditText
-                    android:id="@+id/textUserPass"
+                    android:id="@+id/textLoginUserPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/padlockpass"
                     android:ems="10"
                     android:hint="  Password"
-                    android:inputType="text" />
+                    android:inputType="text"
+                    android:password="true" />
                 <!--            Icons made by <a href="https://www.flaticon.com/authors/tomas-knop" title="Tomas Knop">Tomas Knop</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
 
                 <Button
-                    android:id="@+id/userLogIn_button"
+                    android:id="@+id/userLogIn_buttonAtFirst"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -110,7 +111,7 @@
 
 
                 <TextView
-                    android:id="@+id/textViewSignUp"
+                    android:id="@+id/textView_To_SignUp_Activity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"

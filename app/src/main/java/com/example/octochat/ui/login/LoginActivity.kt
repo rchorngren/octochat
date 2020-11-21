@@ -33,10 +33,10 @@ class LoginActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_login)
 
-        val username = findViewById<EditText>(R.id.textNameOrEmail)
-        val password = findViewById<EditText>(R.id.textUserPass)
-        val login = findViewById<Button>(R.id.userLogIn_button)
-        val signup = findViewById<TextView>(R.id.textViewSignUp)
+        val username = findViewById<EditText>(R.id.textLoginUserNameOrEmail)
+        val password = findViewById<EditText>(R.id.textLoginUserPassword)
+        val login = findViewById<Button>(R.id.userLogIn_buttonAtFirst)
+        val signup = findViewById<TextView>(R.id.textView_To_SignUp_Activity)
         val loading = findViewById<ProgressBar>(R.id.loading)
         val intent = Intent(this, CreateUserProfile::class.java)
 
@@ -116,7 +116,7 @@ class LoginActivity : AppCompatActivity() {
 
             signup.setOnClickListener{
                 Log.d("ToCreate", "clicked")
-                    startActivityForResult(intent, 0)
+                startActivityForResult(intent, 0)
             }
         }
 
