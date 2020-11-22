@@ -29,7 +29,7 @@ class  CreateRepository(val dataSource: CreateDataSource) {
     }
 
     fun create(username: String, password: String): ResultCreate<CreatedUser> {
-        // handle login
+        // handle create
         val result = dataSource.create(username, password)
 
         if (result is ResultCreate.Success) {

@@ -12,9 +12,9 @@ class CreateDataSource {
     fun create(username: String, password: String): ResultCreate<CreatedUser> {
         try {
             // TODO: handle loggedInUser authentication
-            val fakeUser = CreatedUser(java.util.UUID.randomUUID().toString(), "OctoChat Incognito")
-            Log.d("fakeUser here" , fakeUser.toString())
-            return ResultCreate.Success(fakeUser)
+            val newUser = CreatedUser(java.util.UUID.randomUUID().toString(), "OctoChat Incognito")
+            Log.d("newUser here" , newUser.toString())
+            return ResultCreate.Success(newUser)
         } catch (e: Throwable) {
             return ResultCreate.Error(IOException("Error logging in", e))
         }

@@ -12,9 +12,9 @@ class LoginDataSource {
     fun login(username: String, password: String): Result<LoggedInUser> {
         try {
             // TODO: handle loggedInUser authentication
-            val fakeUser = LoggedInUser(java.util.UUID.randomUUID().toString(), "OctoChat Incognito")
-            Log.d("fakeUser here" , fakeUser.toString())
-            return Result.Success(fakeUser)
+            val loggingUser = LoggedInUser(java.util.UUID.randomUUID().toString(), "OctoChat Incognito")
+            Log.d("loggingUser here" , loggingUser.toString())
+            return Result.Success(loggingUser)
         } catch (e: Throwable) {
             return Result.Error(IOException("Error logging in", e))
         }

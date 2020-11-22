@@ -10,13 +10,13 @@ import android.text.TextWatcher
 import androidx.lifecycle.Observer
 import android.text.style.UnderlineSpan
 import android.util.Log
+import android.util.Patterns
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.annotation.StringRes
 import androidx.lifecycle.ViewModelProvider
 import com.example.octochat.messaging.User
-//import com.example.octochat.ui.create.LoggedInUserView
 import com.example.octochat.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -40,7 +40,6 @@ class CreateUserProfile : AppCompatActivity()  {
         val username = findViewById<EditText>(R.id.textUser_EmailAtCreate_first)
 
         val password = findViewById<EditText>(R.id.textUser_PasswordAtCreate_first)
-        //val login = findViewById<Button>(R.id.userLogIn_buttonAtFirst)
         val register = findViewById<TextView>(R.id.userCreateAccount_button)
         val loading = findViewById<ProgressBar>(R.id.loading)
         val cancel = findViewById<TextView>(R.id.textView_CancelAtCreate_first)
@@ -55,8 +54,9 @@ class CreateUserProfile : AppCompatActivity()  {
         createViewModel.createFormState.observe(this@CreateUserProfile, Observer {
             val createState = it ?: return@Observer
 
-            // disable create button unless both username / password is valid
             register.isEnabled = createState.isDataValid
+
+
 
             if (createState.usernameError != null) {
                 username.error = getString(createState.usernameError)
@@ -68,8 +68,6 @@ class CreateUserProfile : AppCompatActivity()  {
 
         createViewModel.createResult.observe(this@CreateUserProfile, Observer {
             val createResult = it ?: return@Observer
-
-            //Log.e("Nowlog" , createResult.toString())
 
             loading.visibility = View.GONE
             if (createResult.error != null) {
@@ -117,11 +115,39 @@ class CreateUserProfile : AppCompatActivity()  {
             }
         }
 
-        register.setOnClickListener{
-            Log.d("thisIsBeing", "clicked - ")
-            loading.visibility = View.VISIBLE
-            buildNewAccount(username, password)
-            //createViewModel.create(username.text.toString(), password.text.toString())
+        username.apply {
+            afterTextChanged {
+                createViewModel.createDataChanged(
+                    username.text.toString(),
+                    password.text.toString()
+                )
+            }
+
+            setOnEditorActionListener { _, actionId, _ ->
+                when (actionId) {
+                    EditorInfo.IME_ACTION_DONE ->
+                        createViewModel.create(
+                            username.text.toString(),
+                            password.text.toString()
+                        )
+                }
+                false
+            }
+        }
+
+
+        register.setOnClickListener {
+            // TODO : initiate successful logged in experience
+
+            if(password.text.toString().isEmpty()){
+                createViewModel.createDataChanged(
+                    username.text.toString(),
+                    password.text.toString()
+                )
+            }
+            else{
+                buildNewAccount(username, password)
+            }
         }
 
         cancel.setOnClickListener{
@@ -132,17 +158,14 @@ class CreateUserProfile : AppCompatActivity()  {
         val cancelStrg: String = getString(R.string.sign_up_cancel)
         val content = SpannableString(cancelStrg)
         content.setSpan(UnderlineSpan(), 0, cancelStrg.length, 0)
-        cancel.setText(content)
+        cancel.text = content
     }
 
 
     private fun buildNewAccount(usernameView: EditText, passwordView: EditText) {
         val email = usernameView.text.toString()
         val password = passwordView.text.toString()
-        Log.d("buildNewAccount", "email: $email, password: $password")
-
-        if (email.isEmpty() || password.isEmpty())
-            return
+        Log.d("buildNewAccountMessage", "email: $email, password: $password")
 
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
@@ -151,7 +174,8 @@ class CreateUserProfile : AppCompatActivity()  {
                     //To login
                     startActivityForResult(intent,0)
                     //userFactory()
-                } else {
+                }
+                else {
                     Log.d("TestAgain", "Unable to create: ${task.exception}")
                 }
             }
