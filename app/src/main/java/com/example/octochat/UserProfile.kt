@@ -5,64 +5,94 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
-import com.example.octochat.messaging.User
-import com.example.octochat.ui.login.LoginActivity
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.android.synthetic.main.activity_edit_profile.*
-import kotlinx.android.synthetic.main.activity_user_profile.*
+
 
 class UserProfile : AppCompatActivity() {
 
-    lateinit var userPic : CircleImageView
+    lateinit var userPic: CircleImageView
     lateinit var db: FirebaseFirestore
-   lateinit var storageRef: FirebaseStorage
-
+    lateinit var auth: FirebaseAuth
+    lateinit var itemsRef: CollectionReference
+    lateinit var imageRef: CollectionReference
+    lateinit var name: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
+        name = findViewById(R.id.displayUser)
         userPic = findViewById(R.id.profilePicture)
         db = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance()
 
-        Picasso.get()
+        getImageUrl()
 
-            .load("https://firebasestorage.googleapis.com/v0/b/octochat-4d230.appspot.com/o/Flower2.jpg?alt=media&token=c51aef37-a661-42d2-8e92-3952f9f7364e")
-            .into(userPic, object : Callback {
-                override fun onSuccess() {
-                    Log.d("TAG", "success")
-                }
-
-                override fun onError(e: Exception?) {
-                    Log.d("TAG", "error")
-                }
-            })
-
-/*        itemsRef.get()
-            .addOnCompleteListener {
-                val result: StringBuffer = StringBuffer()
-                if (it.isSuccessful) {
-                    for (document in it.result!!) {
-                        result.append(document.data.getValue("displayName")).append("")
-        //                result.append(document.data.getValue("email")).append("")
-                    }
-                    userName.setText(result)
-          //          userName1.setText(result)
-            //        email.setText(result)
-
-                }
-
-
-            }*/
-
-        userPic.setOnClickListener{
+        userPic.setOnClickListener {
             val intent = Intent(this, EditProfile::class.java)
             startActivity(intent)
 
+        }
+        readFirestoreData()
+    }
+
+
+    fun readFirestoreData() {
+        val user = auth.currentUser
+        //reference = FirebaseDatabase.getInstance().reference.child("users").child(user!!.uid)
+        val email = findViewById<TextView>(R.id.email)
+        user?.let {
+            val displayName = user.displayName
+            val userEmail = user.email
+            itemsRef = db.collection("users")
+            itemsRef.get()
+                .addOnCompleteListener {
+
+                    val result: StringBuffer = StringBuffer()
+                    if (it.isSuccessful) {
+                        for (document in it.result!!) {
+                            result.append(document.data.getValue("email")).append(" ")
+                        }
+                        email.setText(userEmail)
+                    }
+                }
+        }
+
+
+    }
+
+    fun getImageUrl() {
+        val user = auth.currentUser
+        user?.let {
+            imageRef = db.collection("image")
+            imageRef.get()
+                .addOnCompleteListener {
+                    val result: StringBuffer = StringBuffer()
+                    if (it.isSuccessful) {
+                        for (document in it.result!!) {
+                            result.append(document.data.getValue("image")).append(" ")
+                        }
+                        val imageUrl = result.toString()
+                        Log.d("!!!", "$imageUrl")
+                        Picasso.get()
+                            .load(imageUrl)
+                            .into(userPic, object : Callback {
+                                override fun onSuccess() {
+                                    Log.d("TAG", "success")
+                                }
+
+                                override fun onError(e: Exception?) {
+                                    Log.d("TAG", "error")
+                                }
+                            })
+
+
+                    }
+                }
         }
 
     }

@@ -19,14 +19,24 @@ import com.example.octochat.ui.create.CreateUserProfile
 import com.example.octochat.R
 import com.example.octochat.messaging.User
 import com.google.firebase.auth.FirebaseAuth
+<<<<<<< HEAD
 import com.google.firebase.firestore.FirebaseFirestore
 
+=======
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+>>>>>>> master
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
     lateinit var auth: FirebaseAuth
     lateinit var db: FirebaseFirestore
+    lateinit var itemsRef: CollectionReference
+    lateinit var storageRef: FirebaseStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,10 +48,14 @@ class LoginActivity : AppCompatActivity() {
         val login = findViewById<Button>(R.id.userLogIn_buttonAtFirst)
         val signup = findViewById<TextView>(R.id.textView_To_SignUp_Activity)
         val loading = findViewById<ProgressBar>(R.id.loading)
+<<<<<<< HEAD
         val intent = Intent(this, CreateUserProfile::class.java)
 
+=======
+>>>>>>> master
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
+        storageRef = FirebaseStorage.getInstance()
         loginViewModel = ViewModelProvider(this, LoginViewModelFactory())
             .get(LoginViewModel::class.java)
 
@@ -120,10 +134,14 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
+<<<<<<< HEAD
         val signUpStrg: String = getString(R.string.sign_up)
         val content = SpannableString(signUpStrg)
         content.setSpan(UnderlineSpan(), 0, signUpStrg.length, 0)
         signup.setText(content)
+=======
+
+>>>>>>> master
     }
 
     private fun updateUiWithUser(model: LoggedInUserView, username: String, password: String) {
@@ -135,6 +153,7 @@ class LoginActivity : AppCompatActivity() {
             if (it.isSuccessful) {
                 Log.e("LoginActivity", "Successful login")
                 val user = auth.currentUser
+<<<<<<< HEAD
                 db.collection("users").document(user!!.uid).set(
                     User(
                         user.uid,
@@ -143,6 +162,10 @@ class LoginActivity : AppCompatActivity() {
                         "New user"
                     )
                 )
+=======
+
+                db.collection("users").document(user!!.uid).set(User(user.uid, username,username, "New user"))
+>>>>>>> master
 //                user = auth.currentUser
             finish()
         } else
@@ -150,6 +173,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
 
+<<<<<<< HEAD
     // TODO : initiate successful logged in experience
     Toast.makeText(
         applicationContext,
@@ -157,7 +181,39 @@ class LoginActivity : AppCompatActivity() {
         Toast.LENGTH_LONG
     ).show()
 }
+=======
+        // TODO : initiate successful logged in experience
+        Toast.makeText(
+            applicationContext,
+            "$welcome $displayName",
+            Toast.LENGTH_LONG
+        ).show()
 
+      //  readFirestoreData()
+    }
+>>>>>>> master
+
+// added by Jaya to show the user name in userprofile screen
+ /*   fun readFirestoreData(){
+    Log.d("!!!", "sb")
+    var getData = object: ValueEventListener{
+        override fun onCancelled(error: DatabaseError) {
+            TODO("Not yet implemented")
+            Log.d("!!!", "sb1")
+        }
+
+        override fun onDataChange(error: DataSnapshot) {
+            Log.d("!!!", "sb2")
+            var sb = StringBuffer()
+            for(i in error.children)
+            {
+                var name = i.child("email").getValue()
+                sb.append("$sb")
+                Log.d("!!!", "$name")
+            }
+        }
+    }
+}*/
 
     private fun showLoginFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()

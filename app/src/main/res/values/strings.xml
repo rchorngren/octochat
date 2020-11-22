@@ -10,7 +10,11 @@
     <string name="welcome">"Welcome !"</string>
     <string name="fieldsRequired">"Email and passwords are required"</string>
     <string name="invalid_username">Not a valid username</string>
+<<<<<<< HEAD
     <string name="invalid_password">Password must be at least 8 characters long</string>
+=======
+    <string name="invalid_password">Password must be at least 8 characters</string>
+>>>>>>> master
     <string name="login_failed">"Login failed"</string>
     <string name="create_failed">"Create failed"</string>
     <string name="sign_up">"Sign Up"</string>
@@ -28,4 +32,9 @@
     <string name="settings_change_password_new_password_again">Enter new password again</string>
     <string name="settings_change_password_save">Save</string>
     <string name="settings_change_password_cancel">Cancel</string>
+    <string name="settings_toast_password_mismatch">Passwords does not match</string>
+    <string name="settings_toast_password_too_short">Passwords length is too short - a password length of 8 or more is required</string>
+    <string name="settings_toast_password_successful">Password updated</string>
+    <string name="settings_general_error">Something went wrong - please try again</string>
+    <string name="type_a_message">Type a message</string>
 </resources>

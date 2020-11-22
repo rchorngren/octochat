@@ -15,13 +15,15 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.octochat.messaging.User
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_edit_profile.*
-import java.util.*
+
 
 class EditProfile : AppCompatActivity() {
     private val RequestCode = 0
@@ -29,17 +31,17 @@ class EditProfile : AppCompatActivity() {
     lateinit var imageView: ImageView
     lateinit var changeProfilePic: ImageView
     lateinit var userName: EditText
-    lateinit var userName1: TextView
     lateinit var db: FirebaseFirestore
     lateinit var storageRef: FirebaseStorage
-
-    //lateinit var imageRef: StorageReference
+    lateinit var auth: FirebaseAuth
     var profilepic: ImageView? = null
     lateinit var itemsRef: CollectionReference
-
+    lateinit var imageRef: CollectionReference
+    lateinit var url1: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState
+        super.onCreate(
+            savedInstanceState
         )
         setContentView(R.layout.activity_edit_profile)
         imageView = findViewById(R.id.editUserName)
@@ -49,29 +51,23 @@ class EditProfile : AppCompatActivity() {
         val userList = mutableListOf<User>()
         db = FirebaseFirestore.getInstance()
         storageRef = FirebaseStorage.getInstance()
-        itemsRef = db.collection("UserDetails")
+        itemsRef = db.collection("users")
+        auth = FirebaseAuth.getInstance()
         /*  imageRef = storageRef.getReference()
             .child("Users Profile Image")
 
         url = imageRef.downloadUrl.toString()*/
 
 //        val picasso = Picasso.get()
-        Picasso.get()
-            .load("https://firebasestorage.googleapis.com/v0/b/octochat-4d230.appspot.com/o/Flower2.jpg?alt=media&token=c51aef37-a661-42d2-8e92-3952f9f7364e")
-            .into(profilepic, object : Callback {
-                override fun onSuccess() {
-                    Log.d("TAG", "success")
-                }
 
-                override fun onError(e: Exception?) {
-                    Log.d("TAG", "error")
-                }
-            })
+
         edit_userName.setEnabled(false)
 
         imageView.setOnClickListener {
             edit_userName.setEnabled(true)
         }
+        getImageUrl()
+
         editProfilePic.setOnClickListener {
             val i = Intent()
             i.setType("image/*")
@@ -84,33 +80,21 @@ class EditProfile : AppCompatActivity() {
         saveButton.setOnClickListener {
             val username = userName.text.toString()
             upload()
-           // updateUserProfile(username)
             edit_userName.setEnabled(false)
             imageView.setVisibility(View.INVISIBLE)
             changeProfilePic.setVisibility(View.INVISIBLE)
-            //readFirestoreData()
+
         }
 
-        /*val itemsRef=   db.collection("users")
-        itemsRef.addSnapshotListener { snapshot, e ->
-            if( snapshot != null ) {
-                userList.clear()
-                for (document in snapshot.documents) {
-                    val newItem = document.toObject(User::class.java)
-                    if ( newItem != null)
-                        userList.add(newItem)
-                    Log.d("!!!", "${newItem}")
-                }
-            }
-            Log.d("!!!", "List1: ${userList.size}")
-        }*/
+        readFirestore()
     }
+
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RequestCode && resultCode == Activity.RESULT_OK && data != null) {
-            selectedPhotoUri = data.data!!
+        if (requestCode == RequestCode && resultCode == Activity.RESULT_OK && data!!.data != null) {
+            selectedPhotoUri = data.data
             var bitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedPhotoUri)
             profilepic?.setImageBitmap(bitmap)
         }
@@ -121,57 +105,92 @@ class EditProfile : AppCompatActivity() {
             val pd = ProgressDialog(this)
             pd.setTitle("Uploading")
             pd.show()
-            val fileRef = FirebaseStorage.getInstance().reference.child("Users Profile Image")
+            val fileRef =
+                FirebaseStorage.getInstance().reference.child("UserProfileImage").child("images")
+            fileRef.putFile(selectedPhotoUri!!).addOnSuccessListener() { taskSnapshot ->
+                // success
+                fileRef.downloadUrl.addOnCompleteListener() { taskSnapshot ->
 
-            fileRef.putFile(selectedPhotoUri!!)
-
-                .addOnSuccessListener { p0 ->
+                    var url = taskSnapshot.result
+                     url1 = url.toString()
+                    Log.d("!!!", "$url1")
                     pd.dismiss()
-                    Toast.makeText(applicationContext, "Profile pic uploaded", Toast.LENGTH_SHORT).show()
+                    Picasso.get()
+                        .load(url1)
+                        .into(profilepic, object : Callback {
+                            override fun onSuccess() {
+                                Log.d("TAG", "success")
+                            }
+
+                            override fun onError(e: Exception?) {
+                                Log.d("TAG", "error")
+                            }
+
+                        })
+                    val user = auth.currentUser
+                    db.collection("image").document("vb2jtIxI37Mwy9m0ezLnBqY4QCo1").set(Image(url1))
+
                 }
-
-            //Log.d("!!!", "${fileRef.downloadUrl}")
-
-        }
+            }. addOnFailureListener{
+                         Toast.makeText(applicationContext, "Profile pic not uploaded", Toast.LENGTH_SHORT)
+                          .show()
+                         pd.dismiss()
+                    }
+              }
     }
 
-    /*fun updateUserProfile(username: String) {
+    fun getImageUrl() {
+        val user = auth.currentUser
+        user?.let {
+            imageRef = db.collection("image")
+            imageRef.get()
+                .addOnCompleteListener {
+                    val result: StringBuffer = StringBuffer()
+                    if (it.isSuccessful) {
+                        for (document in it.result!!) {
+                            result.append(document.data.getValue("image")).append(" ")
+                        }
+                        val imageUrl = result.toString()
+                        Log.d("!!!", "$imageUrl")
+                        Picasso.get()
+                            .load(imageUrl)
+                            .into(profilepic, object : Callback {
+                                override fun onSuccess() {
+                                    Log.d("TAG", "success")
+                                }
 
-        val userList = mutableListOf<User>()
+                                override fun onError(e: Exception?) {
+                                    Log.d("TAG", "error")
+                                }
+                            })
 
-        val db = FirebaseFirestore.getInstance()
-        val user: MutableMap<String, Any> = HashMap()
-        user["userName"] = username
-        if (username == null) {
-            error("Please enter name")
-        }
-        itemsRef.add(user)
-            .addOnSuccessListener { document ->
-                Toast.makeText(this, "record added successfully ", Toast.LENGTH_SHORT).show()
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "record Failed to add ", Toast.LENGTH_SHORT).show()
-            }
-    }*/
 
-    /*fun readFirestoreData() {
-
-        itemsRef.get()
-            .addOnCompleteListener {
-                val result: StringBuffer = StringBuffer()
-                if (it.isSuccessful) {
-                    for (document in it.result!!) {
-                        result.append(document.data.getValue("displayName")).append("")
                     }
-                    userName.setText(result)
-                    userName1.setText(result)
-
                 }
+        }
 
+    }
 
-            }
-    }*/
-
+    fun readFirestore() {
+        val user = auth.currentUser
+        //reference = FirebaseDatabase.getInstance().reference.child("users").child(user!!.uid)
+        val email1 = findViewById<TextView>(R.id.textEmail)
+        user?.let {
+            val name = user.displayName
+            val userEmail = user.email
+            itemsRef = db.collection("users")
+            itemsRef.get()
+                .addOnCompleteListener {
+                    val result: StringBuffer = StringBuffer()
+                    if (it.isSuccessful) {
+                        for (document in it.result!!) {
+                            result.append(document.data.getValue("email")).append(" ")
+                        }
+                        email1.setText(userEmail)
+                    }
+                }
+        }
+    }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.menu_main, menu)
@@ -179,25 +198,17 @@ class EditProfile : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
         return when (item.itemId) {
             R.id.menu_settings -> {
                 true
             }
-
-            R.id.menu_chats  -> {
-                true
-            }
-            R.id.menu_editprofile  -> {
-
-                val intent = Intent(this, EditProfile::class.java)
+            R.id.menu_editprofile -> {
+                val intent = Intent(this, UserProfile::class.java)
                 startActivity(intent)
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
-
-
 }
-

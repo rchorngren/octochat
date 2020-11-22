@@ -1,7 +1,6 @@
 package com.example.octochat.messaging.util
 
 import android.content.Context
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +12,6 @@ import androidx.core.content.res.ResourcesCompat
 import com.example.octochat.messaging.Message
 import com.example.octochat.R
 import com.example.octochat.messaging.User
-import com.google.firebase.firestore.FirebaseFirestore
 
 class MessagesListAdapter(val context: Context,
                           val listMessages: MutableList<Message>,
@@ -32,6 +30,7 @@ class MessagesListAdapter(val context: Context,
 
         val displayNameView = view.findViewById<TextView>(R.id.textViewDisplayName)
         val messageView = view.findViewById<TextView>(R.id.textViewMessage)
+
 
         val message = listMessages[p0].text
 
@@ -68,4 +67,6 @@ class MessagesListAdapter(val context: Context,
         }
         return view
     }
+
 }
+
