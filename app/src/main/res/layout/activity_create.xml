@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.create.NewCrea">
+    tools:context=".ui.create.CreateUserProfile">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -68,64 +68,62 @@
                         android:orientation="vertical">
 
                         <EditText
-                            android:id="@+id/textUserNameAtCreate_first"
+                            android:id="@+id/textViewCreateDisplayName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:width="24dp"
-                            android:drawableLeft="@drawable/avataruser"
+                            android:drawableStart="@drawable/avataruser"
                             android:ems="10"
-                            android:hint="  Name"
+                            android:drawablePadding="4dp"
+                            android:hint="@string/name"
                             android:inputType="textPersonName" />
                         <!--            Icons made by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
 
                         <EditText
-                            android:id="@+id/textUserNicknameAtCreate_first"
+                            android:id="@+id/textViewCreateUsername"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:width="24dp"
                             android:ems="10"
-                            android:hint="Userame"
+                            android:hint="@string/username"
                             android:inputType="textPersonName" />
                         <!--            Icons made by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
 
                         <EditText
-                            android:id="@+id/textUser_EmailAtCreate_first"
+                            android:drawablePadding="4dp"
+                            android:id="@+id/textViewCreateEmail"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:width="24dp"
-                            android:drawableLeft="@drawable/avataruser"
+                            android:drawableStart="@drawable/avataruser"
                             android:ems="10"
-                            android:hint="  Email"
-                            android:inputType="textPersonName" />
+                            android:hint="@string/email"
+                            android:inputType="textEmailAddress" />
                         <!--            Icons made by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
-
-                        <!--            Icons made by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
-
 
                         <EditText
-                            android:id="@+id/textUser_PasswordAtCreate_first"
+                            android:drawablePadding="4dp"
+                            android:id="@+id/textViewCreatePassword"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:drawableLeft="@drawable/padlockpass"
+                            android:drawableStart="@drawable/padlockpass"
                             android:ems="10"
-                            android:hint="  Password"
-                            android:inputType="text"
-                            android:password="true" />
+                            android:hint="@string/password"
+                            android:inputType="textPassword" />
                         <!--            Icons made by <a href="https://www.flaticon.com/authors/tomas-knop" title="Tomas Knop">Tomas Knop</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
 
                         <EditText
-                            android:id="@+id/textUser_PasswordAtCreate_Repeat_first"
+                            android:id="@+id/textViewCreateRepeatPassword"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ems="10"
-                            android:hint="Repeat  Password"
-                            android:inputType="text" />
+                            android:hint="@string/repeat_password"
+                            android:inputType="textPassword" />
 
                         <CheckBox
                             android:id="@+id/checkBox1Terms"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerInParent="true"
                             android:layout_marginTop="10dp"
                             android:text="Accept terms of service"/>
 
@@ -139,9 +137,9 @@
                             android:layout_marginBottom="8dp"
                             android:background="#DAD8D8"
                             android:backgroundTint="#F4F4F4"
-                            android:drawableRight="@drawable/go_arrow"
+                            android:drawableEnd="@drawable/go_arrow"
                             android:padding="8dp"
-                            android:text="Create Account" />
+                            android:text="@string/create_account" />
 
                         <Space
                             android:layout_width="match_parent"
@@ -153,10 +151,10 @@
                             android:id="@+id/textView_CancelAtCreate_first"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="right"
+                            android:layout_gravity="end"
                             android:layout_marginEnd="8dp"
                             android:gravity="center"
-                            android:text="Cancel" />
+                            android:text="@string/cancel" />
 
                         <Space
                             android:layout_width="match_parent"

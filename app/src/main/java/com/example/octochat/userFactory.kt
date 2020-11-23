@@ -30,7 +30,7 @@ class userFactory : AppCompatActivity() {
         Log.e("UserFactory", "Login")
 
         val username = findViewById<EditText>(R.id.textLoginUserNameOrEmail)
-        val password = findViewById<EditText>(R.id.textUser_PasswordAtCreate_first)
+        val password = findViewById<EditText>(R.id.textViewCreatePassword)
         lateinit var auth : FirebaseAuth
         val db = FirebaseFirestore.getInstance()
 

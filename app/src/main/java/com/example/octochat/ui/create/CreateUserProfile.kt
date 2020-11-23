@@ -10,7 +10,6 @@ import android.text.TextWatcher
 import androidx.lifecycle.Observer
 import android.text.style.UnderlineSpan
 import android.util.Log
-import android.util.Patterns
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.*
@@ -27,19 +26,21 @@ class CreateUserProfile : AppCompatActivity()  {
     private lateinit var createViewModel: CreateViewModel
     lateinit var auth: FirebaseAuth
     lateinit var db: FirebaseFirestore
-
+    lateinit var displayName: EditText
+    lateinit var username: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create)
 
         //This user_first_name is, different from username a name to bill to, for payments or other
-        val user_first_name = findViewById<EditText>(R.id.textUserNameAtCreate_first)
+        displayName = findViewById(R.id.textViewCreateDisplayName)
+        username = findViewById<EditText>(R.id.textViewCreateUsername)
 
         //Important - this username is the name send to database for registration and login. On create-models username uses this origin
-        val username = findViewById<EditText>(R.id.textUser_EmailAtCreate_first)
+        val email = findViewById<EditText>(R.id.textViewCreateEmail)
 
-        val password = findViewById<EditText>(R.id.textUser_PasswordAtCreate_first)
+        val password = findViewById<EditText>(R.id.textViewCreatePassword)
         val register = findViewById<TextView>(R.id.userCreateAccount_button)
         val loading = findViewById<ProgressBar>(R.id.loading)
         val cancel = findViewById<TextView>(R.id.textView_CancelAtCreate_first)
@@ -59,7 +60,7 @@ class CreateUserProfile : AppCompatActivity()  {
 
 
             if (createState.usernameError != null) {
-                username.error = getString(createState.usernameError)
+                email.error = getString(createState.usernameError)
             }
             if (createState.passwordError != null) {
                 password.error = getString(createState.passwordError)
@@ -79,7 +80,7 @@ class CreateUserProfile : AppCompatActivity()  {
                 Log.e("CreateUserProfile", "successNotnull")
                 updateUiWithUser(
                     createResult.success,
-                    username.text.toString(),
+                    email.text.toString(),
                     password.text.toString()
                 )
             }
@@ -89,9 +90,9 @@ class CreateUserProfile : AppCompatActivity()  {
             //finish()
         })
 
-        username.afterTextChanged {
+        email.afterTextChanged {
             createViewModel.createDataChanged(
-                username.text.toString(),
+                email.text.toString(),
                 password.text.toString()
             )
         }
@@ -99,7 +100,7 @@ class CreateUserProfile : AppCompatActivity()  {
         password.apply {
             afterTextChanged {
                 createViewModel.createDataChanged(
-                    username.text.toString(),
+                    email.text.toString(),
                     password.text.toString()
                 )
             }
@@ -108,7 +109,7 @@ class CreateUserProfile : AppCompatActivity()  {
                 when (actionId) {
                     EditorInfo.IME_ACTION_DONE ->
                         createViewModel.create(
-                            username.text.toString(),
+                            email.text.toString(),
                             password.text.toString()
                         )
                 }
@@ -118,7 +119,7 @@ class CreateUserProfile : AppCompatActivity()  {
 
 
         register.setOnClickListener {
-            readCreate(username, password)
+            readCreate(email, password)
         }
 
         cancel.setOnClickListener{
@@ -155,10 +156,20 @@ class CreateUserProfile : AppCompatActivity()  {
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d("DoneCreating", "Success")
+
+                    val user = auth.currentUser
+                    db.collection("users")
+                        .document(user!!.uid)
+                        .set(User(user.uid, email, username.text.toString(), displayName.text.toString()))
+
+                    finish()
                     //To login
-                    val intent = Intent(this, LoginActivity::class.java)
-                    startActivity(intent)
+//                    val intent = Intent(this, LoginActivity::class.java)
+//                    startActivity(intent)
                     //userFactory()
+
+
+
                 }
                 else {
                     Log.d("TestAgain", "Unable to create: ${task.exception}")

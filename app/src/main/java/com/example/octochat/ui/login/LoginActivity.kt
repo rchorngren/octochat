@@ -84,9 +84,6 @@ class LoginActivity : AppCompatActivity() {
                 )
             }
             setResult(Activity.RESULT_OK)
-
-            //Complete and destroy login activity once successful
-            //finish()
         })
 
         username.afterTextChanged {
@@ -141,26 +138,10 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithEmailAndPassword(username, password).addOnCompleteListener {
             if (it.isSuccessful) {
                 Log.e("LoginActivity", "Successful login")
-                val user = auth.currentUser
-
-                db.collection("users").document(user!!.uid).set(
-                    User(
-                        user.uid,
-                        username,
-                        username,
-                        "New user"
-                    )
-                )
-
-                db.collection("users").document(user.uid).set(User(user.uid, username,username, "New user"))
-
-//                user = auth.currentUser
-            finish()
+                finish()
         } else
             Log.e("updateUiWithUser", it.exception.toString())
     }
-
-
 
         // TODO : initiate successful logged in experience
         Toast.makeText(
@@ -169,43 +150,11 @@ class LoginActivity : AppCompatActivity() {
             Toast.LENGTH_LONG
         ).show()
     }
-      //  readFirestoreData()
-
 
     private fun showLoginFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
     }
 }
-
-
-// added by Jaya to show the user name in userprofile screen
- /*   fun readFirestoreData(){
-    Log.d("!!!", "sb")
-    var getData = object: ValueEventListener{
-        override fun onCancelled(error: DatabaseError) {
-            TODO("Not yet implemented")
-            Log.d("!!!", "sb1")
-        }
-
-        override fun onDataChange(error: DataSnapshot) {
-            Log.d("!!!", "sb2")
-            var sb = StringBuffer()
-            for(i in error.children)
-            {
-                var name = i.child("email").getValue()
-                sb.append("$sb")
-                Log.d("!!!", "$name")
-            }
-        }
-    }
-}*/
-
-//Moved to class
-/*
-private fun showLoginFailed(@StringRes errorString: Int) {
-        Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
-}
-*/
 
 /**
  * Extension function to simplify setting an afterTextChanged action to EditText components.
@@ -221,11 +170,5 @@ fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
     })
 }
-
-
-fun startRegistration(){
-//Paused
-        Log.d("ToClass", "clicked")
-    }
 
 
