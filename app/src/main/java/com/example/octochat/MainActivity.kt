@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         val db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
-//        auth.signOut()
+        auth.signOut()
 
       if(auth.currentUser != null){
         Log.e("displayAuth", auth.currentUser!!.uid)

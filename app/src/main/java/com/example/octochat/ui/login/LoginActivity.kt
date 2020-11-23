@@ -19,16 +19,12 @@ import com.example.octochat.ui.create.CreateUserProfile
 import com.example.octochat.R
 import com.example.octochat.messaging.User
 import com.google.firebase.auth.FirebaseAuth
-<<<<<<< HEAD
-import com.google.firebase.firestore.FirebaseFirestore
-
-=======
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
->>>>>>> master
+
 
 class LoginActivity : AppCompatActivity() {
 
@@ -48,11 +44,10 @@ class LoginActivity : AppCompatActivity() {
         val login = findViewById<Button>(R.id.userLogIn_buttonAtFirst)
         val signup = findViewById<TextView>(R.id.textView_To_SignUp_Activity)
         val loading = findViewById<ProgressBar>(R.id.loading)
-<<<<<<< HEAD
+
         val intent = Intent(this, CreateUserProfile::class.java)
 
-=======
->>>>>>> master
+
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
         storageRef = FirebaseStorage.getInstance()
@@ -75,8 +70,6 @@ class LoginActivity : AppCompatActivity() {
 
         loginViewModel.loginResult.observe(this@LoginActivity, Observer {
             val loginResult = it ?: return@Observer
-
-            //Log.e("Nowlog" , loginResult.toString())
 
             loading.visibility = View.GONE
             if (loginResult.error != null) {
@@ -134,14 +127,10 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
-<<<<<<< HEAD
         val signUpStrg: String = getString(R.string.sign_up)
         val content = SpannableString(signUpStrg)
         content.setSpan(UnderlineSpan(), 0, signUpStrg.length, 0)
-        signup.setText(content)
-=======
-
->>>>>>> master
+        signup.text = content
     }
 
     private fun updateUiWithUser(model: LoggedInUserView, username: String, password: String) {
@@ -153,7 +142,7 @@ class LoginActivity : AppCompatActivity() {
             if (it.isSuccessful) {
                 Log.e("LoginActivity", "Successful login")
                 val user = auth.currentUser
-<<<<<<< HEAD
+
                 db.collection("users").document(user!!.uid).set(
                     User(
                         user.uid,
@@ -162,10 +151,9 @@ class LoginActivity : AppCompatActivity() {
                         "New user"
                     )
                 )
-=======
 
-                db.collection("users").document(user!!.uid).set(User(user.uid, username,username, "New user"))
->>>>>>> master
+                db.collection("users").document(user.uid).set(User(user.uid, username,username, "New user"))
+
 //                user = auth.currentUser
             finish()
         } else
@@ -173,25 +161,22 @@ class LoginActivity : AppCompatActivity() {
     }
 
 
-<<<<<<< HEAD
-    // TODO : initiate successful logged in experience
-    Toast.makeText(
-        applicationContext,
-        "$welcome $displayName",
-        Toast.LENGTH_LONG
-    ).show()
-}
-=======
+
         // TODO : initiate successful logged in experience
         Toast.makeText(
             applicationContext,
             "$welcome $displayName",
             Toast.LENGTH_LONG
         ).show()
-
-      //  readFirestoreData()
     }
->>>>>>> master
+      //  readFirestoreData()
+
+
+    private fun showLoginFailed(@StringRes errorString: Int) {
+        Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
+    }
+}
+
 
 // added by Jaya to show the user name in userprofile screen
  /*   fun readFirestoreData(){
@@ -215,10 +200,12 @@ class LoginActivity : AppCompatActivity() {
     }
 }*/
 
-    private fun showLoginFailed(@StringRes errorString: Int) {
+//Moved to class
+/*
+private fun showLoginFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
-    }
 }
+*/
 
 /**
  * Extension function to simplify setting an afterTextChanged action to EditText components.

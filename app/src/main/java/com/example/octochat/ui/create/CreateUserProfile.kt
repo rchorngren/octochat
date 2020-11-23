@@ -73,6 +73,8 @@ class CreateUserProfile : AppCompatActivity()  {
             if (createResult.error != null) {
                 showCreateFailed(createResult.error)
             }
+
+            //Updade this 'if' if UI is to login
             if (createResult.success != null) {
                 Log.e("CreateUserProfile", "successNotnull")
                 updateUiWithUser(
@@ -94,28 +96,7 @@ class CreateUserProfile : AppCompatActivity()  {
             )
         }
 
-
         password.apply {
-            afterTextChanged {
-                createViewModel.createDataChanged(
-                    username.text.toString(),
-                    password.text.toString()
-                )
-            }
-
-            setOnEditorActionListener { _, actionId, _ ->
-                when (actionId) {
-                    EditorInfo.IME_ACTION_DONE ->
-                        createViewModel.create(
-                            username.text.toString(),
-                            password.text.toString()
-                        )
-                }
-                false
-            }
-        }
-
-        username.apply {
             afterTextChanged {
                 createViewModel.createDataChanged(
                     username.text.toString(),
@@ -137,17 +118,7 @@ class CreateUserProfile : AppCompatActivity()  {
 
 
         register.setOnClickListener {
-            // TODO : initiate successful logged in experience
-
-            if(password.text.toString().isEmpty()){
-                createViewModel.createDataChanged(
-                    username.text.toString(),
-                    password.text.toString()
-                )
-            }
-            else{
-                buildNewAccount(username, password)
-            }
+            readCreate(username, password)
         }
 
         cancel.setOnClickListener{
@@ -162,6 +133,19 @@ class CreateUserProfile : AppCompatActivity()  {
     }
 
 
+    private fun readCreate(username: EditText, password: EditText){
+        // TODO : initiate successful logged in experience
+
+        if(password.text.toString().isEmpty()){
+            createViewModel.createDataChanged(
+                username.text.toString(),
+                password.text.toString()
+            )
+        }
+        else{
+            buildNewAccount(username, password)
+        }
+    }
     private fun buildNewAccount(usernameView: EditText, passwordView: EditText) {
         val email = usernameView.text.toString()
         val password = passwordView.text.toString()
@@ -170,9 +154,10 @@ class CreateUserProfile : AppCompatActivity()  {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Log.d("Done", "Success")
+                    Log.d("DoneCreating", "Success")
                     //To login
-                    startActivityForResult(intent,0)
+                    val intent = Intent(this, LoginActivity::class.java)
+                    startActivity(intent)
                     //userFactory()
                 }
                 else {
@@ -181,7 +166,7 @@ class CreateUserProfile : AppCompatActivity()  {
             }
     }
 
-
+//Update this function if UI will sign in the user after creating account
     private fun updateUiWithUser(model: CreatedUserView, username: String, password: String) {
         val welcome = getString(R.string.welcome)
         val displayName = model.displayName
@@ -190,7 +175,9 @@ class CreateUserProfile : AppCompatActivity()  {
         auth.signInWithEmailAndPassword(username, password).addOnCompleteListener {
             if (it.isSuccessful) {
                 Log.e("LoginActivity", "Successful login")
-                val user = auth.currentUser
+
+                // Comment out to avoid sign in after creating user
+                /*val user = auth.currentUser
                 db.collection("users").document(user!!.uid).set(
                     User(
                         user.uid,
@@ -198,7 +185,7 @@ class CreateUserProfile : AppCompatActivity()  {
                         username,
                         "New user"
                     )
-                )
+                )*/
 //                user = auth.currentUser
                 finish()
             } else
