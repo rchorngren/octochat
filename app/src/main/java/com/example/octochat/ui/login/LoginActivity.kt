@@ -156,17 +156,19 @@ class LoginActivity : AppCompatActivity() {
 
                 db.collection("users").document(user!!.uid).set(User(user.uid, username,username, "New user"))
 //                user = auth.currentUser
+                Toast.makeText(
+                    applicationContext,
+                    "$welcome $displayName",
+                    Toast.LENGTH_LONG
+                ).show()
                 finish()
+
             } else Log.e("updateUiWithUser", it.exception.toString())
         }
 
 
         // TODO : initiate successful logged in experience
-        Toast.makeText(
-            applicationContext,
-            "$welcome $displayName",
-            Toast.LENGTH_LONG
-        ).show()
+
 
       //  readFirestoreData()
     }
