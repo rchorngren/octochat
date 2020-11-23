@@ -163,7 +163,14 @@ class LoginActivity : AppCompatActivity() {
                 ).show()
                 finish()
 
-            } else Log.e("updateUiWithUser", it.exception.toString())
+            } else {
+                Log.e("updateUiWithUser", it.exception.toString())
+                Toast.makeText(
+                    applicationContext,
+                    getString(R.string.login_failed),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
 
 

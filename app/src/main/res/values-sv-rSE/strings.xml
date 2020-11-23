@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">octochat</string>
+    <string name="login_failed">"Inloggning misslyckades"</string>
     <string name="settings_banner">Inställningar</string>
     <string name="settings_change_password">Byt lösenord</string>
     <string name="settings_logout">Logga ut</string>
