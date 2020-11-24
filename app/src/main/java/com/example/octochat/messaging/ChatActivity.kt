@@ -13,7 +13,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
 
-class ChatActivity : AppCompatActivity() {
+class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
 
     val TAG = "ChatActivity"
     var currentUserFb: FirebaseUser? = null
@@ -63,28 +63,36 @@ class ChatActivity : AppCompatActivity() {
         backIcon.setOnClickListener { finish() }
 
         moreIcon.setOnClickListener {
-
+            val popup = PopupMenu(this, it)
+            val inflater = popup.menuInflater
+            popup.setOnMenuItemClickListener(this)
+            inflater.inflate(R.menu.menu_chat, popup.menu)
+            popup.show()
         }
 
         sendButton.setOnClickListener {
             val message = Message(currentUserFb!!.uid, editText.text.toString())
-            messagesRef.add(message)
-                .addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        messageAdapter.notifyDataSetChanged()
-                        messagesList.smoothScrollToPosition(listMessages.size - 1)
-                    } else {
-                        Log.e(TAG, it.exception.toString())
+
+            //If the field is not empty, send a message
+            if (editText.text.isNotBlank()) {
+                messagesRef.add(message)
+                    .addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            messageAdapter.notifyDataSetChanged()
+                            messagesList.smoothScrollToPosition(listMessages.size - 1)
+                        } else {
+                            Log.e(TAG, it.exception.toString())
+                        }
                     }
-                }
+                db.collection("chats").document(chatId).set(hashMapOf("timestamp" to FieldValue.serverTimestamp()), SetOptions.merge())
 
-            db.collection("chats").document(chatId).set(hashMapOf("timestamp" to FieldValue.serverTimestamp()), SetOptions.merge())
-
-            editText.setText("")
+                //clear the field when sending a message
+                editText.setText("")
+            }
         }
 
         editText.setOnClickListener {
-                messagesList.smoothScrollToPosition(listMessages.size-1)
+            messagesList.smoothScrollToPosition(listMessages.size - 1)
         }
     }
 
@@ -113,7 +121,7 @@ class ChatActivity : AppCompatActivity() {
     fun createChat() {
         var currentUser: User?
         db.collection("users").document(currentUserFb!!.uid).get().addOnCompleteListener {
-            if (it.isSuccessful){
+            if (it.isSuccessful) {
                 val currentUserAttributes = it.result!!.toObject(User::class.java)!!
                 val email = currentUserAttributes.email!!
                 val username = currentUserAttributes.username!!
@@ -124,7 +132,8 @@ class ChatActivity : AppCompatActivity() {
             } else Log.e("ChatActivity", it.exception.toString())
         }
     }
-    fun getMessages(currentUser: User){
+
+    fun getMessages(currentUser: User) {
         db.collection("users")
             .document(otherUserUid)
             .get()
@@ -137,23 +146,28 @@ class ChatActivity : AppCompatActivity() {
             }
     }
 
-    override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
+    override fun onCreateContextMenu(
+        menu: ContextMenu?,
+        v: View?,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
         super.onCreateContextMenu(menu, v, menuInfo)
         val inflater = menuInflater
         inflater.inflate(R.menu.menu_chat, menu)
+
     }
 
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId){
-            R.id.profile ->{
+    override fun onMenuItemClick(p0: MenuItem?): Boolean {
+        return when (p0?.itemId) {
+            R.id.profile -> {
                 Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show()
                 true
             }
             R.id.block -> {
                 Toast.makeText(this, "Block", Toast.LENGTH_SHORT).show()
                 true
-                }
-            else -> super.onContextItemSelected(item)
+            }
+            else -> false
         }
     }
 }
