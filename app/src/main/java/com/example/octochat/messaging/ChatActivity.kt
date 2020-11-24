@@ -62,8 +62,9 @@ class ChatActivity : AppCompatActivity() {
 
         backIcon.setOnClickListener { finish() }
 
-        registerForContextMenu(moreIcon)
-        moreIcon.setOnClickListener { it.showContextMenu() }
+        moreIcon.setOnClickListener {
+
+        }
 
         sendButton.setOnClickListener {
             val message = Message(currentUserFb!!.uid, editText.text.toString())
