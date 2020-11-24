@@ -183,9 +183,6 @@ class ChatListActivity : AppCompatActivity() {
                 startActivity(intent)
                 true
             }
-            R.id.menu_chats -> {
-                true
-            }
             else -> super.onOptionsItemSelected(item)
         }
     }
