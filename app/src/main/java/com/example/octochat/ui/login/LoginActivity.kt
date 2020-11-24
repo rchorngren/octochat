@@ -110,9 +110,17 @@ class LoginActivity : AppCompatActivity() {
             }
 
             login.setOnClickListener {
-                Log.d("nw", "thisLog1")
-                loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString(), password.text.toString())
+                if(username.text.toString() == "") {
+                    Toast.makeText(
+                        applicationContext,
+                        getString(R.string.login_no_username),
+                        Toast.LENGTH_SHORT
+                    ).show();
+                } else {
+                    Log.d("nw", "thisLog1")
+                    loading.visibility = View.VISIBLE
+                    loginViewModel.login(username.text.toString(), password.text.toString())
+                }
             }
 
             signup.setOnClickListener{

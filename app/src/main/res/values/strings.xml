@@ -12,6 +12,7 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be at least 8 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="login_no_username">"Please enter your username"</string>
     <string name="create_failed">"Create failed"</string>
     <string name="sign_up">"Sign Up"</string>
     <string name="sign_up_cancel">"Cancel"</string>
