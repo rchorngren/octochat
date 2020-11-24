@@ -1,17 +1,13 @@
 package com.example.octochat.messaging
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.ViewOutlineProvider
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.marginStart
-import com.example.octochat.EditProfile
 import com.example.octochat.R
 import com.example.octochat.SettingsActivity
 import com.example.octochat.UserProfile
@@ -190,7 +186,6 @@ class ChatListActivity : AppCompatActivity() {
             R.id.menu_chats -> {
                 true
             }
-
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -212,8 +207,7 @@ class ChatListActivity : AppCompatActivity() {
                     .get()
                     .addOnCompleteListener {
                         if (it.result!!.documents.size > 0) {
-                            val otherUser =
-                                it.result!!.documents[0].toObject(User::class.java)!!
+                            val otherUser = it.result!!.documents[0].toObject(User::class.java)!!
 
                             db.collection("chats")
                                 .document()
@@ -221,10 +215,7 @@ class ChatListActivity : AppCompatActivity() {
                                     "timestamp" to FieldValue.serverTimestamp()))
 
                             getActiveChats()
-                        } else Log.e(
-                            "ChatListActivity",
-                            "No user with $mode $otherUserFieldValue found"
-                        )
+                        } else Log.e("ChatListActivity", "No user with $mode $otherUserFieldValue found")
                     }
             }
         }.show()

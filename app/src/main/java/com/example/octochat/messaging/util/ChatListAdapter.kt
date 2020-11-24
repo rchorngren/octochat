@@ -10,8 +10,6 @@ import android.widget.TextView
 import com.example.octochat.R
 import com.example.octochat.messaging.Chat
 
-//används inte för tillfället men kommer att behövas
-
 class ChatListAdapter(val context: Context, val listChats: MutableList<Chat>) : BaseAdapter(){
 
     val inflater = LayoutInflater.from(context)
@@ -38,5 +36,4 @@ class ChatListAdapter(val context: Context, val listChats: MutableList<Chat>) : 
 
         return view
     }
-
 }

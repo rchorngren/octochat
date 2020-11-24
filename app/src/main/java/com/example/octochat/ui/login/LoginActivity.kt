@@ -1,27 +1,27 @@
 package com.example.octochat.ui.login
 
 import android.app.Activity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import android.content.Intent
 import android.os.Bundle
-import androidx.annotation.StringRes
-import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
+import android.text.SpannableString
 import android.text.TextWatcher
+import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.*
-
+import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.octochat.R
-import com.example.octochat.messaging.User
-import com.example.octochat.userFactory
+import com.example.octochat.ui.create.CreateUserProfile
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+
 
 class LoginActivity : AppCompatActivity() {
 
@@ -36,11 +36,15 @@ class LoginActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_login)
 
-        val username = findViewById<EditText>(R.id.textNameOrEmail)
-        val password = findViewById<EditText>(R.id.textUserPass)
-        val login = findViewById<Button>(R.id.userLogIn_button)
-        val signup = findViewById<TextView>(R.id.textViewSignUp)
+        val username = findViewById<EditText>(R.id.textLoginUserNameOrEmail)
+        val password = findViewById<EditText>(R.id.textLoginUserPassword)
+        val login = findViewById<Button>(R.id.userLogIn_buttonAtFirst)
+        val signup = findViewById<TextView>(R.id.textView_To_SignUp_Activity)
         val loading = findViewById<ProgressBar>(R.id.loading)
+
+        val intent = Intent(this, CreateUserProfile::class.java)
+
+
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
         storageRef = FirebaseStorage.getInstance()
@@ -69,13 +73,14 @@ class LoginActivity : AppCompatActivity() {
                 showLoginFailed(loginResult.error)
             }
             if (loginResult.success != null) {
-                Log.e("LoginActivity","success")
-                updateUiWithUser(loginResult.success, username.text.toString(), password.text.toString())
+                Log.e("LoginActivity", "successNotnull")
+                updateUiWithUser(
+                    loginResult.success,
+                    username.text.toString(),
+                    password.text.toString()
+                )
             }
             setResult(Activity.RESULT_OK)
-
-            //Complete and destroy login activity once successful
-//            finish()
         })
 
         username.afterTextChanged {
@@ -105,44 +110,22 @@ class LoginActivity : AppCompatActivity() {
             }
 
             login.setOnClickListener {
-                Log.d("nw" ,  "thisLog1")
+                Log.d("nw", "thisLog1")
                 loading.visibility = View.VISIBLE
-
-
                 loginViewModel.login(username.text.toString(), password.text.toString())
             }
 
             signup.setOnClickListener{
-                Log.d("thisIsBeing" ,  "clicked - ")
-                buildNewAccount(username , password)
-                loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString(), password.text.toString())
+                Log.d("ToCreate", "clicked")
+                startActivityForResult(intent, 0)
             }
         }
 
-
+        val signUpStrg: String = getString(R.string.sign_up)
+        val content = SpannableString(signUpStrg)
+        content.setSpan(UnderlineSpan(), 0, signUpStrg.length, 0)
+        signup.text = content
     }
-
-
-    private fun buildNewAccount(usernameView: EditText, passwordView: EditText) {
-        val email = usernameView.text.toString()
-        val password = passwordView.text.toString()
-        Log.d("buildNewAccount", "email: $email, password: $password")
-
-        if (email.isEmpty() || password.isEmpty())
-            return
-
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d("Done", "Success")
-                    userFactory()
-                } else {
-                    Log.d("TestAgain", "Unable to create: ${task.exception}")
-                }
-            }
-    }
-
 
     private fun updateUiWithUser(model: LoggedInUserView, username: String, password: String) {
         val welcome = getString(R.string.welcome)
@@ -152,55 +135,18 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithEmailAndPassword(username, password).addOnCompleteListener {
             if (it.isSuccessful) {
                 Log.e("LoginActivity", "Successful login")
-                val user = auth.currentUser
-
-                db.collection("users").document(user!!.uid).set(User(user.uid, username,username, "New user"))
-//                user = auth.currentUser
-                Toast.makeText(
-                    applicationContext,
-                    "$welcome $displayName",
-                    Toast.LENGTH_LONG
-                ).show()
                 finish()
-
-            } else {
-                Log.e("updateUiWithUser", it.exception.toString())
-                Toast.makeText(
-                    applicationContext,
-                    getString(R.string.login_failed),
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-
+        } else
+            Log.e("updateUiWithUser", it.exception.toString())
+    }
 
         // TODO : initiate successful logged in experience
-
-
-      //  readFirestoreData()
+        Toast.makeText(
+            applicationContext,
+            "$welcome $displayName",
+            Toast.LENGTH_LONG
+        ).show()
     }
-
-// added by Jaya to show the user name in userprofile screen
- /*   fun readFirestoreData(){
-    Log.d("!!!", "sb")
-    var getData = object: ValueEventListener{
-        override fun onCancelled(error: DatabaseError) {
-            TODO("Not yet implemented")
-            Log.d("!!!", "sb1")
-        }
-
-        override fun onDataChange(error: DataSnapshot) {
-            Log.d("!!!", "sb2")
-            var sb = StringBuffer()
-            for(i in error.children)
-            {
-                var name = i.child("email").getValue()
-                sb.append("$sb")
-                Log.d("!!!", "$name")
-            }
-        }
-    }
-}*/
 
     private fun showLoginFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
@@ -221,3 +167,5 @@ fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
     })
 }
+
+
