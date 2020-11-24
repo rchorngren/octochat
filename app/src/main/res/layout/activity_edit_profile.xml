@@ -43,7 +43,7 @@
                 android:layout_marginEnd="86dp"
                 android:layout_marginBottom="112dp"
                 android:foregroundGravity="right"
-                android:src="@drawable/ic_baseline_photo_camera_24"></de.hdodenhof.circleimageview.CircleImageView>
+                android:src="@drawable/ic_camera"></de.hdodenhof.circleimageview.CircleImageView>
 
 
         </RelativeLayout>
@@ -88,7 +88,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_profile"/>
+                android:src="@drawable/ic_user"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -116,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_marginLeft="20dp"
-                android:src="@drawable/ic_baseline_edit_24"
+                android:src="@drawable/ic_edit"
                 />
 
 
@@ -134,7 +134,7 @@
                 android:layout_height="50dp"
                 android:padding="4dp"
                 android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_baseline_email_24"/>
+                android:src="@drawable/ic_email"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

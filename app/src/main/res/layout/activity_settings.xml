@@ -49,7 +49,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@android:drawable/ic_lock_power_off" />
+                    app:srcCompat="@drawable/ic_logout" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -80,7 +80,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@android:drawable/ic_menu_edit" />
+                    app:srcCompat="@drawable/ic_edit" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

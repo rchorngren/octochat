@@ -29,7 +29,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginTop="40dp"
-            android:src="@drawable/ic_profile"
+            android:src="@drawable/pfp_placeholder"
 
             />
 
@@ -65,7 +65,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_profile"/>
+                android:src="@drawable/ic_user"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -103,7 +103,7 @@
                 android:layout_height="50dp"
                 android:padding="4dp"
                 android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_baseline_email_24"/>
+                android:src="@drawable/ic_email"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -15,9 +15,7 @@
                 android:id="@+id/scrollLogIn"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="20dp"
+                android:paddingHorizontal="16dp"
                 android:background="#FFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -28,7 +26,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
-
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -47,7 +44,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="51dp"
                             android:layout_marginEnd="10dp"
-                            android:src="@drawable/ic_profile" />
+                            android:src="@drawable/ic_user" />
                         <TextView
                             android:id="@+id/textViewUploadImage"
                             android:layout_width="match_parent"
@@ -72,14 +69,16 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:width="24dp"
-                            android:drawableStart="@drawable/avataruser"
+                            android:drawableStart="@drawable/ic_user"
                             android:ems="10"
-                            android:drawablePadding="4dp"
+                            android:drawablePadding="8dp"
                             android:hint="@string/name"
                             android:inputType="textPersonName" />
                         <!--            Icons made by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
 
                         <EditText
+                            android:drawablePadding="8dp"
+                            android:drawableStart="@drawable/ic_username"
                             android:id="@+id/textViewCreateUsername"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -90,29 +89,31 @@
                         <!--            Icons made by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
 
                         <EditText
-                            android:drawablePadding="4dp"
+                            android:drawablePadding="8dp"
                             android:id="@+id/textViewCreateEmail"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:width="24dp"
-                            android:drawableStart="@drawable/avataruser"
+                            android:drawableStart="@drawable/ic_email"
                             android:ems="10"
                             android:hint="@string/email"
                             android:inputType="textEmailAddress" />
                         <!--            Icons made by <a href="https://www.flaticon.com/authors/gregor-cresnar" title="Gregor Cresnar">Gregor Cresnar</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
 
                         <EditText
-                            android:drawablePadding="4dp"
+                            android:drawablePadding="8dp"
                             android:id="@+id/textViewCreatePassword"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:drawableStart="@drawable/padlockpass"
+                            android:drawableStart="@drawable/ic_lock"
                             android:ems="10"
                             android:hint="@string/password"
                             android:inputType="textPassword" />
                         <!--            Icons made by <a href="https://www.flaticon.com/authors/tomas-knop" title="Tomas Knop">Tomas Knop</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
 
                         <EditText
+                            android:drawablePadding="8dp"
+                            android:drawableStart="@drawable/ic_lock"
                             android:id="@+id/textViewCreateRepeatPassword"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -137,7 +138,7 @@
                             android:layout_marginBottom="8dp"
                             android:background="#DAD8D8"
                             android:backgroundTint="#F4F4F4"
-                            android:drawableEnd="@drawable/go_arrow"
+                            android:drawableEnd="@drawable/ic_arrow_right"
                             android:padding="8dp"
                             android:text="@string/create_account" />
 
