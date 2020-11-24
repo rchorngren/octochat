@@ -33,21 +33,17 @@ class CreateUserProfile : AppCompatActivity()  {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create)
 
-        //This user_first_name is, different from username a name to bill to, for payments or other
         displayName = findViewById(R.id.textViewCreateDisplayName)
-        username = findViewById<EditText>(R.id.textViewCreateUsername)
-
-        //Important - this username is the name send to database for registration and login. On create-models username uses this origin
+        username = findViewById(R.id.textViewCreateUsername)
         val email = findViewById<EditText>(R.id.textViewCreateEmail)
-
         val password = findViewById<EditText>(R.id.textViewCreatePassword)
         val register = findViewById<TextView>(R.id.userCreateAccount_button)
         val loading = findViewById<ProgressBar>(R.id.loading)
         val cancel = findViewById<TextView>(R.id.textView_CancelAtCreate_first)
-        val intent = Intent(this, LoginActivity::class.java)
 
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
+
         createViewModel = ViewModelProvider(this, CreateViewModelFactory())
             .get(CreateViewModel::class.java)
         Log.d("StartThe" , "CreateUser")
@@ -56,8 +52,6 @@ class CreateUserProfile : AppCompatActivity()  {
             val createState = it ?: return@Observer
 
             register.isEnabled = createState.isDataValid
-
-
 
             if (createState.usernameError != null) {
                 email.error = getString(createState.usernameError)
@@ -124,7 +118,7 @@ class CreateUserProfile : AppCompatActivity()  {
 
         cancel.setOnClickListener{
             Log.d("Cancel", "create")
-            startActivityForResult(intent,0)
+            finish()
         }
 
         val cancelStrg: String = getString(R.string.sign_up_cancel)
