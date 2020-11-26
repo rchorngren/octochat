@@ -113,6 +113,7 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
                     listMessages.add(newDocument)
 
                 }
+                if(listMessages.size > 0) listMessages.sortByDescending { it.timestamp }
                 messageAdapter.notifyDataSetChanged()
                 messagesList.smoothScrollToPosition(listMessages.size - 1)
             }

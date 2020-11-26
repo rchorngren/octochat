@@ -27,7 +27,7 @@
                 android:background="?attr/colorPrimary"
                 android:theme="@style/AppTheme.whiteIcons"
                 app:layout_scrollFlags="scroll|enterAlways"
-                app:titleTextColor="@color/white" />
+                app:titleTextColor="@android:color/white" />
 
         </com.google.android.material.appbar.AppBarLayout>
 

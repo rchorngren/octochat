@@ -9,6 +9,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.octochat.R
 import com.example.octochat.SettingsActivity
@@ -54,6 +55,10 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         //Toolbar
         val toolbar = findViewById<Toolbar>(R.id.toolbarMain)
         setSupportActionBar(toolbar)
+
+        //used for coloring the toolbar and status bar
+//        toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.themeYellowLight))
+//        this.window.statusBarColor = ContextCompat.getColor(this, R.color.themeYellowDark)
 
         //Navigation drawer functionality
         drawer = findViewById(R.id.drawerLayout)
