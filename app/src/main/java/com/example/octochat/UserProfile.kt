@@ -11,6 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.android.synthetic.main.activity_user_profile.*
 
 
 class UserProfile : AppCompatActivity() {
@@ -31,19 +32,22 @@ class UserProfile : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
 
         getImageUrl()
-
-        userPic.setOnClickListener {
+        readFirestoreData()
+        editProfileButton.setOnClickListener {
             val intent = Intent(this, EditProfile::class.java)
             startActivity(intent)
+            finish()
 
         }
-        readFirestoreData()
+
     }
 
 
     fun readFirestoreData() {
         val user = auth.currentUser
         //reference = FirebaseDatabase.getInstance().reference.child("users").child(user!!.uid)
+        val displayUserName = findViewById<TextView>(R.id.displayUserName)
+        val displayUser= findViewById<TextView>(R.id.displayUser)
         val email = findViewById<TextView>(R.id.email)
         user?.let {
             val displayName = user.displayName
@@ -56,8 +60,11 @@ class UserProfile : AppCompatActivity() {
                     if (it.isSuccessful) {
                         for (document in it.result!!) {
                             result.append(document.data.getValue("email")).append(" ")
+                            result.append(document.data.getValue("displayName")).append(" ")
                         }
                         email.setText(userEmail)
+                        displayUserName.setText(displayName)
+                        displayUser.setText(displayName)
                     }
                 }
         }
@@ -68,13 +75,13 @@ class UserProfile : AppCompatActivity() {
     fun getImageUrl() {
         val user = auth.currentUser
         user?.let {
-            imageRef = db.collection("image")
+            imageRef = db.collection("users")
             imageRef.get()
                 .addOnCompleteListener {
                     val result: StringBuffer = StringBuffer()
                     if (it.isSuccessful) {
                         for (document in it.result!!) {
-                            result.append(document.data.getValue("image")).append(" ")
+                            result.append(document.data.getValue("profileImage")).append(" ")
                         }
                         val imageUrl = result.toString()
                         Log.d("!!!", "$imageUrl")

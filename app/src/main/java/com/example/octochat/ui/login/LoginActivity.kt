@@ -17,8 +17,6 @@ import com.example.octochat.R
 import com.example.octochat.messaging.User
 import com.example.octochat.userFactory
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -153,8 +151,7 @@ class LoginActivity : AppCompatActivity() {
             if (it.isSuccessful) {
                 Log.e("LoginActivity", "Successful login")
                 val user = auth.currentUser
-
-                db.collection("users").document(user!!.uid).set(User(user.uid, username,username, "New user"))
+                db.collection("users").document(user!!.uid).set(User(user.uid, username,username, "New user",""))
 //                user = auth.currentUser
                 finish()
             } else Log.e("updateUiWithUser", it.exception.toString())

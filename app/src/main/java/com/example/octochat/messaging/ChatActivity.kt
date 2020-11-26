@@ -1,30 +1,16 @@
 package com.example.octochat.messaging
 
-import android.app.AlertDialog
-import android.app.ProgressDialog
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
 import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.octochat.R
-import com.example.octochat.UserProfile
 import com.example.octochat.messaging.util.MessagesListAdapter
-import com.google.android.gms.tasks.Continuation
-import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.*
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageTask
-import com.google.firebase.storage.UploadTask
-import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.android.synthetic.main.attatchment_dialog.*
 
 class ChatActivity : AppCompatActivity() {
 
