@@ -44,7 +44,7 @@ class userFactory : AppCompatActivity() {
 //
 //            }
 
-        db.collection("users").document(user.uid).set(User(user.uid, username.text.toString(),username.text.toString(), "New user"))
+        db.collection("users").document(user.uid).set(User(user.uid, username.text.toString(),username.text.toString(), "New user",""))
 
     }
 
