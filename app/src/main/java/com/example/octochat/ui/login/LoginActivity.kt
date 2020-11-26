@@ -166,6 +166,11 @@ class LoginActivity : AppCompatActivity() {
     private fun showLoginFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
     }
+
+    override fun onBackPressed() {
+        //prevents the user from accidentally going to the empty MainActivity
+        this.moveTaskToBack(true)
+    }
 }
 
 /**
