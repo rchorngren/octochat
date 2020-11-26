@@ -54,7 +54,6 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
 
         textFullName = findViewById(R.id.textFullName)
         messagesList = findViewById(R.id.listViewMessages)
-//        val backIcon = findViewById<ImageView>(R.id.iconBack)
         val moreIcon = findViewById<ImageView>(R.id.iconMore)
         val sendAttachmentButton = findViewById<ImageView>(R.id.buttonSendAttachment)
         val editText = findViewById<EditText>(R.id.textField)
@@ -63,8 +62,6 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
         textFullName.text = otherUserDisplayName
 
         createChat()
-
-//        backIcon.setOnClickListener { finish() }
 
         moreIcon.setOnClickListener {
             val popup = PopupMenu(this, it)
@@ -151,15 +148,10 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
             }
     }
 
-    override fun onCreateContextMenu(
-        menu: ContextMenu?,
-        v: View?,
-        menuInfo: ContextMenu.ContextMenuInfo?
-    ) {
+    override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
         super.onCreateContextMenu(menu, v, menuInfo)
         val inflater = menuInflater
         inflater.inflate(R.menu.menu_chat, menu)
-
     }
 
     override fun onMenuItemClick(p0: MenuItem?): Boolean {

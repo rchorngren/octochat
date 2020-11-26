@@ -72,9 +72,6 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         navDisplayName = headerView.findViewById(R.id.textDisplayNameNav)
         navUsername = headerView.findViewById(R.id.textUsernameNav)
 
-
-
-
         listViewChats = findViewById(R.id.listView)
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         val emailFab = findViewById<FloatingActionButton>(R.id.fabMiniEmail)
@@ -153,8 +150,7 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
                         val timestamp = document["timestamp"] as Timestamp?
                         val timestampDate: Date
-                        if (timestamp != null) timestampDate =
-                            timestamp.toDate() else return@forEachIndexed
+                        if (timestamp != null) timestampDate = timestamp.toDate() else return@forEachIndexed
 
                         val users = document["users"] as MutableList<String>?
                         var otherUserUid: String? = null
@@ -264,6 +260,7 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        //handles button presses in the navigation drawer
         when(item.itemId){
             R.id.profile -> {
                 val intent = Intent(this, UserProfile::class.java)
