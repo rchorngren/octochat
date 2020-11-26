@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.example.octochat.R
 import com.example.octochat.messaging.util.MessagesListAdapter
 import com.google.firebase.auth.FirebaseAuth
@@ -35,7 +36,10 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        supportActionBar?.hide()
+        //Toolbar
+        val toolbar = findViewById<Toolbar>(R.id.toolbarChat)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         //Intent
         val chatId = intent.getStringExtra("chatId")!!
@@ -50,7 +54,7 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
 
         textFullName = findViewById(R.id.textFullName)
         messagesList = findViewById(R.id.listViewMessages)
-        val backIcon = findViewById<ImageView>(R.id.iconBack)
+//        val backIcon = findViewById<ImageView>(R.id.iconBack)
         val moreIcon = findViewById<ImageView>(R.id.iconMore)
         val sendAttachmentButton = findViewById<ImageView>(R.id.buttonSendAttachment)
         val editText = findViewById<EditText>(R.id.textField)
@@ -60,7 +64,7 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
 
         createChat()
 
-        backIcon.setOnClickListener { finish() }
+//        backIcon.setOnClickListener { finish() }
 
         moreIcon.setOnClickListener {
             val popup = PopupMenu(this, it)
@@ -113,7 +117,7 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
                     listMessages.add(newDocument)
 
                 }
-                if(listMessages.size > 0) listMessages.sortByDescending { it.timestamp }
+                if(listMessages.size > 0) listMessages.sortBy { it.timestamp }
                 messageAdapter.notifyDataSetChanged()
                 messagesList.smoothScrollToPosition(listMessages.size - 1)
             }
@@ -170,5 +174,10 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
             }
             else -> false
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
     }
 }

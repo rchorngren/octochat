@@ -25,6 +25,8 @@ class UserProfile : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         name = findViewById(R.id.displayUser)
         userPic = findViewById(R.id.profilePicture)
         db = FirebaseFirestore.getInstance()
@@ -94,6 +96,10 @@ class UserProfile : AppCompatActivity() {
                     }
                 }
         }
+    }
 
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
     }
 }

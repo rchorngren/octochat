@@ -40,10 +40,10 @@ class EditProfile : AppCompatActivity() {
     lateinit var url1: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(
-            savedInstanceState
-        )
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         imageView = findViewById(R.id.editUserName)
         userName = findViewById(R.id.edit_userName)
         changeProfilePic = findViewById(R.id.editProfilePic)
@@ -191,24 +191,9 @@ class EditProfile : AppCompatActivity() {
                 }
         }
     }
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.menu_main, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_settings -> {
-                true
-            }
-            R.id.menu_editprofile -> {
-                val intent = Intent(this, UserProfile::class.java)
-                startActivity(intent)
-                true
-            }
-
-            else -> super.onOptionsItemSelected(item)
-        }
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
     }
 }
