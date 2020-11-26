@@ -20,6 +20,7 @@
     <string name="fieldsRequired">Epostadress och lösenord krävs</string>
     <string name="invalid_username">"Inte ett "</string>
     <string name="login_failed">Inloggning misslyckad</string>
+    <string name="login_no_username">"Ange ditt användarnamn"</string>
     <string name="create_failed">Misslyckade att skapa</string>
     <string name="sign_up">Registrera</string>
     <string name="sign_up_cancel">Avbryt</string>
