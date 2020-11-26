@@ -44,21 +44,23 @@ import android.Manifest
 import android.content.ContentResolver
 import android.content.ContentValues
 import com.google.firebase.database.DatabaseError.PERMISSION_DENIED
+import com.google.firebase.firestore.FieldValue
 import io.grpc.Status.PERMISSION_DENIED
 
 
 class EditProfile : AppCompatActivity() {
     private val RequestCode = 0
     private var selectedPhotoUri: Uri? = null
-    lateinit var imageView: ImageView
+    lateinit var editName: TextView
+    lateinit var editDisplayName : TextView
     lateinit var changeProfilePic: ImageView
-    lateinit var userName: EditText
+    lateinit var displayName: EditText
+    lateinit var editUserName: EditText
     lateinit var db: FirebaseFirestore
     lateinit var storageRef: FirebaseStorage
     lateinit var auth: FirebaseAuth
     var profilepic: ImageView? = null
     lateinit var itemsRef: CollectionReference
-    lateinit var imageRef: CollectionReference
     lateinit var url1: String
     val PERMISSION_CODE : Int = 1000
     var imageUri: Uri ?= null
@@ -70,18 +72,31 @@ class EditProfile : AppCompatActivity() {
         )
         setContentView(R.layout.activity_edit_profile)
         
-        imageView = findViewById(R.id.editUserName)
-        userName = findViewById(R.id.edit_userName)
+        editName = findViewById(R.id.editUserName)
+        editDisplayName = findViewById(R.id.editDisplayName)
+        displayName = findViewById(R.id.edit_displayName)
+        editUserName =findViewById(R.id.edit_userName)
         changeProfilePic = findViewById(R.id.editProfilePic)
         profilepic = findViewById(R.id.profilePicture)
+
         db = FirebaseFirestore.getInstance()
         storageRef = FirebaseStorage.getInstance()
         itemsRef = db.collection("users")
         auth = FirebaseAuth.getInstance()
 
-        getImageUrl()
-        readFirestore()
+        readFirestoreData()
 
+        displayName.setEnabled(false)
+        editUserName.setEnabled(false)
+
+        editDisplayName.setOnClickListener {
+
+            displayName.setEnabled(true)
+        }
+        editName.setOnClickListener {
+
+            editUserName.setEnabled(true)
+        }
         val bottomSheetDialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.userprofile_bottom_sheet, null)
         bottomSheetDialog.setContentView(view)
@@ -117,9 +132,13 @@ class EditProfile : AppCompatActivity() {
 
         saveButton.setOnClickListener {
             updateDisplayName()
-            edit_userName.setEnabled(false)
-            imageView.setVisibility(View.INVISIBLE)
+            updateUserName()
+            displayName.setEnabled(false)
+            editUserName.setEnabled(false)
             changeProfilePic.setVisibility(View.INVISIBLE)
+
+            val intent = Intent(this, UserProfile::class.java)
+               startActivity(intent)
 
         }
 
@@ -169,11 +188,12 @@ class EditProfile : AppCompatActivity() {
 
         } else (resultCode == Activity.RESULT_OK)
             profilepic?.setImageURI(imageUri)
-        uploadCamera()
+            uploadCamera()
 
-        }
-fun uploadCamera(){
-    val user = auth.currentUser
+    }
+
+    fun uploadCamera(){
+        val user = auth.currentUser
     if (imageUri != null) {
         val fileRef =
             FirebaseStorage.getInstance().reference.child(user!!.uid).child("UserProfileImage").child("CameraImage")
@@ -207,19 +227,6 @@ fun uploadCamera(){
     }
 
     }
-/*fun removePhoto()
-{
-
-    val user = auth.currentUser
-    user?.let {
-        imageRef =  db.collection("users").document(user!!.uid).set(hashMapOf("profileImage" to url1.delete())
-
-    imageRef.update(updates).addOnCompleteListener { }
-    // [END update_delete_field]
-}
-}*/
-
-
 
     private fun uploadPhotos() {
         val user = auth.currentUser
@@ -260,21 +267,22 @@ fun uploadCamera(){
               }
     }
 
-    fun getImageUrl() {
+    fun readFirestoreData() {
+        val testViewName =findViewById<TextView>(R.id.tv_name)
+        val email = findViewById<TextView>(R.id.textEmail)
+
         val user = auth.currentUser
         user?.let {
-            imageRef = db.collection("users")
-            imageRef.get()
-                .addOnCompleteListener {
-                    val result: StringBuffer = StringBuffer()
-                    if (it.isSuccessful) {
-                        for (document in it.result!!) {
-                            result.append(document.data.getValue("profileImage")).append("")
-                        }
-                        val imageUrl = result.toString()
-                        Log.d("!!!", "$imageUrl")
+            val userEmail = user.email
+            db.collection("users").document(user!!.uid).get().addOnCompleteListener {
+                if (it.isSuccessful) {
+                    val currentUser = it.result!!.toObject(User::class.java)!!
+                    val display_Name = currentUser.displayName
+                    val profileImage = currentUser.profileImage
+                    val name = currentUser.username
+
                         Picasso.get()
-                            .load(imageUrl)
+                            .load(profileImage)
                             .into(profilepic, object : Callback {
                                 override fun onSuccess() {
                                     Log.d("TAG", "success")
@@ -284,89 +292,51 @@ fun uploadCamera(){
                                     Log.d("TAG", "error")
                                 }
                             })
-
-
-                    }
+                    
+                    testViewName.setText(display_Name)
+                    displayName.setText(display_Name)
+                    editUserName.setText(name)
                 }
-        }
+            }
+            email.setText(userEmail)
 
-    }
-
-    fun readFirestore() {
-        val user = auth.currentUser
-        val testViewName =findViewById<TextView>(R.id.tv_name)
-        val email1 = findViewById<TextView>(R.id.textEmail)
-        user?.let {
-            val name = user.displayName
-            val userEmail = user.email
-            itemsRef = db.collection("users")
-            itemsRef.get()
-                .addOnCompleteListener {
-                    val result: StringBuffer = StringBuffer()
-                    if (it.isSuccessful) {
-                        for (document in it.result!!) {
-                            result.append(document.data.getValue("email")).append(" ")
-                            result.append(document.data.getValue("displayName")).append(" ")
-                        }
-                        email1.setText(userEmail)
-                        userName.setText(name)
-                        testViewName.setText(name)
-                    }
-                }
         }
     }
+
 
     fun updateDisplayName(){
 
         val user = auth.currentUser
-        val name = userName.text.toString().trim()
+        val name = displayName.text.toString().trim()
         if (name.isEmpty())
         {
-            userName.error= "Please enter the name"
-            userName.requestFocus()
+            displayName.error= "Please enter the name"
+            displayName.requestFocus()
 
         }
-        /*val updates = UserProfileChangeRequest.Builder()
-            .setDisplayName(name)
-            .build()
-        user?.updateProfile(updates)
-            ?.addOnCompleteListener {
-                if(it.isSuccessful)
-                {*/
 
-                    db.collection("users").document(user!!.uid).set(hashMapOf("displayName" to name), SetOptions.merge())
+            db.collection("users").document(user!!.uid).set(hashMapOf("displayName" to name), SetOptions.merge())
+            Log.d("success", "Success")
+            Toast.makeText(applicationContext, "display name updated", Toast.LENGTH_SHORT).show()
+       }
+
+    fun updateUserName(){
+
+        val user = auth.currentUser
+        val name = editUserName.text.toString().trim()
+        if (name.isEmpty())
+        {
+            editUserName.error= "Please enter the name"
+            editUserName.requestFocus()
+
+        }
+        db.collection("users").document(user!!.uid).set(hashMapOf("username" to name), SetOptions.merge())
         Log.d("success", "Success")
-                    Toast.makeText(applicationContext, "display name updated", Toast.LENGTH_SHORT).show()
-                //}
-                   // else
-                    //Toast.makeText(applicationContext, "display name not updated", Toast.LENGTH_SHORT).show()
-            }
+        Toast.makeText(applicationContext, "display name updated", Toast.LENGTH_SHORT).show()
 
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.menu_main, menu)
-        return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_settings -> {
-                setVisible(false)
-                true
-            }
-            R.id.menu_editprofile -> {
-                val intent = Intent(this, UserProfile::class.java)
-                startActivity(intent)
-                true
-            }
-            R.id.menu_chats -> {
-                setVisible(false)
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
+
 }
 
 

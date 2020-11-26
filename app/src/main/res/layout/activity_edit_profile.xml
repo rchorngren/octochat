@@ -96,13 +96,15 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/editDisplayName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="User Name"
-                    android:textStyle="bold" />
+                    android:text="Display Name"
+                    android:textStyle="bold"
+                    android:drawableRight="@drawable/ic_baseline_edit_24"/>
 
                 <EditText
-                    android:id="@+id/edit_userName"
+                    android:id="@+id/edit_displayName"
                     android:layout_width="wrap_content"
                     android:layout_height="43dp"
 
@@ -110,18 +112,48 @@
                     android:text="User01" />
 
             </LinearLayout>
-            <ImageView
-                android:id="@+id/editUserName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginLeft="20dp"
-                android:src="@drawable/ic_baseline_edit_24"
-                />
+
 
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="14dp">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_profile"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/editUserName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="User Name"
+                    android:textStyle="bold"
+                    android:drawableRight="@drawable/ic_baseline_edit_24"
+                    />
+
+                <EditText
+                    android:id="@+id/edit_userName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="43dp"
+                    android:text="User01" />
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
 
 
         <LinearLayout

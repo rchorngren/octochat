@@ -131,6 +131,7 @@ class LoginActivity : AppCompatActivity() {
         val welcome = getString(R.string.welcome)
         val displayName = model.displayName
 
+
         Log.d("updateUiWithUser", "email: $username, password: $password")
         auth.signInWithEmailAndPassword(username, password).addOnCompleteListener {
             if (it.isSuccessful) {
