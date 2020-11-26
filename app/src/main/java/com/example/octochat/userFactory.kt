@@ -7,9 +7,7 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.example.octochat.messaging.User
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.storage.FirebaseStorage
 
 class userFactory : AppCompatActivity() {
 
@@ -29,7 +27,7 @@ class userFactory : AppCompatActivity() {
     fun createNew() {
         Log.e("UserFactory", "Login")
 
-        val username = findViewById<EditText>(R.id.textLoginUserNameOrEmail)
+        val username = findViewById<EditText>(R.id.textLoginEmail)
         val password = findViewById<EditText>(R.id.textViewCreatePassword)
         lateinit var auth : FirebaseAuth
         val db = FirebaseFirestore.getInstance()

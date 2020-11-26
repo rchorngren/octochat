@@ -37,7 +37,7 @@ class MessagesListAdapter(val context: Context,
         val displayName: String
         val userId: String?
 
-        if (listMessages[p0].sender == currentUser!!.userId) {
+        if (listMessages[p0].sender == currentUser!!.userId) { //if the current message is sent by the user
             val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -49,10 +49,10 @@ class MessagesListAdapter(val context: Context,
             userId = currentUser.userId
 
             displayNameView.layoutParams = params
-            messageView.background.setTint(ResourcesCompat.getColor(context.resources, R.color.colorMessageBackgroundGray, null))
             displayNameView.visibility = TextView.GONE
             messageView.layoutParams = params
         } else {
+            messageView.background.setTint(ResourcesCompat.getColor(context.resources, R.color.colorMessageBackgroundGray, null))
             displayName = otherUser!!.displayName!!
             userId = otherUser.userId
         }

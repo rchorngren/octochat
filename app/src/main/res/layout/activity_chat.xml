@@ -7,72 +7,74 @@
     android:orientation="vertical"
     android:background="@android:color/white">
 
-    <RelativeLayout
-        android:id="@+id/toolbar"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarChat"
         android:layout_width="match_parent"
-        android:layout_height="?android:listPreferredItemHeight"
-        android:layout_alignParentTop="true">
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
 
-        <ImageView
-            android:foreground="?selectableItemBackground"
-            android:padding="12dp"
-            android:id="@+id/iconBack"
-            android:layout_centerVertical="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@android:color/darker_gray"
-            android:src="@drawable/ic_back" />
-
-        <LinearLayout
-            android:layout_centerHorizontal="true"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="center_vertical"
-                app:cardCornerRadius="100dp">
-
-                <ImageView
-                    android:id="@+id/imageProfilePicture"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bg_no_pfp" />
-            </androidx.cardview.widget.CardView>
-
-            <TextView
-                android:id="@+id/textFullName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="16dp"
-                android:text="Name Lastname"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <ImageView
-            android:padding="12dp"
-            android:cropToPadding="true"
-            android:foreground="?selectableItemBackground"
-            android:id="@+id/iconMore"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_more_vert"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <View
-            android:layout_alignParentBottom="true"
-            android:background="@android:color/darker_gray"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarChat"
             android:layout_width="match_parent"
-            android:layout_height="1dp"/>
-    </RelativeLayout>
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/AppTheme.whiteIcons"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:titleTextColor="@android:color/white">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="center_vertical"
+                    app:cardCornerRadius="100dp">
+
+                    <ImageView
+                        android:id="@+id/imageProfilePicture"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_no_pfp" />
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:textColor="@android:color/white"
+                    android:id="@+id/textFullName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="12dp"
+                    android:text="Name Lastname"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <ImageView
+                android:padding="12dp"
+                android:cropToPadding="true"
+                android:foreground="?selectableItemBackground"
+                android:id="@+id/iconMore"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/ic_more_vert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
 
     <ListView
-        android:layout_below="@id/toolbar"
+        android:layout_below="@id/appBarChat"
         android:headerDividersEnabled="true"
         android:scrollbars="none"
         android:id="@+id/listViewMessages"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="settings_banner">Inställningar</string>
+    <string name="settings">Inställningar</string>
     <string name="settings_change_password">Byt lösenord</string>
     <string name="settings_logout">Logga ut</string>
     <string name="settings_change_password_current_password">Nuvarande lösenord</string>
@@ -36,4 +36,10 @@
     <string name="create_account">Skapa konto</string>
     <string name="cancel">Avbryt</string>
     <string name="invalid_password">Lösenord måste vara minst 8 tecken</string>
+    <string name="sign_in">Logga in</string>
+    <string name="sign_in_private">Logga in privat</string>
+    <string name="your_profile">Din profil</string>
+    <string name="profile">Profil</string>
+    <string name="block">Blockera</string>
+    <string name="recover_password">Återställ lösenord</string>
 </resources>

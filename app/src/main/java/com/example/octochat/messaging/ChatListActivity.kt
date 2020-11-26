@@ -3,31 +3,42 @@ package com.example.octochat.messaging
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import com.example.octochat.R
 import com.example.octochat.SettingsActivity
 import com.example.octochat.UserProfile
 import com.example.octochat.messaging.util.ChatListAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import kotlinx.android.synthetic.main.activity_chat_list.*
 import java.util.*
 
-class ChatListActivity : AppCompatActivity() {
+class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     val TAG = "ChatListActivity"
     lateinit var auth: FirebaseAuth
     lateinit var db: FirebaseFirestore
 
-    var currentUser: FirebaseUser? = null
+    private lateinit var drawer: DrawerLayout
+    private lateinit var toggle: ActionBarDrawerToggle
+    lateinit var navUsername: TextView
+    lateinit var navDisplayName: TextView
+
+    lateinit var currentUser: User
+    var currentFbUser: FirebaseUser? = null
     val listChats = mutableListOf<Chat>()
     lateinit var chatListAdapter: ChatListAdapter
 
@@ -40,6 +51,26 @@ class ChatListActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_list)
+
+        //Toolbar
+        val toolbar = findViewById<Toolbar>(R.id.toolbarMain)
+        setSupportActionBar(toolbar)
+
+        //used for coloring the toolbar and status bar
+//        toolbar.setBackgroundColor(ContextCompat.getColor(this, R.color.themeYellowLight))
+//        this.window.statusBarColor = ContextCompat.getColor(this, R.color.themeYellowDark)
+
+        //Navigation drawer functionality
+        drawer = findViewById(R.id.drawerLayout)
+        toggle = ActionBarDrawerToggle(this, drawer, toolbar, R.string.app_banner , R.string.action_sign_in)
+        drawer.addDrawerListener(toggle)
+        val navigationView: NavigationView = findViewById(R.id.navView)
+        navigationView.setNavigationItemSelectedListener(this)
+
+        //Navigation drawer header views
+        val headerView = navigationView.getHeaderView(0)
+        navDisplayName = headerView.findViewById(R.id.textDisplayNameNav)
+        navUsername = headerView.findViewById(R.id.textUsernameNav)
 
         listViewChats = findViewById(R.id.listView)
         val fab = findViewById<FloatingActionButton>(R.id.fab)
@@ -58,6 +89,7 @@ class ChatListActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
 
         getActiveChats()
+        getSelfUser()
 
         emailFab.setOnClickListener { startChatFromDialog("email") }
 
@@ -85,6 +117,23 @@ class ChatListActivity : AppCompatActivity() {
         }
     }
 
+    fun getSelfUser() {
+        db.collection("users").document(auth.currentUser!!.uid).get().addOnCompleteListener {
+            if(it.isSuccessful){
+                currentUser = it.result!!.toObject(User::class.java)!!
+                navDisplayName.text = currentUser.displayName
+                val username = "@" + currentUser.username
+                navUsername.text = username
+
+            } else {
+                Log.e(TAG, "Could not find your profile in the database; " + it.exception.toString())
+                Toast.makeText(this, "Could not find your profile in the database", Toast.LENGTH_SHORT).show()
+                auth.signOut()
+                finish()
+            }
+        }
+    }
+
     fun getActiveChats() {
         progressBar.visibility = ProgressBar.VISIBLE
         emptyView.visibility = TextView.GONE
@@ -101,8 +150,7 @@ class ChatListActivity : AppCompatActivity() {
 
                         val timestamp = document["timestamp"] as Timestamp?
                         val timestampDate: Date
-                        if (timestamp != null) timestampDate =
-                            timestamp.toDate() else return@forEachIndexed
+                        if (timestamp != null) timestampDate = timestamp.toDate() else return@forEachIndexed
 
                         val users = document["users"] as MutableList<String>?
                         var otherUserUid: String? = null
@@ -163,31 +211,11 @@ class ChatListActivity : AppCompatActivity() {
             }
     }
 
-    // adding menu button for the user profile screen - Jaya
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.menu_main, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_settings -> {
-                val intent = Intent(this, SettingsActivity::class.java)
-                startActivity(intent)
-                true
-            }
-            R.id.menu_editprofile -> {
-                val intent = Intent(this, UserProfile::class.java)
-                startActivity(intent)
-                true
-            }
-            R.id.menu_chats -> {
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
+        if (toggle.onOptionsItemSelected(item)) {
+            return true
         }
+        return super.onOptionsItemSelected(item)
     }
 
     fun startChatFromDialog(mode: String){
@@ -219,5 +247,30 @@ class ChatListActivity : AppCompatActivity() {
                     }
             }
         }.show()
+    }
+
+    override fun onBackPressed() {
+        //prevents the user from accidentally going to the empty MainActivity
+        this.moveTaskToBack(true)
+    }
+
+    override fun onPostCreate(savedInstanceState: Bundle?) {
+        super.onPostCreate(savedInstanceState)
+        toggle.syncState()
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        //handles button presses in the navigation drawer
+        when(item.itemId){
+            R.id.profile -> {
+                val intent = Intent(this, UserProfile::class.java)
+                startActivity(intent)
+            }
+            R.id.settings -> {
+                val intent = Intent(this, SettingsActivity::class.java)
+                startActivity(intent)
+            }
+        }
+        return true
     }
 }
