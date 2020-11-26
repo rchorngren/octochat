@@ -167,12 +167,8 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
             .addOnCompleteListener {
                 if(it.isSuccessful){
                     if (it.result!!.exists()){
-                        Log.e(TAG, it.result.toString())
-                        Toast.makeText(this, "${otherUser.displayName} is a friend", Toast.LENGTH_SHORT).show()
                         isFriend = true
                     } else {
-                        Log.e(TAG, it.result.toString())
-                        Toast.makeText(this, "${otherUser.displayName} is not a friend", Toast.LENGTH_SHORT).show()
                         isFriend = false
                     }
                     popup.menu.findItem(R.id.addFriend).isVisible = !isFriend

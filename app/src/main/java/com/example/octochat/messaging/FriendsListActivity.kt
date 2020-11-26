@@ -13,6 +13,7 @@ import com.example.octochat.R
 import com.example.octochat.messaging.util.FriendsListAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -104,7 +105,6 @@ class FriendsListActivity : AppCompatActivity() {
     }
 
     fun startChat(pos: Int) {
-        Toast.makeText(this, "Chat started with ${friendsList[pos].displayName}", Toast.LENGTH_SHORT).show()
 
         db.collection("chats")
             .whereArrayContains("users", auth.currentUser!!.uid)
@@ -113,7 +113,6 @@ class FriendsListActivity : AppCompatActivity() {
                 if (it.isSuccessful) {
                     it.result!!.documents.forEachIndexed { i, document ->
                         val list = document["users"] as List<String>
-                        Log.e(TAG, "Friend UID: ${friendsList[pos].userId}" + list.toString())
                         if(list.contains(friendsList[pos].userId)){
                             finish()
                             val intent = Intent(this, ChatActivity::class.java)
@@ -124,11 +123,22 @@ class FriendsListActivity : AppCompatActivity() {
                             return@addOnCompleteListener
                         }
                     }
+                    val newChatId = db.collection("chats").document()
+                    newChatId.set(hashMapOf("users" to listOf(auth.currentUser!!.uid, friendsList[pos].userId),
+                        "timestamp" to FieldValue.serverTimestamp()))
+                        .addOnCompleteListener {
+
+                        finish()
+                        val intent = Intent(this, ChatActivity::class.java)
+                        intent.putExtra("chatId", newChatId.id)
+                        intent.putExtra("otherUserDisplayName", friendsList[pos].displayName)
+                        intent.putExtra("otherUserUid", friendsList[pos].userId)
+                        startActivity(intent)
+                        Toast.makeText(this, "Chat started with ${friendsList[pos].displayName}", Toast.LENGTH_SHORT).show()
+                    }
 
                 }
             }
-
-
     }
 
     override fun onSupportNavigateUp(): Boolean {

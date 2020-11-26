@@ -6,7 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
+import com.example.octochat.Image
 import com.example.octochat.R
 import com.example.octochat.messaging.FriendsListActivity
 import com.example.octochat.messaging.User
@@ -28,9 +30,12 @@ class FriendsListAdapter(val context: Context, val listUsers: MutableList<User>)
         val nameText = view.findViewById<TextView>(R.id.textFriendName)
         val userNameText = view.findViewById<TextView>(R.id.textFriendUsername)
         val startChatButton = view.findViewById<ImageView>(R.id.buttonStartChat)
+        val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
 
         startChatButton.setOnClickListener {
             (context as FriendsListActivity).startChat(p0)
+            startChatButton.visibility = ImageView.GONE
+            progressBar.visibility = ProgressBar.VISIBLE
         }
 
         val name = listUsers[p0].displayName
