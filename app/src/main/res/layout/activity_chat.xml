@@ -39,6 +39,7 @@
                     app:cardCornerRadius="100dp">
 
                     <ImageView
+                        android:theme="@style/AppTheme"
                         android:id="@+id/imageProfilePicture"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

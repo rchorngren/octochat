@@ -70,13 +70,7 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
 
         createChat()
 
-        moreIcon.setOnClickListener {
-//            popup = PopupMenu(this, it)
-//            val inflater = popup.menuInflater
-//            popup.setOnMenuItemClickListener(this)
-//            inflater.inflate(R.menu.menu_chat, popup.menu)
-            popup.show()
-        }
+        moreIcon.setOnClickListener { popup.show() }
 
         sendButton.setOnClickListener {
             val message = Message(currentUserFb!!.uid, editText.text.toString())
@@ -166,11 +160,7 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
             .get()
             .addOnCompleteListener {
                 if(it.isSuccessful){
-                    if (it.result!!.exists()){
-                        isFriend = true
-                    } else {
-                        isFriend = false
-                    }
+                    isFriend = it.result!!.exists()
                     popup.menu.findItem(R.id.addFriend).isVisible = !isFriend
                 }
             }
