@@ -24,14 +24,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        //setContentView(R.layout.activity_main)
+        //setContentView(R.layout.create_activity)
         val db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
-//        auth.signOut()
+        //auth.signOut()
 
-        if(auth.currentUser != null)
-            startChatList()
+      if(auth.currentUser != null){
+        Log.e("displayAuth", auth.currentUser!!.uid)
+            startChatList()}
         else
             getLogStarted()
     }

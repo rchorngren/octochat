@@ -16,9 +16,7 @@
         <activity android:name=".UserProfile" />
         <activity android:name=".EditProfile" />
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".ui.login.LoginActivity" android:label="@string/title_activity_login" >
-
-        </activity> <!-- <activity android:name=".LogInUser" /> -->
+        <activity android:name=".ui.login.LoginActivity"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,6 +24,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.create.CreateUserProfile"/>
         <activity android:name=".messaging.ChatListActivity" />
         <activity
             android:name=".messaging.ChatActivity"

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">octochat</string>
     <string name="settings_banner">Inställningar</string>
     <string name="settings_change_password">Byt lösenord</string>
     <string name="settings_logout">Logga ut</string>
@@ -13,4 +12,27 @@
     <string name="settings_toast_password_too_short">Lösenordet är för kort - lösenordet måste vara på 8 tecken eller fler</string>
     <string name="settings_toast_password_successful">Lösenord uppdaterat</string>
     <string name="settings_general_error">Något gick fel - försök igen</string>
+    <string name="prompt_email">Epostadress</string>
+    <string name="prompt_password">Lösenord</string>
+    <string name="action_sign_in">Logga in eller registrera</string>
+    <string name="action_sign_in_short">Logga in</string>
+    <string name="welcome">Välkommen</string>
+    <string name="fieldsRequired">Epostadress och lösenord krävs</string>
+    <string name="invalid_username">"Inte ett "</string>
+    <string name="login_failed">Inloggning misslyckad</string>
+    <string name="create_failed">Misslyckade att skapa</string>
+    <string name="sign_up">Registrera</string>
+    <string name="sign_up_cancel">Avbryt</string>
+    <string name="no_chats_yet">Inga chatter ännu</string>
+    <string name="message">Meddelande</string>
+    <string name="name">Namn</string>
+    <string name="menu_settings">Inställningar</string>
+    <string name="type_a_message">Skriv ett meddelande</string>
+    <string name="username">Användarnamn</string>
+    <string name="email">Epostadress</string>
+    <string name="repeat_password">Upprepa lösenord</string>
+    <string name="password">Lösenord</string>
+    <string name="create_account">Skapa konto</string>
+    <string name="cancel">Avbryt</string>
+    <string name="invalid_password">Lösenord måste vara minst 8 tecken</string>
 </resources>

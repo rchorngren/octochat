@@ -2,8 +2,9 @@ package com.example.octochat.messaging
 
 import android.os.Bundle
 import android.util.Log
+import android.view.ContextMenu
 import android.view.MenuItem
-import android.view.*
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.octochat.R
@@ -55,8 +56,6 @@ class ChatActivity : AppCompatActivity() {
         val editText = findViewById<EditText>(R.id.textField)
         val sendButton = findViewById<ImageView>(R.id.buttonSend)
 
-
-
         textFullName.text = otherUserDisplayName
 
         createChat()
@@ -78,7 +77,6 @@ class ChatActivity : AppCompatActivity() {
                     }
                 }
 
-
             db.collection("chats").document(chatId).set(hashMapOf("timestamp" to FieldValue.serverTimestamp()), SetOptions.merge())
 
             editText.setText("")
@@ -87,7 +85,6 @@ class ChatActivity : AppCompatActivity() {
         editText.setOnClickListener {
                 messagesList.smoothScrollToPosition(listMessages.size-1)
         }
-
     }
 
     fun setSnapshotListener() {
@@ -139,15 +136,10 @@ class ChatActivity : AppCompatActivity() {
             }
     }
 
-    override fun onCreateContextMenu(
-        menu: ContextMenu?,
-        v: View?,
-        menuInfo: ContextMenu.ContextMenuInfo?
-    ) {
+    override fun onCreateContextMenu(menu: ContextMenu?, v: View?, menuInfo: ContextMenu.ContextMenuInfo?) {
         super.onCreateContextMenu(menu, v, menuInfo)
         val inflater = menuInflater
         inflater.inflate(R.menu.menu_chat, menu)
-
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
