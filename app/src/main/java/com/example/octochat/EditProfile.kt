@@ -269,7 +269,7 @@ fun uploadCamera(){
                     val result: StringBuffer = StringBuffer()
                     if (it.isSuccessful) {
                         for (document in it.result!!) {
-                            result.append(document.data.getValue("profileImage")).append(" ")
+                            result.append(document.data.getValue("profileImage")).append("")
                         }
                         val imageUrl = result.toString()
                         Log.d("!!!", "$imageUrl")

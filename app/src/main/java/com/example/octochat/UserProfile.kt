@@ -61,10 +61,14 @@ class UserProfile : AppCompatActivity() {
                         for (document in it.result!!) {
                             result.append(document.data.getValue("email")).append(" ")
                             result.append(document.data.getValue("displayName")).append(" ")
+                            result.append(document.data.getValue("username")).append(" ")
+
                         }
                         email.setText(userEmail)
                         displayUserName.setText(displayName)
                         displayUser.setText(displayName)
+
+
                     }
                 }
         }
@@ -81,7 +85,7 @@ class UserProfile : AppCompatActivity() {
                     val result: StringBuffer = StringBuffer()
                     if (it.isSuccessful) {
                         for (document in it.result!!) {
-                            result.append(document.data.getValue("profileImage")).append(" ")
+                            result.append(document.data.getValue("profileImage")).append("")
                         }
                         val imageUrl = result.toString()
                         Log.d("!!!", "$imageUrl")
