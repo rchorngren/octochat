@@ -166,7 +166,11 @@ class CreateUserProfile : AppCompatActivity()  {
 
                 }
                 else {
-                    Log.d("TestAgain", "Unable to create: ${task.exception}")
+                    Toast.makeText(
+                        applicationContext,
+                        "${getString(R.string.registration_signup_failed)} - ${task.exception?.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
     }
