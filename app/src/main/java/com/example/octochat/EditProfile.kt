@@ -76,6 +76,9 @@ class EditProfile : AppCompatActivity() {
         editDisplayName = findViewById(R.id.editDisplayName)
         displayName = findViewById(R.id.edit_displayName)
         editUserName =findViewById(R.id.edit_userName)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
         changeProfilePic = findViewById(R.id.editProfilePic)
         profilepic = findViewById(R.id.profilePicture)
 
@@ -334,9 +337,15 @@ class EditProfile : AppCompatActivity() {
         Log.d("success", "Success")
         Toast.makeText(applicationContext, "display name updated", Toast.LENGTH_SHORT).show()
 
+
+
+
     }
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
 
-
+    }
 }
 
 

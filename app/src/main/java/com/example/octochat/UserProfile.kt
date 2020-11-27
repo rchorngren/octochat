@@ -25,6 +25,10 @@ class UserProfile : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+
         name = findViewById(R.id.displayUser)
         userPic = findViewById(R.id.profilePicture)
         db = FirebaseFirestore.getInstance()
@@ -43,7 +47,7 @@ class UserProfile : AppCompatActivity() {
 
     fun readFirestoreData() {
         val email = findViewById<TextView>(R.id.email)
-        val displayUser= findViewById<TextView>(R.id.displayUser)
+        val displayUser = findViewById<TextView>(R.id.displayUser)
         val displayUserName = findViewById<TextView>(R.id.displayUserName)
         val userName = findViewById<TextView>(R.id.userName)
         val user = auth.currentUser
@@ -55,17 +59,17 @@ class UserProfile : AppCompatActivity() {
                     val displayName = currentUser.displayName
                     val profileImage = currentUser.profileImage
                     val name = currentUser.username
-                        Picasso.get()
-                            .load(profileImage)
-                            .into(userPic, object : Callback {
-                                override fun onSuccess() {
-                                    Log.d("TAG", "success")
-                                }
+                    Picasso.get()
+                        .load(profileImage)
+                        .into(userPic, object : Callback {
+                            override fun onSuccess() {
+                                Log.d("TAG", "success")
+                            }
 
-                                override fun onError(e: Exception?) {
-                                    Log.d("TAG", "error")
-                                }
-                            })
+                            override fun onError(e: Exception?) {
+                                Log.d("TAG", "error")
+                            }
+                        })
                     displayUserName.setText(displayName)
                     displayUser.setText(displayName)
                     userName.setText(name)
@@ -74,5 +78,10 @@ class UserProfile : AppCompatActivity() {
             email.setText(userEmail)
 
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
     }
 }
