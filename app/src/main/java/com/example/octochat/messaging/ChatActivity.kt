@@ -20,6 +20,8 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
     var currentUserFb: FirebaseUser? = null
     val listMessages = mutableListOf<Message>()
 
+    lateinit var popup: PopupMenu
+
     lateinit var textFullName: TextView
     lateinit var messagesList: ListView
     lateinit var messageAdapter: MessagesListAdapter
@@ -59,17 +61,16 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
         val editText = findViewById<EditText>(R.id.textField)
         val sendButton = findViewById<ImageView>(R.id.buttonSend)
 
+        popup = PopupMenu(this, moreIcon)
+        val inflater = popup.menuInflater
+        popup.setOnMenuItemClickListener(this)
+        inflater.inflate(R.menu.menu_chat, popup.menu)
+
         textFullName.text = otherUserDisplayName
 
         createChat()
 
-        moreIcon.setOnClickListener {
-            val popup = PopupMenu(this, it)
-            val inflater = popup.menuInflater
-            popup.setOnMenuItemClickListener(this)
-            inflater.inflate(R.menu.menu_chat, popup.menu)
-            popup.show()
-        }
+        moreIcon.setOnClickListener { popup.show() }
 
         sendButton.setOnClickListener {
             val message = Message(currentUserFb!!.uid, editText.text.toString())
@@ -114,7 +115,6 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
                     listMessages.add(newDocument)
 
                 }
-                if(listMessages.size > 0) listMessages.sortBy { it.timestamp }
                 messageAdapter.notifyDataSetChanged()
                 messagesList.smoothScrollToPosition(listMessages.size - 1)
             }
@@ -144,7 +144,25 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
 
                 messageAdapter = MessagesListAdapter(this, listMessages, currentUser, otherUser)
                 messagesList.adapter = messageAdapter
+
                 setSnapshotListener()
+                checkIfFriend()
+                if(listMessages.size > 0) listMessages.sortBy { it.timestamp }
+            }
+    }
+
+    fun checkIfFriend() {
+        var isFriend: Boolean
+        db.collection("users")
+            .document(auth.currentUser!!.uid)
+            .collection("friends")
+            .document(otherUserUid)
+            .get()
+            .addOnCompleteListener {
+                if(it.isSuccessful){
+                    isFriend = it.result!!.exists()
+                    popup.menu.findItem(R.id.addFriend).isVisible = !isFriend
+                }
             }
     }
 
@@ -158,6 +176,21 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
         return when (p0?.itemId) {
             R.id.profile -> {
                 Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show()
+                true
+            }
+            R.id.addFriend -> {
+                db.collection("users")
+                    .document(auth.currentUser!!.uid)
+                    .collection("friends")
+                    .document(otherUserUid).set(otherUser)
+                    .addOnCompleteListener {
+                        if(it.isSuccessful){
+                            Toast.makeText(this, "${otherUser.displayName} added as friend!", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this, "Could not add ${otherUser.displayName} as friend", Toast.LENGTH_SHORT).show()
+                            Log.e(TAG, it.exception.toString())
+                        }
+                }
                 true
             }
             R.id.block -> {

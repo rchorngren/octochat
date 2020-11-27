@@ -16,7 +16,7 @@
     <string name="prompt_password">Lösenord</string>
     <string name="action_sign_in">Logga in eller registrera</string>
     <string name="action_sign_in_short">Logga in</string>
-    <string name="welcome">Välkommen</string>
+    <string name="welcome">Välkommen!</string>
     <string name="fieldsRequired">Epostadress och lösenord krävs</string>
     <string name="invalid_username">"Inte ett "</string>
     <string name="login_failed">Inloggning misslyckad</string>
@@ -27,13 +27,13 @@
     <string name="no_chats_yet">Inga chatter ännu</string>
     <string name="message">Meddelande</string>
     <string name="name">Namn</string>
-    <string name="menu_settings">Inställningar</string>
     <string name="type_a_message">Skriv ett meddelande</string>
     <string name="username">Användarnamn</string>
     <string name="email">Epostadress</string>
     <string name="repeat_password">Upprepa lösenord</string>
     <string name="password">Lösenord</string>
     <string name="create_account">Skapa konto</string>
+    <string name="registration_signup_failed">Registrering misslyckades</string>
     <string name="cancel">Avbryt</string>
     <string name="invalid_password">Lösenord måste vara minst 8 tecken</string>
     <string name="sign_in">Logga in</string>
@@ -42,4 +42,9 @@
     <string name="profile">Profil</string>
     <string name="block">Blockera</string>
     <string name="recover_password">Återställ lösenord</string>
+    <string name="friends">Vänner</string>
+    <string name="add_friend">Lägg till vän</string>
+    <string name="remove_friend">Ta bort vän</string>
+    <string name="add">Lägg till</string>
+    <string name="start_chat">Starta chatt</string>
 </resources>

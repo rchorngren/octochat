@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.octochat.R
 import com.example.octochat.SettingsActivity
@@ -224,7 +225,7 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         otherUserField.hint = "Enter $mode of recipient"
 
         dialogBuilder.setView(otherUserField)
-        dialogBuilder.setTitle("Start chat")
+        dialogBuilder.setTitle(getString(R.string.start_chat))
 
         dialogBuilder.setPositiveButton("Start") { dialogInterface, i ->
 
@@ -261,6 +262,7 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         //handles button presses in the navigation drawer
+        drawer.closeDrawer(GravityCompat.START)
         when(item.itemId){
             R.id.profile -> {
                 val intent = Intent(this, UserProfile::class.java)
@@ -268,6 +270,10 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             }
             R.id.settings -> {
                 val intent = Intent(this, SettingsActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.friends -> {
+                val intent = Intent(this, FriendsListActivity::class.java)
                 startActivity(intent)
             }
         }
