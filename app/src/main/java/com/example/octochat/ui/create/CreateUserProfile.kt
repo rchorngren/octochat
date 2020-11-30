@@ -154,7 +154,7 @@ class CreateUserProfile : AppCompatActivity()  {
                     val user = auth.currentUser
                     db.collection("users")
                         .document(user!!.uid)
-                        .set(User(user.uid, email, username.text.toString(), displayName.text.toString()))
+                        .set(User(user.uid, email, username.text.toString(), displayName.text.toString(),""))
 
                     finish()
                     //To login

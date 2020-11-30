@@ -24,6 +24,9 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
+import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.activity_chat_list.*
 import java.util.*
 
@@ -37,6 +40,7 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     private lateinit var toggle: ActionBarDrawerToggle
     lateinit var navUsername: TextView
     lateinit var navDisplayName: TextView
+    lateinit var navProfilePic: CircleImageView
 
     lateinit var currentUser: User
     var currentFbUser: FirebaseUser? = null
@@ -52,6 +56,8 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat_list)
+
+
 
         //Toolbar
         val toolbar = findViewById<Toolbar>(R.id.toolbarMain)
@@ -72,7 +78,7 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         val headerView = navigationView.getHeaderView(0)
         navDisplayName = headerView.findViewById(R.id.textDisplayNameNav)
         navUsername = headerView.findViewById(R.id.textUsernameNav)
-
+        navProfilePic= headerView.findViewById(R.id.imagePfpNavHeader)
         listViewChats = findViewById(R.id.listView)
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         val emailFab = findViewById<FloatingActionButton>(R.id.fabMiniEmail)
@@ -114,6 +120,7 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             intent.putExtra("chatId", listChats[i].chatId)
             intent.putExtra("otherUserDisplayName", listChats[i].otherUser.displayName)
             intent.putExtra("otherUserUid", listChats[i].otherUser.userId)
+            intent.putExtra("otherUserProfileImage", listChats[i].otherUser.profileImage)
             startActivity(intent)
         }
     }
@@ -125,6 +132,24 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                 navDisplayName.text = currentUser.displayName
                 val username = "@" + currentUser.username
                 navUsername.text = username
+
+                val profileImage = currentUser.profileImage
+                Log.e(TAG, profileImage.toString())
+
+                if(profileImage != null && profileImage.isNotEmpty()){
+                    Picasso.get()
+                        .load(profileImage)
+                        .into(navProfilePic, object : Callback {
+                            override fun onSuccess() {
+                                Log.d(TAG, "success")
+                            }
+                            override fun onError(e: Exception?) {
+                                Log.d(TAG, "error")
+                            }
+                        })
+                } else {
+                    navProfilePic.setImageResource(R.drawable.bg_no_pfp)
+                }
 
             } else {
                 Log.e(TAG, "Could not find your profile in the database; " + it.exception.toString())

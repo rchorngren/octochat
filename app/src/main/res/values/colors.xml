@@ -15,11 +15,15 @@
     <color name="grey">#E5E5E5</color>
     <color name="colorMessageBackgroundGray">#808080</color>
 
+
+
+
     //support for themes, either throughout the app or in individual chats
     <color name="themeYellowLight">#FFF176</color>
     <color name="themeYellowDark">#FFEB3B</color>
 
     <color name="themeBlueLight">#03A9F4</color>
     <color name="themeBlueDark">#0288D1</color>
+
 
 </resources>
