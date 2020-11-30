@@ -68,16 +68,19 @@ class EditProfile : AppCompatActivity() {
     val IMAGE_CAPTURE_CODE : Int = 1001
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(
-            savedInstanceState
-        )
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
+
         
         editName = findViewById(R.id.editUserName)
         editDisplayName = findViewById(R.id.editDisplayName)
         displayName = findViewById(R.id.edit_displayName)
         editUserName =findViewById(R.id.edit_userName)
 
+
+
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
 
         changeProfilePic = findViewById(R.id.editProfilePic)
@@ -319,6 +322,7 @@ class EditProfile : AppCompatActivity() {
 
         }
 
+
             db.collection("users").document(user!!.uid).set(hashMapOf("displayName" to name), SetOptions.merge())
             Log.d("success", "Success")
             Toast.makeText(applicationContext, "display name updated", Toast.LENGTH_SHORT).show()
@@ -340,6 +344,13 @@ class EditProfile : AppCompatActivity() {
 
 
 
+
+
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
 
     }
 

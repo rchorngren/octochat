@@ -36,8 +36,8 @@ class LoginActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_login)
 
-        val username = findViewById<EditText>(R.id.textLoginUserNameOrEmail)
-        val password = findViewById<EditText>(R.id.textLoginUserPassword)
+        val username = findViewById<EditText>(R.id.textLoginEmail)
+        val password = findViewById<EditText>(R.id.textLoginPassword)
         val login = findViewById<Button>(R.id.userLogIn_buttonAtFirst)
         val signup = findViewById<TextView>(R.id.textView_To_SignUp_Activity)
         val loading = findViewById<ProgressBar>(R.id.loading)
@@ -110,9 +110,17 @@ class LoginActivity : AppCompatActivity() {
             }
 
             login.setOnClickListener {
-                Log.d("nw", "thisLog1")
-                loading.visibility = View.VISIBLE
-                loginViewModel.login(username.text.toString(), password.text.toString())
+                if(username.text.toString() == "") {
+                    Toast.makeText(
+                        applicationContext,
+                        getString(R.string.login_no_username),
+                        Toast.LENGTH_SHORT
+                    ).show();
+                } else {
+                    Log.d("nw", "thisLog1")
+                    loading.visibility = View.VISIBLE
+                    loginViewModel.login(username.text.toString(), password.text.toString())
+                }
             }
 
             signup.setOnClickListener{
@@ -136,21 +144,33 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithEmailAndPassword(username, password).addOnCompleteListener {
             if (it.isSuccessful) {
                 Log.e("LoginActivity", "Successful login")
+                Toast.makeText(
+                    applicationContext,
+                    "$welcome $displayName",
+                    Toast.LENGTH_LONG
+                ).show()
                 finish()
-        } else
-            Log.e("updateUiWithUser", it.exception.toString())
-    }
+        } else {
+                Log.e("updateUiWithUser", it.exception.toString())
+                Toast.makeText(
+                    applicationContext,
+                    getString(R.string.login_failed),
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
 
         // TODO : initiate successful logged in experience
-        Toast.makeText(
-            applicationContext,
-            "$welcome $displayName",
-            Toast.LENGTH_LONG
-        ).show()
+
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {
         Toast.makeText(applicationContext, errorString, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onBackPressed() {
+        //prevents the user from accidentally going to the empty MainActivity
+        this.moveTaskToBack(true)
     }
 }
 

@@ -3,10 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/profile"
-        android:title="Profile"
+        android:title="@string/profile"
         app:showAsAction="never" />
     <item
+        android:id="@+id/addFriend"
+        android:title="@string/add_friend"
+        app:showAsAction="never"
+        android:visible="false"/>
+    <item
         android:id="@+id/block"
-        android:title="Block"
+        android:title="@string/block"
         app:showAsAction="never" />
 </menu>

@@ -27,6 +27,10 @@ class UserProfile : AppCompatActivity() {
         setContentView(R.layout.activity_user_profile)
 
 
+
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+
         name = findViewById(R.id.displayUser)
         userPic = findViewById(R.id.profilePicture)
         db = FirebaseFirestore.getInstance()
@@ -79,4 +83,43 @@ class UserProfile : AppCompatActivity() {
     }
 
 
+
+
+
+/*    fun getImageUrl() {
+        val user = auth.currentUser
+        user?.let {
+            imageRef = db.collection("image")
+            imageRef.get()
+                .addOnCompleteListener {
+                    val result: StringBuffer = StringBuffer()
+                    if (it.isSuccessful) {
+                        for (document in it.result!!) {
+                            result.append(document.data.getValue("image")).append(" ")
+                        }
+                        val imageUrl = result.toString()
+                        Log.d("!!!", "$imageUrl")
+                        Picasso.get()
+                            .load(imageUrl)
+                            .into(userPic, object : Callback {
+                                override fun onSuccess() {
+                                    Log.d("TAG", "success")
+                                }
+
+                                override fun onError(e: Exception?) {
+                                    Log.d("TAG", "error")
+                                }
+                            })
+
+
+                    }
+                }
+        }
+    }*/
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
+    }
 }
+

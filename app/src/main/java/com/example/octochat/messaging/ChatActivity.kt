@@ -7,17 +7,20 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.example.octochat.R
 import com.example.octochat.messaging.util.MessagesListAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
 
-class ChatActivity : AppCompatActivity() {
+class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
 
     val TAG = "ChatActivity"
     var currentUserFb: FirebaseUser? = null
     val listMessages = mutableListOf<Message>()
+
+    lateinit var popup: PopupMenu
 
     lateinit var textFullName: TextView
     lateinit var messagesList: ListView
@@ -35,7 +38,10 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        supportActionBar?.hide()
+        //Toolbar
+        val toolbar = findViewById<Toolbar>(R.id.toolbarChat)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         //Intent
         val chatId = intent.getStringExtra("chatId")!!
@@ -50,40 +56,45 @@ class ChatActivity : AppCompatActivity() {
 
         textFullName = findViewById(R.id.textFullName)
         messagesList = findViewById(R.id.listViewMessages)
-        val backIcon = findViewById<ImageView>(R.id.iconBack)
         val moreIcon = findViewById<ImageView>(R.id.iconMore)
         val sendAttachmentButton = findViewById<ImageView>(R.id.buttonSendAttachment)
         val editText = findViewById<EditText>(R.id.textField)
         val sendButton = findViewById<ImageView>(R.id.buttonSend)
 
+        popup = PopupMenu(this, moreIcon)
+        val inflater = popup.menuInflater
+        popup.setOnMenuItemClickListener(this)
+        inflater.inflate(R.menu.menu_chat, popup.menu)
+
         textFullName.text = otherUserDisplayName
 
         createChat()
 
-        backIcon.setOnClickListener { finish() }
-
-        registerForContextMenu(moreIcon)
-        moreIcon.setOnClickListener { it.showContextMenu() }
+        moreIcon.setOnClickListener { popup.show() }
 
         sendButton.setOnClickListener {
             val message = Message(currentUserFb!!.uid, editText.text.toString())
-            messagesRef.add(message)
-                .addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        messageAdapter.notifyDataSetChanged()
-                        messagesList.smoothScrollToPosition(listMessages.size - 1)
-                    } else {
-                        Log.e(TAG, it.exception.toString())
+
+            //If the field is not empty, send a message
+            if (editText.text.isNotBlank()) {
+                messagesRef.add(message)
+                    .addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            messageAdapter.notifyDataSetChanged()
+                            messagesList.smoothScrollToPosition(listMessages.size - 1)
+                        } else {
+                            Log.e(TAG, it.exception.toString())
+                        }
                     }
-                }
+                db.collection("chats").document(chatId).set(hashMapOf("timestamp" to FieldValue.serverTimestamp()), SetOptions.merge())
 
-            db.collection("chats").document(chatId).set(hashMapOf("timestamp" to FieldValue.serverTimestamp()), SetOptions.merge())
-
-            editText.setText("")
+                //clear the field when sending a message
+                editText.setText("")
+            }
         }
 
         editText.setOnClickListener {
-                messagesList.smoothScrollToPosition(listMessages.size-1)
+            messagesList.smoothScrollToPosition(listMessages.size - 1)
         }
     }
 
@@ -112,7 +123,7 @@ class ChatActivity : AppCompatActivity() {
     fun createChat() {
         var currentUser: User?
         db.collection("users").document(currentUserFb!!.uid).get().addOnCompleteListener {
-            if (it.isSuccessful){
+            if (it.isSuccessful) {
                 val currentUserAttributes = it.result!!.toObject(User::class.java)!!
                 val email = currentUserAttributes.email!!
                 val username = currentUserAttributes.username!!
@@ -123,7 +134,8 @@ class ChatActivity : AppCompatActivity() {
             } else Log.e("ChatActivity", it.exception.toString())
         }
     }
-    fun getMessages(currentUser: User){
+
+    fun getMessages(currentUser: User) {
         db.collection("users")
             .document(otherUserUid)
             .get()
@@ -132,7 +144,25 @@ class ChatActivity : AppCompatActivity() {
 
                 messageAdapter = MessagesListAdapter(this, listMessages, currentUser, otherUser)
                 messagesList.adapter = messageAdapter
+
                 setSnapshotListener()
+                checkIfFriend()
+                if(listMessages.size > 0) listMessages.sortBy { it.timestamp }
+            }
+    }
+
+    fun checkIfFriend() {
+        var isFriend: Boolean
+        db.collection("users")
+            .document(auth.currentUser!!.uid)
+            .collection("friends")
+            .document(otherUserUid)
+            .get()
+            .addOnCompleteListener {
+                if(it.isSuccessful){
+                    isFriend = it.result!!.exists()
+                    popup.menu.findItem(R.id.addFriend).isVisible = !isFriend
+                }
             }
     }
 
@@ -142,17 +172,37 @@ class ChatActivity : AppCompatActivity() {
         inflater.inflate(R.menu.menu_chat, menu)
     }
 
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId){
-            R.id.profile ->{
+    override fun onMenuItemClick(p0: MenuItem?): Boolean {
+        return when (p0?.itemId) {
+            R.id.profile -> {
                 Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show()
+                true
+            }
+            R.id.addFriend -> {
+                db.collection("users")
+                    .document(auth.currentUser!!.uid)
+                    .collection("friends")
+                    .document(otherUserUid).set(otherUser)
+                    .addOnCompleteListener {
+                        if(it.isSuccessful){
+                            Toast.makeText(this, "${otherUser.displayName} added as friend!", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this, "Could not add ${otherUser.displayName} as friend", Toast.LENGTH_SHORT).show()
+                            Log.e(TAG, it.exception.toString())
+                        }
+                }
                 true
             }
             R.id.block -> {
                 Toast.makeText(this, "Block", Toast.LENGTH_SHORT).show()
                 true
-                }
-            else -> super.onContextItemSelected(item)
+            }
+            else -> false
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return super.onSupportNavigateUp()
     }
 }

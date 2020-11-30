@@ -27,7 +27,7 @@ class userFactory : AppCompatActivity() {
     fun createNew() {
         Log.e("UserFactory", "Login")
 
-        val username = findViewById<EditText>(R.id.textLoginUserNameOrEmail)
+        val username = findViewById<EditText>(R.id.textLoginEmail)
         val password = findViewById<EditText>(R.id.textViewCreatePassword)
         lateinit var auth : FirebaseAuth
         val db = FirebaseFirestore.getInstance()
