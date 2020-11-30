@@ -26,16 +26,12 @@ class UserProfile : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
 
-
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
 
         name = findViewById(R.id.displayUser)
         userPic = findViewById(R.id.profilePicture)
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
-
 
         readFirestoreData()
         editProfileButton.setOnClickListener {
@@ -55,36 +51,39 @@ class UserProfile : AppCompatActivity() {
         val user = auth.currentUser
         user?.let {
             val userEmail = user.email
-            db.collection("users").document(user!!.uid).get().addOnCompleteListener {
+            db.collection("users")
+                .document(user.uid)
+                .get()
+                .addOnCompleteListener {
                 if (it.isSuccessful) {
                     val currentUser = it.result!!.toObject(User::class.java)!!
                     val displayName = currentUser.displayName
                     val profileImage = currentUser.profileImage
                     val name = currentUser.username
-                    Picasso.get()
-                        .load(profileImage)
-                        .into(userPic, object : Callback {
-                            override fun onSuccess() {
-                                Log.d("TAG", "success")
-                            }
 
-                            override fun onError(e: Exception?) {
-                                Log.d("TAG", "error")
-                            }
-                        })
-                    displayUserName.setText(displayName)
-                    displayUser.setText(displayName)
-                    userName.setText(name)
+                    if(profileImage != null && profileImage.isNotEmpty()){
+                        Picasso.get()
+                            .load(profileImage)
+                            .into(userPic, object : Callback {
+                                override fun onSuccess() {
+                                    Log.d("TAG", "success")
+                                }
+
+                                override fun onError(e: Exception?) {
+                                    Log.d("TAG", "error")
+                                }
+                            })
+                    } else {
+                        userPic.setImageResource(R.drawable.bg_no_pfp)
+                    }
+                    displayUserName.text = displayName
+                    displayUser.text = displayName
+                    userName.text = name
                 }
             }
-            email.setText(userEmail)
-
+            email.text = userEmail
         }
     }
-
-
-
-
 
 /*    fun getImageUrl() {
         val user = auth.currentUser

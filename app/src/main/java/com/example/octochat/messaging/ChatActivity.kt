@@ -13,6 +13,8 @@ import com.example.octochat.messaging.util.MessagesListAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
 
 class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
 
@@ -22,6 +24,7 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
 
     lateinit var popup: PopupMenu
 
+    lateinit var profilePictureView: ImageView
     lateinit var textFullName: TextView
     lateinit var messagesList: ListView
     lateinit var messageAdapter: MessagesListAdapter
@@ -47,6 +50,7 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
         val chatId = intent.getStringExtra("chatId")!!
         otherUserUid = intent.getStringExtra("otherUserUid")!!
         val otherUserDisplayName = intent.getStringExtra("otherUserDisplayName")
+        val profileImage = intent.getStringExtra("otherUserProfileImage")
 
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
@@ -54,6 +58,7 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
 
         messagesRef = db.collection("chats").document(chatId).collection("messages")
 
+        profilePictureView = findViewById(R.id.imageProfilePicture)
         textFullName = findViewById(R.id.textFullName)
         messagesList = findViewById(R.id.listViewMessages)
         val moreIcon = findViewById<ImageView>(R.id.iconMore)
@@ -67,6 +72,21 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
         inflater.inflate(R.menu.menu_chat, popup.menu)
 
         textFullName.text = otherUserDisplayName
+
+        if(profileImage != null && profileImage.isNotEmpty()){
+            Picasso.get()
+                .load(profileImage)
+                .into(profilePictureView, object : Callback {
+                    override fun onSuccess() {
+                        Log.d("ChatListAdapter-picasso", "success")
+                    }
+                    override fun onError(e: Exception?) {
+                        Log.d("ChatListAdapter-picasso", "error")
+                    }
+                })
+        } else {
+            profilePictureView.setImageResource(R.drawable.bg_no_pfp)
+        }
 
         createChat()
 

@@ -71,17 +71,12 @@ class EditProfile : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
 
-        
         editName = findViewById(R.id.editUserName)
         editDisplayName = findViewById(R.id.editDisplayName)
         displayName = findViewById(R.id.edit_displayName)
         editUserName =findViewById(R.id.edit_userName)
 
-
-
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
 
         changeProfilePic = findViewById(R.id.editProfilePic)
         profilepic = findViewById(R.id.profilePicture)
@@ -93,25 +88,17 @@ class EditProfile : AppCompatActivity() {
 
         readFirestoreData()
 
-        displayName.setEnabled(false)
-        editUserName.setEnabled(false)
+        displayName.isEnabled = false
+        editUserName.isEnabled = false
 
-        editDisplayName.setOnClickListener {
+        editDisplayName.setOnClickListener { displayName.isEnabled = true }
+        editName.setOnClickListener { editUserName.isEnabled = true }
 
-            displayName.setEnabled(true)
-        }
-        editName.setOnClickListener {
-
-            editUserName.setEnabled(true)
-        }
         val bottomSheetDialog = BottomSheetDialog(this)
         val view = layoutInflater.inflate(R.layout.userprofile_bottom_sheet, null)
         bottomSheetDialog.setContentView(view)
 
-        editProfilePic.setOnClickListener {
-
-        bottomSheetDialog.show()
-        }
+        editProfilePic.setOnClickListener { bottomSheetDialog.show() }
         view.takePicCamera.setOnClickListener {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
@@ -125,11 +112,9 @@ class EditProfile : AppCompatActivity() {
                     else {
                         takePhoto()
                     }
-
             }
                 else {
             takePhoto()
-
         }
         bottomSheetDialog.dismiss()
         }
@@ -140,25 +125,20 @@ class EditProfile : AppCompatActivity() {
         saveButton.setOnClickListener {
             updateDisplayName()
             updateUserName()
-            displayName.setEnabled(false)
-            editUserName.setEnabled(false)
-            changeProfilePic.setVisibility(View.INVISIBLE)
+            displayName.isEnabled = false
+            editUserName.isEnabled = false
+            changeProfilePic.visibility = View.INVISIBLE
 
             val intent = Intent(this, UserProfile::class.java)
                startActivity(intent)
-
         }
-
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when(requestCode){
             PERMISSION_CODE -> {
-                if(grantResults.size >0 && grantResults [0] ==
-                        PackageManager.PERMISSION_GRANTED)
-                {
+                if(grantResults.isNotEmpty() && grantResults [0] == PackageManager.PERMISSION_GRANTED) {
                     takePhoto()
-
                 } else {
                     Toast.makeText(this,"Permission denied", Toast.LENGTH_SHORT).show()
                 }
@@ -174,29 +154,27 @@ class EditProfile : AppCompatActivity() {
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
         startActivityForResult(cameraIntent,IMAGE_CAPTURE_CODE)
-
     }
 
     fun uploadImageGallery(){
-           val i = Intent()
-           i.setType("image/*")
-           i.setAction(Intent.ACTION_GET_CONTENT)
-           startActivityForResult(Intent.createChooser(i, "Choose Picture"), RequestCode)
-           }
+        val i = Intent()
+        i.type = "image/*"
+        i.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(Intent.createChooser(i, "Choose Picture"), RequestCode)
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == RequestCode && resultCode == Activity.RESULT_OK && data!!.data != null) {
             selectedPhotoUri = data.data
-            var bitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedPhotoUri)
+            val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedPhotoUri)
             profilepic?.setImageBitmap(bitmap)
             uploadPhotos()
 
         } else (resultCode == Activity.RESULT_OK)
-            profilepic?.setImageURI(imageUri)
-            uploadCamera()
-
+        profilepic?.setImageURI(imageUri)
+        uploadCamera()
     }
 
     fun uploadCamera(){
@@ -288,6 +266,7 @@ class EditProfile : AppCompatActivity() {
                     val profileImage = currentUser.profileImage
                     val name = currentUser.username
 
+                    if(profileImage != null && profileImage.isNotEmpty()) {
                         Picasso.get()
                             .load(profileImage)
                             .into(profilepic, object : Callback {
@@ -299,63 +278,50 @@ class EditProfile : AppCompatActivity() {
                                     Log.d("TAG", "error")
                                 }
                             })
-                    
-                    testViewName.setText(display_Name)
+                    } else {
+                        profilepic!!.setImageResource(R.drawable.bg_no_pfp)
+                    }
+                    testViewName.text = display_Name
                     displayName.setText(display_Name)
                     editUserName.setText(name)
                 }
             }
-            email.setText(userEmail)
-
+            email.text = userEmail
         }
     }
 
-
     fun updateDisplayName(){
-
         val user = auth.currentUser
         val name = displayName.text.toString().trim()
-        if (name.isEmpty())
-        {
+        if (name.isEmpty()) {
             displayName.error= "Please enter the name"
             displayName.requestFocus()
-
         }
+            db.collection("users")
+                .document(user!!.uid)
+                .set(hashMapOf("displayName" to name), SetOptions.merge())
 
-
-            db.collection("users").document(user!!.uid).set(hashMapOf("displayName" to name), SetOptions.merge())
             Log.d("success", "Success")
             Toast.makeText(applicationContext, "display name updated", Toast.LENGTH_SHORT).show()
        }
 
     fun updateUserName(){
-
         val user = auth.currentUser
         val name = editUserName.text.toString().trim()
-        if (name.isEmpty())
-        {
+        if (name.isEmpty()){
             editUserName.error= "Please enter the name"
             editUserName.requestFocus()
-
         }
-        db.collection("users").document(user!!.uid).set(hashMapOf("username" to name), SetOptions.merge())
+        db.collection("users")
+            .document(user!!.uid)
+            .set(hashMapOf("username" to name), SetOptions.merge())
+
         Log.d("success", "Success")
         Toast.makeText(applicationContext, "display name updated", Toast.LENGTH_SHORT).show()
-
-
-
-
-
     }
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return super.onSupportNavigateUp()
-
     }
-
 }
-
-
-
-

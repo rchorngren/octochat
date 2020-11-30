@@ -120,6 +120,7 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             intent.putExtra("chatId", listChats[i].chatId)
             intent.putExtra("otherUserDisplayName", listChats[i].otherUser.displayName)
             intent.putExtra("otherUserUid", listChats[i].otherUser.userId)
+            intent.putExtra("otherUserProfileImage", listChats[i].otherUser.profileImage)
             startActivity(intent)
         }
     }
@@ -131,18 +132,24 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                 navDisplayName.text = currentUser.displayName
                 val username = "@" + currentUser.username
                 navUsername.text = username
-                val profileImage = currentUser.profileImage
-                Picasso.get()
-                    .load(profileImage)
-                    .into(navProfilePic, object : Callback {
-                        override fun onSuccess() {
-                            Log.d("TAG", "success")
-                        }
 
-                        override fun onError(e: Exception?) {
-                            Log.d("TAG", "error")
-                        }
-                    })
+                val profileImage = currentUser.profileImage
+                Log.e(TAG, profileImage.toString())
+
+                if(profileImage != null && profileImage.isNotEmpty()){
+                    Picasso.get()
+                        .load(profileImage)
+                        .into(navProfilePic, object : Callback {
+                            override fun onSuccess() {
+                                Log.d(TAG, "success")
+                            }
+                            override fun onError(e: Exception?) {
+                                Log.d(TAG, "error")
+                            }
+                        })
+                } else {
+                    navProfilePic.setImageResource(R.drawable.bg_no_pfp)
+                }
 
             } else {
                 Log.e(TAG, "Could not find your profile in the database; " + it.exception.toString())

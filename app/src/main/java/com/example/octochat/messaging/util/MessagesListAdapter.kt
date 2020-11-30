@@ -6,12 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import com.example.octochat.messaging.Message
 import com.example.octochat.R
 import com.example.octochat.messaging.User
+import de.hdodenhof.circleimageview.CircleImageView
 
 class MessagesListAdapter(val context: Context,
                           val listMessages: MutableList<Message>,
@@ -28,12 +30,11 @@ class MessagesListAdapter(val context: Context,
     override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
         val view = inflater.inflate(R.layout.list_item_message, p2, false)
 
+        val profilePictureView = view.findViewById<CircleImageView>(R.id.imageViewProfilePicture)
         val displayNameView = view.findViewById<TextView>(R.id.textViewDisplayName)
         val messageView = view.findViewById<TextView>(R.id.textViewMessage)
 
-
         val message = listMessages[p0].text
-
         val displayName: String
         val userId: String?
 

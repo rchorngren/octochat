@@ -42,7 +42,6 @@ class FriendsListActivity : AppCompatActivity() {
         friendsAdapter = FriendsListAdapter(this, friendsList)
         listView.adapter = friendsAdapter
 
-
         addFriendFab.setOnClickListener {
             addFriendDialog()
         }
@@ -119,6 +118,7 @@ class FriendsListActivity : AppCompatActivity() {
                             intent.putExtra("chatId", it.result!!.documents[i].id)
                             intent.putExtra("otherUserDisplayName", friendsList[pos].displayName)
                             intent.putExtra("otherUserUid", friendsList[pos].userId)
+                            intent.putExtra("otherUserProfileImage", friendsList[pos].profileImage)
                             startActivity(intent)
                             return@addOnCompleteListener
                         }

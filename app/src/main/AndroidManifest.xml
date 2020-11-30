@@ -18,9 +18,11 @@
             android:theme="@style/AppTheme"
             android:label="@string/friends"/>
         <activity
+            android:label="@string/profile"
             android:name=".UserProfile"
             android:theme="@style/AppTheme" />
         <activity
+            android:label="@string/edit_profile"
             android:name=".EditProfile"
             android:theme="@style/AppTheme" />
         <activity
