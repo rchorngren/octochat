@@ -64,6 +64,7 @@ class EditProfile : AppCompatActivity() {
     lateinit var url1: String
     val PERMISSION_CODE : Int = 1000
     var imageUri: Uri ?= null
+
     val IMAGE_CAPTURE_CODE : Int = 1001
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,7 +78,7 @@ class EditProfile : AppCompatActivity() {
         displayName = findViewById(R.id.edit_displayName)
         editUserName =findViewById(R.id.edit_userName)
 
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
 
         changeProfilePic = findViewById(R.id.editProfilePic)
         profilepic = findViewById(R.id.profilePicture)
@@ -341,11 +342,7 @@ class EditProfile : AppCompatActivity() {
 
 
     }
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
-        return super.onSupportNavigateUp()
 
-    }
 }
 
 
