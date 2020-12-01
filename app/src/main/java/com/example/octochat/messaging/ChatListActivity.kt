@@ -80,15 +80,20 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         navUsername = headerView.findViewById(R.id.textUsernameNav)
         navProfilePic= headerView.findViewById(R.id.imagePfpNavHeader)
         listViewChats = findViewById(R.id.listView)
-        val fab = findViewById<FloatingActionButton>(R.id.fab)
-        val emailFab = findViewById<FloatingActionButton>(R.id.fabMiniEmail)
-        val usernameFab = findViewById<FloatingActionButton>(R.id.fabMiniUsername)
-        val firstFabOption = findViewById<LinearLayout>(R.id.firstFabOption)
-        val secondFabOption = findViewById<LinearLayout>(R.id.secondFabOption)
 
         progressBar = findViewById(R.id.progressBar)
         emptyView = findViewById(R.id.emptyView)
 
+        //fab
+        val fab = findViewById<FloatingActionButton>(R.id.fab)
+        val startGroupChatFab = findViewById<FloatingActionButton>(R.id.fabMiniStartGroupChat)
+        val emailFab = findViewById<FloatingActionButton>(R.id.fabMiniEmail)
+        val usernameFab = findViewById<FloatingActionButton>(R.id.fabMiniUsername)
+        val thirdFabOption = findViewById<LinearLayout>(R.id.thirdFabOption)
+        val secondFabOption = findViewById<LinearLayout>(R.id.secondFabOption)
+        val firstFabOption = findViewById<LinearLayout>(R.id.firstFabOption)
+
+        FabAnimation().init(thirdFabOption)
         FabAnimation().init(secondFabOption)
         FabAnimation().init(firstFabOption)
 
@@ -97,6 +102,8 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         getActiveChats()
         getSelfUser()
+
+        startGroupChatFab.setOnClickListener {  }
 
         emailFab.setOnClickListener { startChatFromDialog("email") }
 
@@ -107,9 +114,11 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
             fabExpanded = FabAnimation().rotateFab(it, !fabExpanded)
 
             if(fabExpanded){
+                FabAnimation().showIn(thirdFabOption)
                 FabAnimation().showIn(secondFabOption)
                 FabAnimation().showIn(firstFabOption)
             } else {
+                FabAnimation().showOut(thirdFabOption)
                 FabAnimation().showOut(secondFabOption)
                 FabAnimation().showOut(firstFabOption)
             }

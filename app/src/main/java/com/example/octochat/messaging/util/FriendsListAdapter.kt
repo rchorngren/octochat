@@ -38,10 +38,10 @@ class FriendsListAdapter(val context: Context, val listUsers: MutableList<User>)
         val name = listUsers[p0].displayName
         val username = "@" + listUsers[p0].username
 
-
         if(profileImage != null && profileImage.isNotEmpty()){
             Picasso.get()
                 .load(profileImage)
+                .resize(48, 48)
                 .into(navProfilePic, object : Callback {
                     override fun onSuccess() {
                         Log.d("FriendsListAdapter", "success")

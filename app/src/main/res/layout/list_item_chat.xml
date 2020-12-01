@@ -6,7 +6,6 @@
     android:layout_height="?android:listPreferredItemHeightLarge"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
     <androidx.cardview.widget.CardView
         app:cardCornerRadius="100dp"
         android:layout_gravity="center_vertical"
@@ -14,7 +13,6 @@
         android:layout_height="48dp">
 
     <ImageView
-        android:background="@drawable/bg_no_pfp"
         android:id="@+id/imageViewProfilePicture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
@@ -44,7 +42,5 @@
             android:id="@+id/textViewLastMessage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
-
     </LinearLayout>
-
 </LinearLayout>

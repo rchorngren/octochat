@@ -76,6 +76,7 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
         if(profileImage != null && profileImage.isNotEmpty()){
             Picasso.get()
                 .load(profileImage)
+                .resize(48, 48)
                 .into(profilePictureView, object : Callback {
                     override fun onSuccess() {
                         Log.d("ChatListAdapter-picasso", "success")

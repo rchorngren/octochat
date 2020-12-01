@@ -48,4 +48,5 @@
     <string name="add">Lägg till</string>
     <string name="start_chat">Starta chatt</string>
     <string name="edit_profile">Redigera profil</string>
+    <string name="start_a_group_chat">Starta en gruppchatt</string>
 </resources>

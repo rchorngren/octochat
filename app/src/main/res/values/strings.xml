@@ -52,4 +52,5 @@
     <string name="add">Add</string>
     <string name="start_chat">Start chat</string>
     <string name="edit_profile">Edit Profile</string>
+    <string name="start_a_group_chat">Start a group chat</string>
 </resources>
