@@ -8,9 +8,9 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import com.example.octochat.R
 import com.example.octochat.messaging.util.MessagesListAdapter
+import com.example.octochat.messaging.util.MessagesListAdapterGroupChat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
@@ -28,14 +28,16 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
     lateinit var profilePictureView: ImageView
     lateinit var textFullName: TextView
     lateinit var messagesList: ListView
-    lateinit var messageAdapter: MessagesListAdapter
+    var messageAdapter: MessagesListAdapter? = null
+    var groupMessageAdapter: MessagesListAdapterGroupChat? = null
 
     lateinit var messagesRef: CollectionReference
 
     lateinit var auth: FirebaseAuth
     lateinit var db: FirebaseFirestore
 
-    lateinit var otherUserUid: String
+    lateinit var chatId: String
+    var otherUserUid: String? = null
     lateinit var otherUser: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,8 +50,8 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         //Intent
-        val chatId = intent.getStringExtra("chatId")!!
-        otherUserUid = intent.getStringExtra("otherUserUid")!!
+        chatId = intent.getStringExtra("chatId")!!
+        otherUserUid = intent.getStringExtra("otherUserUid")
         val otherUserDisplayName = intent.getStringExtra("otherUserDisplayName")
         val profileImage = intent.getStringExtra("otherUserProfileImage")
 
@@ -86,9 +88,7 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
                         Log.d("ChatListAdapter-picasso", "error")
                     }
                 })
-        } else {
-            profilePictureView.setImageResource(R.drawable.bg_no_pfp)
-        }
+        } else profilePictureView.setImageResource(R.drawable.bg_no_pfp)
 
         createChat()
 
@@ -102,8 +102,8 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
                 messagesRef.add(message)
                     .addOnCompleteListener {
                         if (it.isSuccessful) {
-                            messageAdapter.notifyDataSetChanged()
-                            messagesList.smoothScrollToPosition(listMessages.size - 1)
+                            if(messageAdapter != null)messageAdapter!!.notifyDataSetChanged() else groupMessageAdapter!!.notifyDataSetChanged()
+                                messagesList.smoothScrollToPosition(listMessages.size - 1)
                         } else {
                             Log.e(TAG, it.exception.toString())
                         }
@@ -118,6 +118,71 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
         editText.setOnClickListener {
             messagesList.smoothScrollToPosition(listMessages.size - 1)
         }
+    }
+
+    fun createChat() {
+        var currentUser: User?
+        db.collection("users")
+            .document(currentUserFb!!.uid)
+            .get()
+            .addOnCompleteListener {
+            if (it.isSuccessful) {
+                val currentUserAttributes = it.result!!.toObject(User::class.java)!!
+                val email = currentUserAttributes.email!!
+                val username = currentUserAttributes.username!!
+                val displayName = currentUserAttributes.displayName!!
+                currentUser = User(currentUserFb!!.uid, email, username, displayName)
+
+                //starts a group chat if the intent tells it to
+                if(otherUserUid != null) getMessages(currentUser!!) else getGroupMessages(currentUser!!)
+
+            } else Log.e("ChatActivity", it.exception.toString())
+        }
+    }
+
+    private fun getGroupMessages(currentUser: User) {
+        db.collection("chats")
+            .document(chatId)
+            .get()
+            .addOnCompleteListener {
+                val otherUsers = mutableListOf<User>()
+
+                groupMessageAdapter = MessagesListAdapterGroupChat(this, listMessages, currentUser, otherUsers)
+                messagesList.adapter = groupMessageAdapter
+
+                val userUids = it.result!!["users"] as List<String>
+
+                userUids.forEachIndexed { index, s ->
+                    if(s != auth.currentUser!!.uid){
+                        db.collection("users")
+                            .document(s)
+                            .get()
+                            .addOnCompleteListener {
+                                val otherUserDoc = it.result!!.toObject(User::class.java)!!
+                                otherUsers.add(otherUserDoc)
+                                groupMessageAdapter!!.notifyDataSetChanged()
+                            }
+                    }
+                }
+                setSnapshotListener()
+                if(listMessages.size > 0) listMessages.sortBy { it.timestamp }
+            }
+    }
+
+    fun getMessages(currentUser: User) {
+        db.collection("users")
+            .document(otherUserUid!!)
+            .get()
+            .addOnCompleteListener {
+                otherUser = it.result!!.toObject(User::class.java)!!
+
+                messageAdapter = MessagesListAdapter(this, listMessages, currentUser, otherUser)
+                messagesList.adapter = messageAdapter
+
+                setSnapshotListener()
+                checkIfFriend()
+                if(listMessages.size > 0) listMessages.sortBy { it.timestamp }
+            }
     }
 
     fun setSnapshotListener() {
@@ -137,48 +202,20 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
                     listMessages.add(newDocument)
 
                 }
-                messageAdapter.notifyDataSetChanged()
+                if(messageAdapter != null ) messageAdapter!!.notifyDataSetChanged() else groupMessageAdapter!!.notifyDataSetChanged()
                 messagesList.smoothScrollToPosition(listMessages.size - 1)
+//                if(listMessages.size > 0) listMessages.sortBy { it.timestamp }
             }
     }
 
-    fun createChat() {
-        var currentUser: User?
-        db.collection("users").document(currentUserFb!!.uid).get().addOnCompleteListener {
-            if (it.isSuccessful) {
-                val currentUserAttributes = it.result!!.toObject(User::class.java)!!
-                val email = currentUserAttributes.email!!
-                val username = currentUserAttributes.username!!
-                val displayName = currentUserAttributes.displayName!!
-                currentUser = User(currentUserFb!!.uid, email, username, displayName)
 
-                getMessages(currentUser!!)
-            } else Log.e("ChatActivity", it.exception.toString())
-        }
-    }
-
-    fun getMessages(currentUser: User) {
-        db.collection("users")
-            .document(otherUserUid)
-            .get()
-            .addOnCompleteListener {
-                otherUser = it.result!!.toObject(User::class.java)!!
-
-                messageAdapter = MessagesListAdapter(this, listMessages, currentUser, otherUser)
-                messagesList.adapter = messageAdapter
-
-                setSnapshotListener()
-                checkIfFriend()
-                if(listMessages.size > 0) listMessages.sortBy { it.timestamp }
-            }
-    }
 
     fun checkIfFriend() {
         var isFriend: Boolean
         db.collection("users")
             .document(auth.currentUser!!.uid)
             .collection("friends")
-            .document(otherUserUid)
+            .document(otherUserUid!!)
             .get()
             .addOnCompleteListener {
                 if(it.isSuccessful){
@@ -204,7 +241,8 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
                 db.collection("users")
                     .document(auth.currentUser!!.uid)
                     .collection("friends")
-                    .document(otherUserUid).set(otherUser)
+                    .document(otherUserUid!!)
+                    .set(otherUser)
                     .addOnCompleteListener {
                         if(it.isSuccessful){
                             Toast.makeText(this, getString(R.string.s_added_as_friend, otherUser.displayName), Toast.LENGTH_SHORT).show()

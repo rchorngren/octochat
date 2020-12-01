@@ -55,4 +55,5 @@
     <string name="start_a_group_chat">Start a group chat</string>
     <string name="s_added_as_friend">%1$s added as friend!</string>
     <string name="could_not_add_s_as_friend">Could not add %1$s as friend</string>
+    <string name="select_more_than_one">Select more than one friend to start a group chat</string>
 </resources>

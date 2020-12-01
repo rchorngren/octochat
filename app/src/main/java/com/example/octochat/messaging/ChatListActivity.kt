@@ -1,5 +1,6 @@
 package com.example.octochat.messaging
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -22,6 +23,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -125,13 +127,26 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         }
 
         listViewChats.setOnItemClickListener { adapterView, view, i, l ->
-            val intent = Intent(this, ChatActivity::class.java)
-            intent.putExtra("chatId", listChats[i].chatId)
-            intent.putExtra("otherUserDisplayName", listChats[i].otherUser.displayName)
-            intent.putExtra("otherUserUid", listChats[i].otherUser.userId)
-            intent.putExtra("otherUserProfileImage", listChats[i].otherUser.profileImage)
-            startActivity(intent)
+            if(listChats[i].otherUser.userId != null){
+                val intent = Intent(this, ChatActivity::class.java)
+                intent.putExtra("chatId", listChats[i].chatId)
+                intent.putExtra("otherUserDisplayName", listChats[i].otherUser.displayName)
+                intent.putExtra("otherUserUid", listChats[i].otherUser.userId)
+                intent.putExtra("otherUserProfileImage", listChats[i].otherUser.profileImage)
+                startActivity(intent)
+            } else {
+                val intent = Intent(this, ChatActivity::class.java)
+                intent.putExtra("chatId", listChats[i].chatId)
+                intent.putExtra("otherUserDisplayName", listChats[i].otherUser.displayName)
+                intent.putExtra("otherUserProfileImage", listChats[i].otherUser.profileImage)
+                startActivity(intent)
+
+            }
         }
+    }
+
+    fun hideFabs(){
+
     }
 
     fun getSelfUser() {
@@ -188,53 +203,21 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                         if (timestamp != null) timestampDate = timestamp.toDate() else return@forEachIndexed
 
                         val users = document["users"] as MutableList<String>?
-                        var otherUserUid: String? = null
 
-                        for (user in users!!) {
-                            otherUserUid = if (user == auth.currentUser!!.uid) continue else user
-                        }
-
-                        db.collection("users").document(otherUserUid!!)
-                            .get()
-                            .addOnCompleteListener {
-                                if (it.isSuccessful) {
-                                    progressBar.visibility = ProgressBar.GONE
-                                    val otherUser = it.result!!.toObject(User::class.java)!!
-
-                                    db.collection("chats")
-                                        .document(document.id)
-                                        .collection("messages")
-                                        .orderBy("timestamp", Query.Direction.ASCENDING)
-                                        .limitToLast(1)
-                                        .get()
-                                        .addOnCompleteListener {
-                                            var addChat = true
-                                            for (chat in listChats) {
-                                                if (chat.chatId == document.id) {
-                                                    addChat = false
-                                                    break
-                                                }
-                                            }
-                                            if (addChat) {
-                                                if (it.result!!.documents.size > 0) {
-                                                    val message = it.result!!.documents[0].toObject(Message::class.java)!!
-
-                                                    if (message.sender == auth.currentUser!!.uid) { //if you sent the message
-                                                        message.text = "You: " + message.text
-                                                        listChats.add(Chat(document.id, otherUser, message, timestampDate))
-                                                    } else {
-                                                        listChats.add(Chat(document.id, otherUser, message, timestampDate))
-                                                    }
-                                                    listChats.sortByDescending { it.timestamp }
-                                                } else {
-                                                    listChats.add(Chat(document.id, otherUser))
-                                                }
-                                            }
-                                            emptyView.visibility = TextView.GONE
-                                            chatListAdapter.notifyDataSetChanged()
-                                        }
-                                }
+                        //Checks whether or not it's a group chat
+                        if(users!!.size > 2){
+                            val otherUserUids = mutableListOf<String>()
+                            for (user in users){
+                                otherUserUids.add(user)
                             }
+                            getGroupChat(document, otherUserUids, timestampDate)
+                        } else {
+                            var otherUserUid: String? = null
+                            for (user in users) {
+                                otherUserUid = if (user == auth.currentUser!!.uid) continue else user
+                            }
+                            getChat(document, otherUserUid!!, timestampDate)
+                        }
                     }
                 } else {
                     if(listChats.size > 0) listChats.clear()
@@ -243,6 +226,88 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                 }
                 chatListAdapter = ChatListAdapter(this, listChats)
                 listViewChats.adapter = chatListAdapter
+            }
+    }
+
+    fun getChat(document: DocumentSnapshot, otherUserUid: String, timestampDate: Date){
+        db.collection("users").document(otherUserUid)
+            .get()
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    progressBar.visibility = ProgressBar.GONE
+                    val otherUser = it.result!!.toObject(User::class.java)!!
+
+                    db.collection("chats")
+                        .document(document.id)
+                        .collection("messages")
+                        .orderBy("timestamp", Query.Direction.ASCENDING)
+                        .limitToLast(1)
+                        .get()
+                        .addOnCompleteListener {
+                            var addChat = true
+                            for (chat in listChats) {
+                                if (chat.chatId == document.id) {
+                                    addChat = false
+                                    break
+                                }
+                            }
+                            if (addChat) {
+                                if (it.result!!.documents.size > 0) {
+                                    val message = it.result!!.documents[0].toObject(Message::class.java)!!
+
+                                    if (message.sender == auth.currentUser!!.uid) { //if you sent the message
+                                        message.text = "You: " + message.text
+                                        listChats.add(Chat(document.id, otherUser, message, timestampDate))
+                                    } else {
+                                        listChats.add(Chat(document.id, otherUser, message, timestampDate))
+                                    }
+                                } else {
+                                    listChats.add(Chat(document.id, otherUser, timestamp = timestampDate))
+                                }
+                            }
+                            listChats.sortByDescending { it.timestamp }
+                            emptyView.visibility = TextView.GONE
+                            chatListAdapter.notifyDataSetChanged()
+                        }
+                }
+            }
+    }
+
+    fun getGroupChat(document: DocumentSnapshot, otherUserUids: List<String>, timestampDate: Date) {
+        db.collection("chats")
+            .document(document.id)
+            .collection("messages")
+            .orderBy("timestamp", Query.Direction.ASCENDING)
+            .limitToLast(1)
+            .get()
+            .addOnCompleteListener {
+                var addChat = true
+                for (chat in listChats) {
+                    if (chat.chatId == document.id) {
+                        addChat = false
+                        break
+                    }
+                }
+
+                if (addChat) {
+                    val fakeOtherUser = User(null, null, null, document["name"] as String?, document["image"] as String?)
+                    if (it.result!!.documents.size > 0) {//if there are no messages in the group chat
+                        val message = it.result!!.documents[0].toObject(Message::class.java)!!
+
+                        if (message.sender == auth.currentUser!!.uid) { //if you sent the message
+                            message.text = "You: " + message.text
+                            listChats.add(Chat(document.id, fakeOtherUser, message, timestampDate))
+                        } else {
+                            listChats.add(Chat(document.id, fakeOtherUser, message, timestampDate))
+                        }
+                    } else {
+                        val groupChat = Chat(document.id, fakeOtherUser, timestamp = timestampDate)
+                        listChats.add(groupChat)
+                    }
+                }
+                listChats.sortByDescending { it.timestamp }
+                emptyView.visibility = TextView.GONE
+                chatListAdapter.notifyDataSetChanged()
             }
     }
 
@@ -301,7 +366,6 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
 
         listViewFriendsDialog.setOnItemClickListener { adapterView, view, i, l ->
             val checkBox = adapterView[i].findViewById<CheckBox>(R.id.checkboxIncludeInGroupChat)
-            Log.e(TAG, "click")
 
             checkBox.isChecked = !checkBox.isChecked
             checkedFriends[i] = !checkedFriends[i]
@@ -348,10 +412,19 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                 }
             }
 
-
-
+        //When clicking the "start" button
         dialogBuilder.setPositiveButton("Start") { dialogInterface, i ->
+            if(selectedFriendsList.size < 2) {
+                Toast.makeText(this, getString(R.string.select_more_than_one), Toast.LENGTH_SHORT).show()
+            }else{
+                val membersToAdd = mutableListOf<String>()
+                selectedFriendsList.forEach { membersToAdd.add(it.userId!!) }
+                membersToAdd.add(auth.currentUser!!.uid)
 
+                db.collection("chats")
+                    .document()
+                    .set(hashMapOf("users" to membersToAdd, "timestamp" to FieldValue.serverTimestamp(), "name" to "New Group Chat", "image" to null))
+            }
         }.show()
     }
 
