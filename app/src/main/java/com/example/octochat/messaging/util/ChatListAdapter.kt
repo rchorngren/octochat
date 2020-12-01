@@ -25,8 +25,6 @@ class ChatListAdapter(val context: Context, val listChats: MutableList<Chat>) : 
 
     override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
         val view = inflater.inflate(R.layout.list_item_chat, p2, false)
-        Log.e("ChatListAdapter", "load $p0")
-
 
         val profilePictureView = view.findViewById<ImageView>(R.id.imageViewProfilePicture)
         val displayNameView = view.findViewById<TextView>(R.id.textViewDisplayName)

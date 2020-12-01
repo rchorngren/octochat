@@ -53,4 +53,6 @@
     <string name="start_chat">Start chat</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="start_a_group_chat">Start a group chat</string>
+    <string name="s_added_as_friend">%1$s added as friend!</string>
+    <string name="could_not_add_s_as_friend">Could not add %1$s as friend</string>
 </resources>

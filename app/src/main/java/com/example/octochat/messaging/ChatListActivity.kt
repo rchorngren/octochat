@@ -9,13 +9,14 @@ import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
+import androidx.core.view.get
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.octochat.R
 import com.example.octochat.SettingsActivity
 import com.example.octochat.UserProfile
 import com.example.octochat.messaging.util.ChatListAdapter
+import com.example.octochat.messaging.util.FriendsListAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.Timestamp
@@ -27,7 +28,6 @@ import com.google.firebase.firestore.Query
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.android.synthetic.main.activity_chat_list.*
 import java.util.*
 
 class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -103,7 +103,7 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         getActiveChats()
         getSelfUser()
 
-        startGroupChatFab.setOnClickListener {  }
+        startGroupChatFab.setOnClickListener { startGroupChatDialog() }
 
         emailFab.setOnClickListener { startChatFromDialog("email") }
 
@@ -281,6 +281,77 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
                         } else Log.e("ChatListActivity", "No user with $mode $otherUserFieldValue found")
                     }
             }
+        }.show()
+    }
+
+    private fun startGroupChatDialog() {
+        val dialogBuilder = AlertDialog.Builder(this)
+        val dialogLayout = layoutInflater.inflate(R.layout.dialog_start_group_chat, null)
+
+        val listViewFriendsDialog = dialogLayout.findViewById<ListView>(R.id.listFriendsDialog)
+        val membersToAddTextView = dialogLayout.findViewById<TextView>(R.id.textMembersToAdd)
+
+        //friends list
+        val checkedFriends = mutableListOf<Boolean>()
+        val friendsList = mutableListOf<User>()
+        val selectedFriendsList = mutableListOf<User>()
+        val friendsAdapterDialog = FriendsListAdapter(this, friendsList, checkedFriends)
+        listViewFriendsDialog.adapter = friendsAdapterDialog
+
+
+        listViewFriendsDialog.setOnItemClickListener { adapterView, view, i, l ->
+            val checkBox = adapterView[i].findViewById<CheckBox>(R.id.checkboxIncludeInGroupChat)
+            Log.e(TAG, "click")
+
+            checkBox.isChecked = !checkBox.isChecked
+            checkedFriends[i] = !checkedFriends[i]
+
+            if(checkBox.isChecked){
+                selectedFriendsList.add(friendsList[i])
+            } else {
+                selectedFriendsList.remove(friendsList[i])
+            }
+
+            var membersToAddString = ""
+            selectedFriendsList.forEachIndexed { index, friend ->
+
+                membersToAddString += if(index == 0) friend.displayName else ", " + friend.displayName
+            }
+            membersToAddTextView.text = membersToAddString
+            friendsAdapterDialog.notifyDataSetChanged()
+        }
+
+        dialogBuilder.setTitle("Add members")
+        dialogBuilder.setView(dialogLayout)
+
+        db.collection("users")
+            .document(auth.currentUser!!.uid)
+            .collection("friends")
+            .get()
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    if (friendsList.size > 0) friendsList.clear()
+                    if (it.result!!.documents.size > 0) {
+                        for (document in it.result!!.documents) {
+                            db.collection("users")
+                                .document(document.id)
+                                .get()
+                                .addOnCompleteListener { friendDoc ->
+                                    val newDocument = friendDoc.result!!.toObject(User::class.java) as User
+                                    friendsList.add(newDocument)
+                                    checkedFriends.add(false)
+
+                                    friendsAdapterDialog.notifyDataSetChanged()
+                                }
+                        }
+                    }
+                }
+            }
+
+
+
+        dialogBuilder.setPositiveButton("Start") { dialogInterface, i ->
+
         }.show()
     }
 

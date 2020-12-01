@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import com.example.octochat.R
 import com.example.octochat.messaging.util.MessagesListAdapter
 import com.google.firebase.auth.FirebaseAuth
@@ -206,9 +207,9 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
                     .document(otherUserUid).set(otherUser)
                     .addOnCompleteListener {
                         if(it.isSuccessful){
-                            Toast.makeText(this, "${otherUser.displayName} added as friend!", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, getString(R.string.s_added_as_friend, otherUser.displayName), Toast.LENGTH_SHORT).show()
                         } else {
-                            Toast.makeText(this, "Could not add ${otherUser.displayName} as friend", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, getString(R.string.could_not_add_s_as_friend, otherUser.displayName), Toast.LENGTH_SHORT).show()
                             Log.e(TAG, it.exception.toString())
                         }
                 }

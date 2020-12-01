@@ -93,18 +93,22 @@ class FriendsListActivity : AppCompatActivity() {
                     if (friendsList.size > 0) friendsList.clear()
                     if (it.result!!.documents.size > 0) {
                         for (document in it.result!!.documents) {
-                            val newDocument = document.toObject(User::class.java)
+                            db.collection("users")
+                                .document(document.id)
+                                .get()
+                                .addOnCompleteListener { friendDoc ->
+                                    val newDocument = friendDoc.result!!.toObject(User::class.java) as User
+                                    friendsList.add(newDocument)
 
-                            friendsList.add(newDocument!!)
+                                    friendsAdapter.notifyDataSetChanged()
+                                }
                         }
-                        friendsAdapter.notifyDataSetChanged()
                     }
                 }
             }
     }
 
     fun startChat(pos: Int) {
-
         db.collection("chats")
             .whereArrayContains("users", auth.currentUser!!.uid)
             .get()

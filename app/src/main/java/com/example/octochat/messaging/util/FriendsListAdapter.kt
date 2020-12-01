@@ -5,17 +5,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import com.example.octochat.R
 import com.example.octochat.messaging.FriendsListActivity
 import com.example.octochat.messaging.User
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
-class FriendsListAdapter(val context: Context, val listUsers: MutableList<User>) : BaseAdapter(){
+class FriendsListAdapter(val context: Context, val listUsers: MutableList<User>, val selected: MutableList<Boolean>? = null) : BaseAdapter(){
 
     val inflater = LayoutInflater.from(context)
 
@@ -32,6 +29,7 @@ class FriendsListAdapter(val context: Context, val listUsers: MutableList<User>)
         val nameText = view.findViewById<TextView>(R.id.textFriendName)
         val userNameText = view.findViewById<TextView>(R.id.textFriendUsername)
         val startChatButton = view.findViewById<ImageView>(R.id.buttonStartChat)
+        val checkBox = view.findViewById<CheckBox>(R.id.checkboxIncludeInGroupChat)
         val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
 
         val profileImage = listUsers[p0].profileImage
@@ -56,12 +54,20 @@ class FriendsListAdapter(val context: Context, val listUsers: MutableList<User>)
 
         nameText.text = name
         userNameText.text = username
-        
-        startChatButton.setOnClickListener {
-            (context as FriendsListActivity).startChat(p0)
+
+        if(selected != null){
             startChatButton.visibility = ImageView.GONE
-            progressBar.visibility = ProgressBar.VISIBLE
+            checkBox.visibility = CheckBox.VISIBLE
+
+            checkBox.isChecked = selected[p0]
+        }else{
+            startChatButton.setOnClickListener {
+                (context as FriendsListActivity).startChat(p0)
+                startChatButton.visibility = ImageView.GONE
+                progressBar.visibility = ProgressBar.VISIBLE
+           }
         }
+
 
 
         return view
