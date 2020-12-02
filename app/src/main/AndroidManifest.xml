@@ -12,12 +12,12 @@
         package="com.example.octochat">
         <activity android:name=".ui.notification.Notification"></activity>
         <receiver
-            android:name=".receiver.AlarmReceiver"
+            android:name=".ui.notification.receiver.AlarmReceiver"
             android:enabled="true"
             android:exported="false">
         </receiver>
         <receiver
-            android:name=".receiver.SnoozeReceiver"
+            android:name=".ui.notification.receiver.SnoozeReceiver"
             android:enabled="true"
             android:exported="false">
         </receiver>

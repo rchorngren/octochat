@@ -162,6 +162,7 @@ fun NotificationManager.sendNotification(
 
     // TODO STEP 1.4 - Call notify
     notify(NOTIFICATION_ID, builder.build())
+    Log.d("NOTIF" ,  notify(NOTIFICATION_ID, builder.build()).toString())
     // TODO END STEP 1.4
 }
 
