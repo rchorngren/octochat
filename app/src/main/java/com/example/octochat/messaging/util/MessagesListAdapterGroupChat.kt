@@ -40,7 +40,7 @@ class MessagesListAdapterGroupChat(val context: Context, val listMessages: Mutab
         val userId = listMessages[p0].sender
 
         for(user in listUsers){
-            if (userId == listMessages[p0].sender) {
+            if (user.userId == listMessages[p0].sender) {
                 displayName = user.displayName!!
                 break
             }
