@@ -19,6 +19,16 @@
     <string name="title_activity_login2" translatable="false">LoginActivity2</string>
     <string name="no_chats_yet">No chats yet</string>
     <string name="message">Message</string>
+
+    <string name="notification_title">You\'ve got a message!</string>
+    <string name="msg_notification_channel_id" translatable="false">msg_channel</string>
+    <string name="msg_notification_channel_name" translatable="false">Message</string>
+    <string name="msg_delivery">Got this message!</string>
+    <string name="snooze">Remind later</string>
+
+
+
+
     <string name="name">Name</string>
     <string name="settings">Settings</string>
     <string name="settings_change_password">Change password</string>

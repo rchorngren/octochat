@@ -111,7 +111,7 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
                     val newDocument = message.document.toObject(Message::class.java)
 
                     //this line adds the latest message to the conversation, maybe check if
-                    //the user is currently in the app and if they sent it, and if they aren't, send a notification?
+                    //the user is currently in the app and if they sent it, and if they aren't, send a Notification?
                     listMessages.add(newDocument)
 
                 }
