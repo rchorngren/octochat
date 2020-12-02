@@ -37,6 +37,7 @@ class ChatListAdapter(val context: Context, val listChats: MutableList<Chat>) : 
         if(profileImage != null && profileImage.isNotEmpty()){
             Picasso.get()
                 .load(profileImage)
+                .resize(48, 48)
                 .into(profilePictureView, object : Callback {
                     override fun onSuccess() {
                         Log.d("ChatListAdapter-picasso", "success")

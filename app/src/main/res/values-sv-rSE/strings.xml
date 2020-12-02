@@ -48,4 +48,8 @@
     <string name="add">Lägg till</string>
     <string name="start_chat">Starta chatt</string>
     <string name="edit_profile">Redigera profil</string>
+    <string name="start_a_group_chat">Starta en gruppchatt</string>
+    <string name="s_added_as_friend">%1$s tillagd som vän!</string>
+    <string name="could_not_add_s_as_friend">Kunde inte lägga till %1$s som vän</string>
+    <string name="select_more_than_one">Välj mer än en vän för att starta en gruppchatt</string>
 </resources>
