@@ -21,6 +21,16 @@
             android:enabled="true"
             android:exported="false">
         </receiver>
+
+        <service
+            android:name=".ui.notification.FirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+
         <activity
             android:name=".messaging.FriendsListActivity"
             android:label="@string/friends"
@@ -51,6 +61,11 @@
         <activity
             android:name=".messaging.ChatActivity"
             android:windowSoftInputMode="adjustResize" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/octochat_notification_channel_id" />
+
     </application>
 
 </manifest>

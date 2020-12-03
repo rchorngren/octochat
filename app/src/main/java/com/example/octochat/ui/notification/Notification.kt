@@ -16,17 +16,24 @@ import com.example.octochat.ui.notification.model.NotifViewModel
 import android.widget.Button
 import android.util.Log
 import androidx.core.content.ContextCompat
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.RemoteMessage
 
 
 class Notification : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_notification)
+        //setContentView(R.layout.activity_notification)
 
 
         val viewModel = ViewModelProvider(this).get(
             NotifViewModel::class.java)
+
+
+        val mBody = intent.getStringExtra("Message").toString()
+
+        Log.d("ShowMessage" ,  mBody)
 
         // TODO STEP 1.7 - Call create channel
         /*createChannel(
@@ -37,20 +44,21 @@ class Notification : AppCompatActivity() {
         // accessing button
         val btn = findViewById<Button>(R.id.btnTestNotification)
 
-        btn.setOnClickListener {
+        //btn.setOnClickListener {
 
             // TODO STEP 1.7 - Call create channel
             createChannel(
                 getString(R.string.msg_notification_channel_id),
-                getString(R.string.msg_notification_channel_name)
+                getString(R.string.msg_notification_channel_name),
+                mBody
             )
 
 
-        }
+        //}
     }
 
 
-    private fun createChannel(channelId: String, channelName: String) {
+    private fun createChannel(channelId: String, channelName: String , mBody: String) {
         // checking if android version is greater than oreo(API 26) or not
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(
@@ -74,15 +82,26 @@ class Notification : AppCompatActivity() {
 
         }
 
+        //val body = "test this body"
+        sendNotification(mBody)
+
+        /*val notificationManager = ContextCompat.getSystemService(
+            applicationContext, NotificationManager::class.java) as
+                NotificationManager
+                (notificationManager.sendNotification(messageBody, applicationContext)
+*/
+        //For testing
+    //    notificationManager.sendNotification("Hej", applicationContext)
+
+    }
+
+    private fun sendNotification(messageBody: String) {
         val notificationManager = ContextCompat.getSystemService(
             applicationContext, NotificationManager::class.java) as
                 NotificationManager
-//            notificationManager.sendNotification(messageBody, applicationContext)
-
-        //For testing
-        notificationManager.sendNotification("Hej", applicationContext)
-
+        notificationManager.sendNotification(messageBody, applicationContext)
     }
+
 
 
 

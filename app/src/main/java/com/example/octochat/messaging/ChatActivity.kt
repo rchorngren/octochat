@@ -1,5 +1,6 @@
 package com.example.octochat.messaging
 
+import android.app.NotificationManager
 import android.os.Bundle
 import android.util.Log
 import android.view.ContextMenu
@@ -13,6 +14,10 @@ import com.example.octochat.messaging.util.MessagesListAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.*
+import com.example.octochat.ui.notification.Notification
+import android.content.Intent
+import androidx.core.content.ContextCompat
+import com.example.octochat.ui.notification.sendNotification
 
 class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
 
@@ -114,6 +119,12 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
                     //the user is currently in the app and if they sent it, and if they aren't, send a Notification?
                     listMessages.add(newDocument)
 
+                  /*  val intent = Intent(this@ChatActivity, Notification::class.java)
+                    intent.putExtra("Message" , newDocument.text.toString())
+                    startActivity(intent)*/
+
+                    sendNotification(newDocument.text.toString())
+
                 }
                 messageAdapter.notifyDataSetChanged()
                 messagesList.smoothScrollToPosition(listMessages.size - 1)
@@ -205,4 +216,14 @@ class ChatActivity : AppCompatActivity(), PopupMenu.OnMenuItemClickListener {
         onBackPressed()
         return super.onSupportNavigateUp()
     }
+
+
+    private fun sendNotification(messageBody: String) {
+        val notificationManager = ContextCompat.getSystemService(
+            applicationContext, NotificationManager::class.java) as
+                NotificationManager
+        notificationManager.sendNotification(messageBody, applicationContext)
+    }
+
+
 }
