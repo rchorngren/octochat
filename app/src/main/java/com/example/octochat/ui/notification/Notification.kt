@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.octochat.ui.notification.model.NotifViewModel
 import android.widget.Button
 import android.util.Log
+import androidx.core.content.ContextCompat
 
 
 class Notification : AppCompatActivity() {
@@ -28,10 +29,10 @@ class Notification : AppCompatActivity() {
             NotifViewModel::class.java)
 
         // TODO STEP 1.7 - Call create channel
-        createChannel(
+        /*createChannel(
             getString(R.string.msg_notification_channel_id),
             getString(R.string.msg_notification_channel_name)
-        )
+        )*/
 
         // accessing button
         val btn = findViewById<Button>(R.id.btnTestNotification)
@@ -43,6 +44,8 @@ class Notification : AppCompatActivity() {
                 getString(R.string.msg_notification_channel_id),
                 getString(R.string.msg_notification_channel_name)
             )
+
+
         }
     }
 
@@ -67,9 +70,22 @@ class Notification : AppCompatActivity() {
             notificationManager.createNotificationChannel(notificationChannel)
 
             Log.d("this notification class", "${notificationChannel.toString()}")
+
+
         }
 
+        val notificationManager = ContextCompat.getSystemService(
+            applicationContext, NotificationManager::class.java) as
+                NotificationManager
+//            notificationManager.sendNotification(messageBody, applicationContext)
+
+        //For testing
+        notificationManager.sendNotification("Hej", applicationContext)
+
     }
+
+
+
     companion object {
         fun newInstance() = Notification()
     }

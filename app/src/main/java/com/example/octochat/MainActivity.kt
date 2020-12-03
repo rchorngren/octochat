@@ -35,8 +35,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun getLogStarted(){
-        val intent = Intent(this, Notification::class.java)
-        //val intent = Intent(this, LoginActivity::class.java)
+        //For testing notifications
+        //val intent = Intent(this, Notification::class.java)
+        val intent = Intent(this, LoginActivity::class.java)
         startActivityForResult(intent,0)
     }
 

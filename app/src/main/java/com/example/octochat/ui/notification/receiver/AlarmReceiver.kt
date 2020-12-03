@@ -20,6 +20,7 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.core.content.ContextCompat
 import com.example.octochat.ui.notification.sendNotification
 import com.example.octochat.R
@@ -43,6 +44,7 @@ class AlarmReceiver: BroadcastReceiver() {
             context.getText(R.string.msg_delivery).toString(),
             context
         )
+        Log.d("TestConnect" , "This Alarm")
         // TODO END STEP 1.9
     }
 }
