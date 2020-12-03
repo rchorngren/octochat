@@ -11,6 +11,7 @@
     <string name="settings_toast_password_mismatch">Det angivna lösenordet matchar inte</string>
     <string name="settings_toast_password_too_short">Lösenordet är för kort - lösenordet måste vara på 8 tecken eller fler</string>
     <string name="settings_toast_password_successful">Lösenord uppdaterat</string>
+    <string name="login_header_text">Logga in</string>
     <string name="settings_general_error">Något gick fel - försök igen</string>
     <string name="prompt_email">Epostadress</string>
     <string name="prompt_password">Lösenord</string>
@@ -33,6 +34,7 @@
     <string name="repeat_password">Upprepa lösenord</string>
     <string name="password">Lösenord</string>
     <string name="create_account">Skapa konto</string>
+    <string name="registration_signup_header_text">Registrera ny användare</string>
     <string name="registration_signup_failed">Registrering misslyckades</string>
     <string name="cancel">Avbryt</string>
     <string name="invalid_password">Lösenord måste vara minst 8 tecken</string>
