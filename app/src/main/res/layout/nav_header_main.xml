@@ -19,7 +19,7 @@
             android:id="@+id/imagePfpNavHeader"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:src="@drawable/pfp_placeholder" />
+            android:src="@drawable/octochat_logo" />
 
         <LinearLayout
             android:layout_marginStart="16dp"
