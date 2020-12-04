@@ -13,10 +13,6 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.Window
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -43,8 +39,10 @@ import kotlinx.android.synthetic.main.userprofile_bottom_sheet.view.*
 import android.Manifest
 import android.content.ContentResolver
 import android.content.ContentValues
+import android.view.*
 import com.google.firebase.database.DatabaseError.PERMISSION_DENIED
 import com.google.firebase.firestore.FieldValue
+import de.hdodenhof.circleimageview.CircleImageView
 import io.grpc.Status.PERMISSION_DENIED
 
 
@@ -128,9 +126,9 @@ class EditProfile : AppCompatActivity() {
             displayName.isEnabled = false
             editUserName.isEnabled = false
             changeProfilePic.visibility = View.INVISIBLE
-
             val intent = Intent(this, UserProfile::class.java)
                startActivity(intent)
+
         }
     }
 
