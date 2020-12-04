@@ -105,6 +105,9 @@ class ChatListActivity : AppCompatActivity(), NavigationView.OnNavigationItemSel
         getActiveChats()
         getSelfUser()
 
+        headerView.setOnClickListener {
+            getSelfUser()
+        }
         startGroupChatFab.setOnClickListener { startGroupChatDialog() }
 
         emailFab.setOnClickListener { startChatFromDialog("email") }
